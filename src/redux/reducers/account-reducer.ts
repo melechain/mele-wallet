@@ -3,6 +3,7 @@ import {
 	AccountStateActionTypes,
 	IAccountReducerAction,
 } from "../actions-types/account-types";
+import { IAccountModel } from "mele-wallet/src/app/model/account.model";
 
 export class AccountState {
 	isLoggingIn: boolean = false;
@@ -11,7 +12,7 @@ export class AccountState {
 	loginError: string = "";
 	logoutError: string = "";
 	sessionChecked: boolean = false;
-	session?: any;
+	account?: IAccountModel;
 }
 
 export const initialState: AccountState = new AccountState();
@@ -51,6 +52,7 @@ const accountReducer = (
 				...state,
 				isLoggingOut: false,
 				isLoggedIn: false,
+				account: undefined,
 			};
 		case AccountStateActionTypes.LOG_OUT_ERROR:
 			return {

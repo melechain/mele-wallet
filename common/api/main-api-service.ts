@@ -1,15 +1,15 @@
 import axios, { AxiosRequestConfig, Method, AxiosResponse } from "axios";
+import { Errors } from "../error/errors";
 
 const getUrl = () => {
-	if (typeof window !== "undefined") {
-		return "";
+	if (__DEV__) {
+		return "https://api.dev.melechain.com";
 	} else {
-		return process.env.API_URL || "http://localhost:8005";
+		return "https://api.dev.melechain.com";
 	}
 };
-// check if browser
-export const API_URL = getUrl() + "/api";
-// export const API_URL = "http://192.168.1.91:8005/api";
+
+export const API_URL = getUrl();
 
 export interface ServiceRequestParam {
 	timeout?: number;
@@ -17,7 +17,6 @@ export interface ServiceRequestParam {
 	headers?: any;
 	data?: any;
 	path: string;
-	authRequired: boolean;
 	body?: FormData;
 }
 
@@ -41,51 +40,24 @@ export default class MainApiService {
 		if (p.body) {
 			fetchParam.data = p.body;
 		}
-		let result: AxiosResponse<any> = null;
+		let result: AxiosResponse<any>;
 		try {
 			result = await axios({
 				...fetchParam,
 				url: API_URL + p.path,
 			});
 		} catch (e) {
+			console.log(e, { ...fetchParam, url: API_URL + p.path });
 			if (!e.response) {
-				throw FrontErrors.SERVER_CONNECTION_PROBLEM.throw(e);
+				throw Errors.SERVER_CONNECTION_PROBLEM.throw(e);
 			}
 			result = e.response;
 		}
+		const body = await result.data;
 
-		let body = null;
-		try {
-			body = await result.data;
-		} catch (e) {
-			throw FrontErrors.INVALID_RESPONSE.throw();
-		}
-
-		if (!body) {
-			throw FrontErrors.INVALID_RESPONSE.throw();
-		}
 		if (result.status < 200 || result.status > 299) {
-			if (!body.success) {
-				if (body.error.code == Errors.UNAUTHORIZED.code) {
-					if (p.authRequired) {
-						// if browser do stuff
-						//window.location.replace("/");
-					}
-					throw Errors.UNAUTHORIZED.throw();
-				}
-				throw DefaultError.build(body.error).throw();
-			}
-			throw FrontErrors.SERVER_CONNECTION_PROBLEM.throw(body);
-		}
-		if (
-			body.session &&
-			MainApiService.reduxStore &&
-			p.method.toLowerCase() !== "options"
-		) {
-			MainApiService.reduxStore.dispatch({
-				type: "@@AUTH/UPDATE_SESSION",
-				session: body.session,
-			});
+			//TODO hadnle all the edge cases here (unauthorized, ..., ...)
+			throw Errors.SERVER_CONNECTION_PROBLEM.throw(body);
 		}
 		return { body: body, result: result };
 	};

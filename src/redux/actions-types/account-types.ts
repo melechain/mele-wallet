@@ -1,4 +1,5 @@
 import { Action } from "redux";
+import { IAccountModel } from "mele-wallet/src/app/model/account.model";
 
 export enum AccountStateActionTypes {
 	LOG_IN_REQUEST = "@@ACCOUNT/LOG_IN_REQUEST",
@@ -10,9 +11,11 @@ export enum AccountStateActionTypes {
 	UPDATE_SESSION = "@@ACCOUNT/UPDATE_SESSION",
 }
 
-export interface IAccountReducerAction extends Action {
+export interface IAccountReducerAction {
 	type: AccountStateActionTypes;
-	data?: any;
-	loginError?: string;
-	logoutError?: string;
+	username: string;
+	password: string;
+	account: IAccountModel;
+	loginError: string;
+	logoutError: string;
 }

@@ -11,6 +11,8 @@ export default class AccountActionCreator extends BaseActionCreator<
 	login = async (username: string, password: string) => {
 		this.dispatch({
 			type: AccountStateActionTypes.LOG_IN_REQUEST,
+			username: username,
+			password: password,
 		});
 	};
 }

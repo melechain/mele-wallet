@@ -1,23 +1,28 @@
 import React, { Component } from "react";
 import { Button } from "react-native";
 import { connect } from "react-redux";
-import ApplicationState from "meme-wallet/src/redux/application-state";
+import ApplicationState from "mele-wallet/src/redux/application-state";
 import {
 	mapDispatchToProps,
 	IActionCreators,
-} from "meme-wallet/src/redux/methods/map-dispatch-to-props";
+} from "mele-wallet/src/redux/methods/map-dispatch-to-props";
+import { AccountState } from "mele-wallet/src/redux/reducers/account-reducer";
 interface ITestComponentProps {
 	actionCreators: IActionCreators;
+	accountState: AccountState;
 }
 
 class TestComponent extends Component<ITestComponentProps> {
 	render() {
+		console.log(console.log(this.props.accountState.account), "Account!");
 		return (
 			<Button
 				title="hello"
 				onPress={() => {
-					console.log(this.props);
-					this.props.actionCreators.account.login("testUser", "testPass");
+					this.props.actionCreators.account.login(
+						"levan@mailinator.com",
+						"test",
+					);
 				}}
 			/>
 		);
@@ -26,7 +31,7 @@ class TestComponent extends Component<ITestComponentProps> {
 
 const mapStateToProps = (state: ApplicationState) => {
 	return {
-		account: state.account,
+		accountState: state.account,
 	};
 };
 
