@@ -2,7 +2,11 @@ import axios, { AxiosRequestConfig, Method, AxiosResponse } from "axios";
 import { Errors } from "../error/errors";
 
 const getUrl = () => {
-	if (__DEV__) {
+	if (typeof (global as any).window !== "undefined") {
+		return "";
+	}
+
+	if (typeof (global as any).__DEV__ !== "undefined") {
 		return "https://api.dev.melechain.com";
 	} else {
 		return "https://api.dev.melechain.com";
