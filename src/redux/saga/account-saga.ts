@@ -23,7 +23,7 @@ function* doStuff(action: IAccountReducerAction): IterableIterator<any> {
 	console.log(response, "!!!!!!!!!!");
 	yield put({
 		type: AccountStateActionTypes.LOG_IN_SUCCESSFUL,
-		account: response.data,
+		account: response,
 	});
 	//async
 	//yield call

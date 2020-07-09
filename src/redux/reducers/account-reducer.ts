@@ -34,6 +34,7 @@ const accountReducer = (
 				isLoggingIn: false,
 				isLoggedIn: true,
 				loginError: "",
+				account: action.account,
 			};
 		case AccountStateActionTypes.LOG_IN_ERROR:
 			return {
