@@ -9,5 +9,17 @@ export default class AccountService extends MainService {
 			},
 		});
 	};
+
+	checkSession = async () => {
+		return await this.get({
+			path: `/account`,
+		});
+	};
+
+	logout = async () => {
+		return await this.patch({
+			path: `/account`,
+		});
+	};
 }
 export const accountService = new AccountService();

@@ -5,4 +5,5 @@ export interface IAccountModel {
 	bearer: string;
 	bearerExp: string;
 	email: string;
+	role: string;
 }

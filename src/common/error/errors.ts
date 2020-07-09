@@ -50,4 +50,8 @@ export const Errors = {
 		status: 500,
 		code: "INTERNAL_SERVER_ERROR",
 	}),
+	UNAUTHORIZED: DefaultError.build({
+		status: 401,
+		code: "UNAUTHORIZED",
+	}),
 };

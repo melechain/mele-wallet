@@ -4,13 +4,12 @@ import {
 } from "../actions-types/account-types";
 import { put, call, takeEvery, takeLatest, select } from "redux-saga/effects";
 import { accountService } from "mele-wallet/common/api/client-service";
-export const accountSaga = function* handleMessage(
-	params: any,
-): IterableIterator<any> {
+import { SagaIterator } from "redux-saga";
+export const accountSaga = function* handleMessage(params: any): SagaIterator {
 	yield takeEvery(AccountStateActionTypes.LOG_IN_REQUEST, doStuff);
 };
 
-function* doStuff(action: IAccountReducerAction): IterableIterator<any> {
+function* doStuff(action: IAccountReducerAction): SagaIterator {
 	let accountState = yield select((state: any) => {
 		return state.account;
 	});

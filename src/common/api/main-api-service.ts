@@ -2,7 +2,11 @@ import axios, { AxiosRequestConfig, Method, AxiosResponse } from "axios";
 import { Errors } from "../error/errors";
 
 const getUrl = () => {
-	if (__DEV__) {
+	if (typeof (global as any).window !== "undefined") {
+		return "";
+	}
+
+	if (typeof (global as any).__DEV__ !== "undefined") {
 		return "https://api.dev.melechain.com";
 	} else {
 		return "https://api.dev.melechain.com";
@@ -21,13 +25,38 @@ export interface ServiceRequestParam {
 }
 
 export default class MainApiService {
+	public static APPLICATION_STORE: {
+		dispatch: (p: { type: any }) => {};
+		getState: () => {
+			account: {
+				account?: {
+					bearer: string;
+					bearerExp: string;
+				};
+			};
+		};
+	};
+
 	protected request = async (p: ServiceRequestParam): Promise<any> => {
+		if (!MainApiService.APPLICATION_STORE) {
+			throw "init the APPLICAITON STORE FIRST!";
+		}
+
 		const defaultHeaders: any = {
 			Accept: "application/json",
 		};
 
 		if (!p.body) {
 			defaultHeaders["Content-Type"] = "application/json";
+		}
+		console.log(
+			MainApiService.APPLICATION_STORE.getState().account,
+			"MAIN API HEREEE!!",
+		);
+		if (MainApiService.APPLICATION_STORE.getState().account.account) {
+			defaultHeaders["Authorization"] = `Bearer ${
+				MainApiService.APPLICATION_STORE.getState().account.account!.bearer
+			}`;
 		}
 
 		const fetchParam: AxiosRequestConfig = {
@@ -47,9 +76,11 @@ export default class MainApiService {
 				url: API_URL + p.path,
 			});
 		} catch (e) {
-			console.log(e, { ...fetchParam, url: API_URL + p.path });
 			if (!e.response) {
 				throw Errors.SERVER_CONNECTION_PROBLEM.throw(e);
+			}
+			if (e.response.status == 401) {
+				throw Errors.UNAUTHORIZED;
 			}
 			result = e.response;
 		}
@@ -57,6 +88,12 @@ export default class MainApiService {
 
 		if (result.status < 200 || result.status > 299) {
 			//TODO hadnle all the edge cases here (unauthorized, ..., ...)
+			if (result.status == 401) {
+				MainApiService.APPLICATION_STORE.dispatch({
+					type: "@@ACCOUNT/LOG_OUT_SUCCESSFUL",
+				});
+			}
+
 			throw Errors.SERVER_CONNECTION_PROBLEM.throw(body);
 		}
 		return { body: body, result: result };
