@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { IAccountModel } from "mele-wallet/src/app/model/account.model";
+import { IAccountModel } from "mele-wallet/common/model/account.model";
 
 export enum AccountStateActionTypes {
 	LOG_IN_REQUEST = "@@ACCOUNT/LOG_IN_REQUEST",

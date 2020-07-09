@@ -5,6 +5,7 @@ import createSagaMiddleware from "redux-saga";
 
 import { createStore, combineReducers } from "redux";
 import { rootSaga } from "./saga";
+import MainApiService from "mele-wallet/common/api/main-api-service";
 
 export const reducers: Reducer<ApplicationState> = combineReducers<
 	ApplicationState
@@ -21,6 +22,7 @@ export const getApplicationStateStore = () => {
 		},
 		applyMiddleware(sagaMiddleware),
 	);
+	MainApiService.APPLICATION_STORE = store;
 	sagaMiddleware.run(rootSaga, undefined as any);
 	return store;
 };
