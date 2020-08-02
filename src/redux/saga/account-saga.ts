@@ -3,7 +3,7 @@ import {
 	IAccountReducerAction,
 } from "../actions-types/account-types";
 import { put, call, takeEvery, takeLatest, select } from "redux-saga/effects";
-import { accountService } from "mele-wallet/src/common/api/client-service";
+import { accountService } from "mele-wallet/src/common/api/account-service";
 import { SagaIterator } from "redux-saga";
 export const accountSaga = function* handleMessage(params: any): SagaIterator {
 	yield takeEvery(AccountStateActionTypes.LOG_IN_REQUEST, doStuff);
