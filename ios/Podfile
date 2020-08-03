@@ -44,8 +44,8 @@ def flipper_post_install(installer)
   end
 end
 
-target 'MemeWallet' do
-  # Pods for MemeWallet
+target 'MeleWallet' do
+  # Pods for MeleWallet
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -77,7 +77,7 @@ target 'MemeWallet' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'MemeWalletTests' do
+  target 'MeleWalletTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -94,10 +94,10 @@ target 'MemeWallet' do
   end
 end
 
-target 'MemeWallet-tvOS' do
-  # Pods for MemeWallet-tvOS
+target 'MeleWallet-tvOS' do
+  # Pods for MeleWallet-tvOS
 
-  target 'MemeWallet-tvOSTests' do
+  target 'MeleWallet-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
