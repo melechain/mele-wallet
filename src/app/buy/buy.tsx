@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "react-native";
+import { Button, View } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -7,24 +7,26 @@ import {
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
-interface ITestComponentProps {
+interface IBuyComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 }
+import styles from "./buy.scss";
 
-class TestComponent extends Component<ITestComponentProps> {
+class BuyComponent extends Component<IBuyComponentProps> {
 	render() {
-		console.log(console.log(this.props.accountState.account), "Account!");
 		return (
-			<Button
-				title="hello"
-				onPress={() => {
-					this.props.actionCreators.account.login(
-						"levan@mailinator.com",
-						"test",
-					);
-				}}
-			/>
+			<View style={styles.content}>
+				<Button
+					title="hello1"
+					onPress={() => {
+						this.props.actionCreators.account.login(
+							"levan@mailinator.com",
+							"test",
+						);
+					}}
+				/>
+			</View>
 		);
 	}
 }
@@ -35,4 +37,4 @@ const mapStateToProps = (state: ApplicationState) => {
 	};
 };
 
-export const Test = connect(mapStateToProps, mapDispatchToProps)(TestComponent);
+export const Buy = connect(mapStateToProps, mapDispatchToProps)(BuyComponent);

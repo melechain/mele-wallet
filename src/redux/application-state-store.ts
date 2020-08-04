@@ -6,7 +6,7 @@ import createSagaMiddleware from "redux-saga";
 import { createStore, combineReducers } from "redux";
 import { rootSaga } from "./saga";
 //import MainApiService from "mele-wallet/common/api/main-api-service";
-import MainApiService from "mele-wallet/src/common/api/main-api-service";
+import MainApiService from "@mele-wallet/common/api/main-api-service";
 export const reducers: Reducer<ApplicationState> = combineReducers<
 	ApplicationState
 >({

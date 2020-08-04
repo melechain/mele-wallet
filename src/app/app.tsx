@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { Provider } from "react-redux";
 import { getApplicationStateStore } from "../redux/application-state-store";
-import { Test } from "./test-component/test";
+import { Home } from "./home/home";
+import { RouterComponent } from "@mele-wallet/app/router-component";
 
 const App = () => {
 	return (
@@ -17,7 +18,7 @@ const App = () => {
 			<StatusBar barStyle="dark-content" />
 			<SafeAreaView>
 				<View>
-					<Test />
+					<RouterComponent />
 				</View>
 			</SafeAreaView>
 		</Provider>
