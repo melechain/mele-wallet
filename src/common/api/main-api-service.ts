@@ -43,10 +43,7 @@ export default class MainApiService {
 		if (!p.body) {
 			defaultHeaders["Content-Type"] = "application/json";
 		}
-		console.log(
-			MainApiService.APPLICATION_STORE.getState().account,
-			"MAIN API HEREEE!!",
-		);
+
 		if (MainApiService.APPLICATION_STORE.getState().account.account) {
 			defaultHeaders["Authorization"] = `Bearer ${
 				MainApiService.APPLICATION_STORE.getState().account.account!.bearer
