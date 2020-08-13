@@ -7,5 +7,10 @@ export default class UserService extends MainService {
 			path: `/accounts?page=${page || 1}&size=${size || 20}`,
 		});
 	};
+	loadUserByEmail = async (email: string) => {
+		return await this.get({
+			path: `/account/${email}`,
+		});
+	};
 }
 export const userService = new UserService();
