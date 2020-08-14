@@ -8,7 +8,7 @@ export default class TransactionService extends MainService {
 			data: {
 				to: to,
 				type: "transfer",
-				amount: amount,
+				amount: parseFloat(amount as any),
 			},
 		});
 	};
