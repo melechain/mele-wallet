@@ -11,4 +11,7 @@ export interface IAccountModel {
 	password: string;
 	role: string;
 	wallet: string;
+	mobile: string;
+	dateOfBirth: string;
+	registrationDate: string;
 }
