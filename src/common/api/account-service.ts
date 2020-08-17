@@ -54,6 +54,16 @@ export default class AccountService extends MainService {
 			},
 		});
 	};
+	inviteAccount = async (username: string, name: string, uri: string) => {
+		return await this.put({
+			path: `/account`,
+			data: {
+				name: name,
+				email: username,
+				uri: uri,
+			},
+		});
+	};
 	checkUsername = async (username: string) => {
 		return await this.get({
 			path: `/account/${username}`,

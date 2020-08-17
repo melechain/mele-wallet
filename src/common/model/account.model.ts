@@ -1,9 +1,17 @@
 export interface IAccountModel {
-	firstName: string;
-	lastName: string;
-	melec: number;
+	balance: number;
 	bearer: string;
 	bearerExp: string;
 	email: string;
+	emailVerified: boolean;
+	id: string;
+	kyc: string;
+	logoutMins: number;
+	name: string;
+	password: string;
 	role: string;
+	wallet: string;
+	mobile: string;
+	dateOfBirth: string;
+	registrationDate: string;
 }
