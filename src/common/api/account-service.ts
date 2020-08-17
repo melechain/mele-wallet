@@ -29,6 +29,14 @@ export default class AccountService extends MainService {
 			path: `/account/${token}`,
 		});
 	};
+	confirmEmailWithPassword = async (token: string, password: string) => {
+		return await this.post({
+			path: `/account/${token}`,
+			data: {
+				password: password,
+			},
+		});
+	};
 
 	createAccount = async (
 		username: string,
