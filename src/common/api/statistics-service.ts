@@ -12,5 +12,10 @@ export default class StatisticsService extends MainService {
 			path: `/transaction?statistics`,
 		});
 	};
+	searchDailyTransactions = async (startDate: string, endDate: string) => {
+		return await this.get({
+			path: `/transaction?to=${endDate}&from=${startDate}&aggregate`,
+		});
+	};
 }
 export const statisticsService = new StatisticsService();
