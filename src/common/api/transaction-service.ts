@@ -28,7 +28,17 @@ export default class TransactionService extends MainService {
 			data: {
 				to: to,
 				type: "transfer",
-				amount: parseFloat(amount as any),
+				amount: parseInt(amount as any),
+			},
+		});
+	};
+	transactionPurchase = async (amount: number, referenceCode: string) => {
+		return await this.put({
+			path: `/transaction`,
+			data: {
+				type: "purchase",
+				amount: parseInt(amount as any),
+				referenceCode: referenceCode,
 			},
 		});
 	};
@@ -42,6 +52,11 @@ export default class TransactionService extends MainService {
 		});
 		return await this.get({
 			path: url,
+		});
+	};
+	getNewTransactionNumber = async () => {
+		return await this.get({
+			path: "/sequence",
 		});
 	};
 }
