@@ -6,4 +6,5 @@ export interface ITransactionModel {
 	createdAt: string;
 	updatedAt: string;
 	status: string;
+	refCode: string;
 }
