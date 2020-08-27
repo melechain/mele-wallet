@@ -38,7 +38,7 @@ export default class TransactionService extends MainService {
 			data: {
 				type: "purchase",
 				amount: parseInt(amount as any),
-				referenceCode: refCode,
+				refCode: refCode,
 			},
 		});
 	};
