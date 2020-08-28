@@ -9,7 +9,7 @@ export class MeleCalculator {
 	public static CentsToMeleCFormatted(
 		cents: number,
 		meleCPrice: number,
-		decimals: number = 5,
+		decimals: number = 9,
 	) {
 		return MeleCalculator.formatNumber(
 			MeleCalculator.CentsToMeleC(cents, meleCPrice),
@@ -19,7 +19,7 @@ export class MeleCalculator {
 	public static CentsToMeleGFormatted(
 		cents: number,
 		meleCPrice: number,
-		decimals: number = 5,
+		decimals: number = 9,
 	) {
 		return MeleCalculator.formatNumber(
 			MeleCalculator.CentsToMeleG(cents, meleCPrice),
