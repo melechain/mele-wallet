@@ -5,6 +5,7 @@ export interface ITransactionModel {
 	type: string;
 	amount: number;
 	createdAt: string;
+	approvedAt: string;
 	updatedAt: string;
 	status: string;
 	refCode: string;
