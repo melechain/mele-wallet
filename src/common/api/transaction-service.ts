@@ -42,6 +42,19 @@ export default class TransactionService extends MainService {
 			},
 		});
 	};
+	transactionLoad = async (transactionId: string) => {
+		return await this.get({
+			path: `/transaction/${transactionId}`,
+		});
+	};
+	transactionApprove = async (transactionId: string) => {
+		return await this.post({
+			path: `/transaction/${transactionId}`,
+			data: {
+				status: "approved",
+			},
+		});
+	};
 	searchTransactions = async (p: ISearchTransactionParameter) => {
 		const url = buildUrl("/transaction", {
 			queryParams: {
