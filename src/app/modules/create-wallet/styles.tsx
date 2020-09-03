@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
 	agreeConditionsContainer: {
 		display: "flex",
 		flexDirection: "row",
-		paddingTop: 20,
+		paddingTop: 30,
 	},
 	agreeConditionsTextContainer: {
 		flex: 1,

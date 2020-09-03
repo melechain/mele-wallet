@@ -19,6 +19,22 @@ export default class AccountService extends MainService {
 	logout = async () => {
 		return await this.patch({
 			path: `/account`,
+			data: {
+				bearer: null,
+			},
+		});
+	};
+	confirmEmail = async (token: string) => {
+		return await this.post({
+			path: `/account/${token}`,
+		});
+	};
+	confirmEmailWithPassword = async (token: string, password: string) => {
+		return await this.post({
+			path: `/account/${token}`,
+			data: {
+				password: password,
+			},
 		});
 	};
 
@@ -34,6 +50,16 @@ export default class AccountService extends MainService {
 				name: name,
 				email: username,
 				password: password,
+				uri: uri,
+			},
+		});
+	};
+	inviteAccount = async (username: string, name: string, uri: string) => {
+		return await this.put({
+			path: `/account`,
+			data: {
+				name: name,
+				email: username,
 				uri: uri,
 			},
 		});
