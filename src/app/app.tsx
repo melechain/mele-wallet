@@ -8,19 +8,13 @@ import {
 	Button,
 } from "react-native";
 import { Provider } from "react-redux";
-import { getApplicationStateStore } from "../redux/application-state-store";
-import { Home } from "./home/home";
-import { RouterComponent } from "@mele-wallet/app/router-component";
+import { getApplicationStateStore } from "@mele-wallet/redux/application-state-store";
+import { MainRouter } from "@mele-wallet/app/router/main-router";
 
 const App = () => {
 	return (
 		<Provider store={getApplicationStateStore()}>
-			<StatusBar barStyle="dark-content" />
-			<SafeAreaView>
-				<View>
-					<RouterComponent />
-				</View>
-			</SafeAreaView>
+			<MainRouter />
 		</Provider>
 	);
 };

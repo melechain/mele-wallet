@@ -7,27 +7,14 @@ import {
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
-interface IHomeComponentProps {
+interface IHistoryComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 }
-import styles from "./home.scss";
-
-class HomeComponent extends Component<IHomeComponentProps> {
+import { styles } from "./styles";
+class HistoryComponent extends Component<IHistoryComponentProps> {
 	render() {
-		return (
-			<View style={styles.content}>
-				<Button
-					title="hello1"
-					onPress={() => {
-						this.props.actionCreators.account.login(
-							"levan@mailinator.com",
-							"test",
-						);
-					}}
-				/>
-			</View>
-		);
+		return <View style={styles.content}></View>;
 	}
 }
 
@@ -37,4 +24,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	};
 };
 
-export const Home = connect(mapStateToProps, mapDispatchToProps)(HomeComponent);
+export const History = connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(HistoryComponent);

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "react-native";
+import { Button, View, Text } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -7,24 +7,25 @@ import {
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
-interface ITestComponentProps {
+interface IHomeComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 }
+import { styles } from "./styles";
+import { Actions } from "react-native-router-flux";
 
-class TestComponent extends Component<ITestComponentProps> {
+class HomeComponent extends Component<IHomeComponentProps> {
 	render() {
-		console.log(console.log(this.props.accountState.account), "Account!");
 		return (
-			<Button
-				title="hello"
-				onPress={() => {
-					this.props.actionCreators.account.login(
-						"levan@mailinator.com",
-						"test",
-					);
-				}}
-			/>
+			<View style={styles.content}>
+				<Button
+					title="Send"
+					onPress={() => {
+						Actions.jump("Send");
+					}}
+				/>
+				<Text>bozeboooo</Text>
+			</View>
 		);
 	}
 }
@@ -35,4 +36,4 @@ const mapStateToProps = (state: ApplicationState) => {
 	};
 };
 
-export const Test = connect(mapStateToProps, mapDispatchToProps)(TestComponent);
+export const Home = connect(mapStateToProps, mapDispatchToProps)(HomeComponent);
