@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { Button, View, Text, Image, Switch } from "react-native";
+import { Button, View, Text, Image, Switch, ScrollView } from "react-native";
+import Clipboard from "@react-native-community/clipboard";
+
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -12,7 +14,10 @@ import { styles } from "./styles";
 import WalletLogo from "@mele-wallet/resources/images/wallet-logo.svg";
 import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
 import Ripple from "react-native-material-ripple";
-import { BlueButton } from "@mele-wallet/app/common/bottons/blue-button";
+import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
+import { Mele, MnemonicSigner, Utils } from "mele-sdk";
+import { Actions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface ICreateWalletComponentProps {
 	actionCreators: IActionCreators;
@@ -20,6 +25,7 @@ interface ICreateWalletComponentProps {
 }
 interface ICreateWalletComponentState {
 	agreeConditions: boolean;
+	mnemonic: string[];
 }
 
 class CreateWalletComponent extends Component<
@@ -30,18 +36,31 @@ class CreateWalletComponent extends Component<
 		super(props);
 		this.state = {
 			agreeConditions: false,
+			mnemonic: [],
 		};
 	}
+	componentWillUnmount() {
+		this.setState({
+			mnemonic: [],
+		});
+	}
+	componentDidMount() {
+		this.setNewMnemonic();
+	}
+
+	setNewMnemonic = () => {
+		this.setState({
+			mnemonic: this.generateMnemonic(),
+		});
+	};
+
 	render() {
 		return (
-			<View style={[commonStyles.whiteBackground, styles.content]}>
-				<WalletLogo
-					style={{
-						marginTop: 35,
-						width: 81,
-						height: 71,
-					}}
-				/>
+			<ScrollView
+				style={[commonStyles.whiteBackground, styles.scrollView]}
+				contentContainerStyle={styles.content}
+			>
+				<WalletLogo style={styles.walletLogo} />
 				<Text style={[commonStyles.blackSubHeader, styles.headerText]}>
 					Store your passphrase carefully!
 				</Text>
@@ -50,45 +69,25 @@ class CreateWalletComponent extends Component<
 				</Text>
 
 				<View style={styles.wordsContainer}>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
+					{this.state.mnemonic.map((word: string, index: number) => {
+						return (
+							<View style={styles.word} key={index}>
+								<Text style={[styles.wordNumber, commonStyles.fontBold]}>
+									{index + 1}
+								</Text>
+								<Text style={[styles.wordText, commonStyles.fontBook]}>
+									{word}
+								</Text>
+							</View>
+						);
+					})}
 
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<View style={styles.word}>
-						<Text style={[styles.wordNumber, commonStyles.fontBold]}>1</Text>
-						<Text style={[styles.wordText, commonStyles.fontBook]}>hello</Text>
-					</View>
-					<Ripple style={[styles.copyButtonContainer]}>
+					<Ripple
+						style={[styles.copyButtonContainer]}
+						onPress={() => {
+							Clipboard.setString(this.state.mnemonic.join(" "));
+						}}
+					>
 						<View style={[styles.copyButton]}>
 							<CopyIcon style={[styles.copyIcon]} />
 							<Text style={[styles.copyText, commonStyles.fontBold]}>
@@ -118,10 +117,24 @@ class CreateWalletComponent extends Component<
 						value={this.state.agreeConditions}
 					/>
 				</View>
-				<BlueButton style={styles.confirmButton} text="I wrote it down" />
-			</View>
+				<BlueButton
+					disabled={!this.state.agreeConditions}
+					onPress={() => {
+						Actions.jump(ROUTES.nonAuthenticated.confirmWallet, {
+							mnemonic: this.state.mnemonic,
+							backHandler: this.setNewMnemonic,
+						});
+					}}
+					style={styles.confirmButton}
+					text="I wrote it down"
+				/>
+			</ScrollView>
 		);
 	}
+
+	generateMnemonic = () => {
+		return Utils.generateMnemonic().split(" ").slice(0, 12);
+	};
 }
 
 const mapStateToProps = (state: ApplicationState) => {

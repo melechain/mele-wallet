@@ -1,13 +1,20 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-	content: {
-		height: "100%",
+	scrollView: {
 		display: "flex",
 		flexDirection: "column",
 		paddingLeft: 20,
 		paddingRight: 20,
+	},
+	content: {
 		alignItems: "center",
+		paddingBottom: 30,
+	},
+	walletLogo: {
+		marginTop: 35,
+		width: 81,
+		height: 71,
 	},
 	headerText: {
 		marginTop: 28,
@@ -36,8 +43,8 @@ export const styles = StyleSheet.create({
 		width: "33.33%",
 		paddingTop: 15,
 		paddingBottom: 15,
-		paddingLeft: 30,
-		paddingRight: 30,
+		paddingLeft: 20,
+		paddingRight: 20,
 		display: "flex",
 		flexDirection: "row",
 	},

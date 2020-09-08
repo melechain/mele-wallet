@@ -8,29 +8,18 @@ import {
 	IActionCreators,
 	mapDispatchToProps,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
-import Ripple from "react-native-material-ripple";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
-import { Text } from "react-native";
-import { IButtonComponentProps } from "@mele-wallet/app/common/bottons/button-props";
+import { IButtonComponentProps } from "./button-props";
+import { BaseButton } from "./base-button";
 
-class BlueButtonComponent extends Component<IButtonComponentProps> {
+class YellowButtonComponent extends Component<IButtonComponentProps> {
 	render() {
-		const text = this.props.text ? (
-			<Text style={commonStyles.buttonWhiteText}>{this.props.text}</Text>
-		) : null;
 		const newProps = {
 			...this.props,
-			style: {
-				...styles.button,
-				...styles.blueButton,
-				...(this.props.style as any),
-			},
+			style: [styles.button, styles.yellowButton, this.props.style],
 		};
-
 		return (
-			<Ripple onPress={() => {}} {...newProps}>
-				{text || this.props.children}
-			</Ripple>
+			<BaseButton {...newProps} textStyle={commonStyles.buttonBlackText} />
 		);
 	}
 }
@@ -41,7 +30,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	};
 };
 
-export const BlueButton = connect(
+export const YellowButton = connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(BlueButtonComponent);
+)(YellowButtonComponent);

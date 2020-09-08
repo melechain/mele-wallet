@@ -20,33 +20,18 @@ import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { RegistrationOrLogin } from "@mele-wallet/app/modules/registration-or-login/registration-or-login";
 import { CreateWallet } from "@mele-wallet/app/modules/create-wallet/create-wallet";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
+import { ConfirmWallet } from "@mele-wallet/app/modules/confirm-wallet/confirm-wallet";
+import { CreatePin } from "@mele-wallet/app/modules/create-pin/create-pin";
+import { UnauthenticatedBlueHeader } from "@mele-wallet/app/router/header/unauthenticated-blue-header";
+import { UnauthenticatedWhiteHeader } from "@mele-wallet/app/router/header/unauthenticated-white-header";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface IMainRouterComponentProps {
 	languageState: LanguageState;
 	accountState: AccountState;
 }
-export const ROUTES = {
-	nonAuthenticated: {
-		registrationOrLogin: "nonAuthenticated.registrationOrLogin",
-		createWallet: "nonAuthenticated.createWallet",
-	},
-	authenticated: {
-		home: "nonAuthenticated.home",
-		buy: "nonAuthenticated.buy",
-		send: "nonAuthenticated.send",
-		history: "nonAuthenticated.history",
-		more: "nonAuthenticated.more",
-	},
-};
 
 class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
-	// componentDidMount(){
-	//     setTimeout(()=>{
-	//         console.log("SENDING!")
-	//         Actions.jump(ROUTES.nonAuthenticated.createWallet)
-	//     }, 2000)
-
-	// }
 	render() {
 		return (
 			<Router>
@@ -66,7 +51,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 						<Scene
 							key={ROUTES.nonAuthenticated.registrationOrLogin}
 							component={RegistrationOrLogin}
-							initial={true}
+							//initial={true}
 							hideNavBar
 							showLabel={false}
 						/>
@@ -75,7 +60,35 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							component={CreateWallet}
 							hideNavBar={false}
 							showLabel={false}
-							title="Create a Mele Wallet"
+							navBar={() => {
+								return (
+									<UnauthenticatedWhiteHeader title="Create a Mele Wallet" />
+								);
+							}}
+						/>
+						<Scene
+							key={ROUTES.nonAuthenticated.confirmWallet}
+							component={ConfirmWallet}
+							hideNavBar={false}
+							showLabel={false}
+							navBar={() => {
+								return (
+									<UnauthenticatedWhiteHeader
+										refreshOnBack={true}
+										title="Passphrase Verification"
+									/>
+								);
+							}}
+						/>
+						<Scene
+							key={ROUTES.nonAuthenticated.createPin}
+							component={CreatePin}
+							hideNavBar={false}
+							showLabel={false}
+							initial={true}
+							navBar={() => {
+								return <UnauthenticatedBlueHeader />;
+							}}
 						/>
 					</Stack>
 					<Scene key="Authenticated">

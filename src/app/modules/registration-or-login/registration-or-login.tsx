@@ -9,10 +9,11 @@ import {
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
-import { YellowButton } from "@mele-wallet/app/common/bottons/yellow-button";
-import { BlueButton } from "@mele-wallet/app/common/bottons/blue-button";
+import { YellowButton } from "@mele-wallet/app/common/buttons/yellow-button";
+import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { Actions } from "react-native-router-flux";
-import { ROUTES } from "@mele-wallet/app/router/main-router";
+import { ROUTES } from "@mele-wallet/app/router/routes";
+
 interface IRegistrationOrLoginComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;

@@ -1,9 +1,9 @@
 export class MeleCalculator {
 	public static CentsToMeleC(cents: number, meleCPrice: number) {
-		return Math.ceil((cents / 3) * 2) / meleCPrice;
+		return (cents * 0.67) / meleCPrice;
 	}
 	public static CentsToMeleG(cents: number, meleGPrice: number) {
-		return Math.floor((cents / 3) * 1) / meleGPrice;
+		return (cents * 0.33) / meleGPrice;
 	}
 
 	public static CentsToMeleCFormatted(
