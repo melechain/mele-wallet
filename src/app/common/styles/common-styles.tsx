@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const commonStyles = StyleSheet.create({
 	blueBackground: {
-		backgroundColor: "#013EC4",
+		backgroundColor: "#1538B8",
 	},
 	whiteBackground: {
 		backgroundColor: "#FFFFFF",
@@ -39,6 +39,11 @@ export const commonStyles = StyleSheet.create({
 		fontSize: 18,
 		fontFamily: "CircularStd-Bold",
 		color: "#101654",
+	},
+	whiteSubHeader: {
+		fontSize: 18,
+		fontFamily: "CircularStd-Bold",
+		color: "#FFFFFF",
 	},
 	buttonBlackText: {
 		color: "#091841",

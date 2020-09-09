@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, View } from "react-native";
+import { Button, View, Text } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -7,15 +7,19 @@ import {
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
-import { styles } from "./styles";
 interface IBuyComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 }
+import { styles } from "./styles";
 
 class BuyComponent extends Component<IBuyComponentProps> {
 	render() {
-		return <View style={styles.content}></View>;
+		return (
+			<View style={styles.content}>
+				<Text>Buy</Text>
+			</View>
+		);
 	}
 }
 

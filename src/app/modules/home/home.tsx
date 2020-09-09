@@ -12,19 +12,12 @@ interface IHomeComponentProps {
 	accountState: AccountState;
 }
 import { styles } from "./styles";
-import { Actions } from "react-native-router-flux";
 
 class HomeComponent extends Component<IHomeComponentProps> {
 	render() {
 		return (
 			<View style={styles.content}>
-				<Button
-					title="Send"
-					onPress={() => {
-						Actions.jump("Send");
-					}}
-				/>
-				<Text>bozeboooo</Text>
+				<Text>HOMEEEEEEE</Text>
 			</View>
 		);
 	}

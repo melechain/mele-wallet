@@ -17,7 +17,7 @@ class SendComponent extends Component<ISendComponentProps> {
 	render() {
 		return (
 			<View style={styles.content}>
-				<Text>test</Text>
+				<Text>send</Text>
 			</View>
 		);
 	}

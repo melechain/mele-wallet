@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, View } from "react-native";
+import { Button, View, Text } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -12,9 +12,14 @@ interface IHistoryComponentProps {
 	accountState: AccountState;
 }
 import { styles } from "./styles";
+
 class HistoryComponent extends Component<IHistoryComponentProps> {
 	render() {
-		return <View style={styles.content}></View>;
+		return (
+			<View style={styles.content}>
+				<Text>History</Text>
+			</View>
+		);
 	}
 }
 

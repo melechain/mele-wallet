@@ -20,7 +20,9 @@ export const styles = StyleSheet.create({
 		flexDirection: "column",
 		alignItems: "center",
 	},
+
 	headerText: {
+		marginTop: 48,
 		textAlign: "center",
 	},
 	subHeaderText: {

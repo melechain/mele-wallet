@@ -6,7 +6,10 @@ import LockGreen from "@mele-wallet/resources/icons/lock-green.svg";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { Actions } from "react-native-router-flux";
 
-export interface HeaderComponentProps extends ViewProps {}
+export interface HeaderComponentProps extends ViewProps {
+	title?: string;
+	refreshOnBack?: boolean;
+}
 
 export class UnauthenticatedBlueHeader extends Component<HeaderComponentProps> {
 	render() {
@@ -18,6 +21,11 @@ export class UnauthenticatedBlueHeader extends Component<HeaderComponentProps> {
 							style={styles.backButton}
 							onPress={() => {
 								Actions.pop();
+								if (this.props.refreshOnBack) {
+									setTimeout(() => {
+										Actions.refresh({ key: Math.random() });
+									}, 1);
+								}
 							}}
 						>
 							<BackButton height={20} width={20} />

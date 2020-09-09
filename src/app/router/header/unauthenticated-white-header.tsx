@@ -7,7 +7,7 @@ import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { Actions } from "react-native-router-flux";
 
 export interface HeaderComponentProps extends ViewProps {
-	title: string;
+	title?: string;
 	refreshOnBack?: boolean;
 }
 

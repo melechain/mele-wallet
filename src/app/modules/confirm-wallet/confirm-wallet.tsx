@@ -118,7 +118,7 @@ class ConfirmWalletComponent extends Component<
 					text="Confirm"
 					onPress={() => {
 						Actions.jump(ROUTES.nonAuthenticated.createPin, {
-							mnemonic: this.props.mnemonic,
+							mnemonic: this.props.mnemonic.join(" "),
 						});
 					}}
 				/>

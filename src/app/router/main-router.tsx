@@ -25,11 +25,11 @@ import { CreatePin } from "@mele-wallet/app/modules/create-pin/create-pin";
 import { UnauthenticatedBlueHeader } from "@mele-wallet/app/router/header/unauthenticated-blue-header";
 import { UnauthenticatedWhiteHeader } from "@mele-wallet/app/router/header/unauthenticated-white-header";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { ConfirmPin } from "@mele-wallet/app/modules/confirm-pin/confirm-pin";
+import { CheckAuthentication } from "@mele-wallet/app/modules/check-authentication/check-authentication";
+import { LoginPin } from "@mele-wallet/app/modules/login-pin/login-pin";
 
-interface IMainRouterComponentProps {
-	languageState: LanguageState;
-	accountState: AccountState;
-}
+interface IMainRouterComponentProps {}
 
 class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 	render() {
@@ -51,7 +51,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 						<Scene
 							key={ROUTES.nonAuthenticated.registrationOrLogin}
 							component={RegistrationOrLogin}
-							//initial={true}
+							initial={true}
 							hideNavBar
 							showLabel={false}
 						/>
@@ -85,13 +85,46 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							component={CreatePin}
 							hideNavBar={false}
 							showLabel={false}
-							initial={true}
+							initial={false}
+							navBar={() => {
+								return <UnauthenticatedBlueHeader />;
+							}}
+						/>
+						<Scene
+							key={ROUTES.nonAuthenticated.createPin}
+							component={CreatePin}
+							hideNavBar={false}
+							showLabel={false}
+							initial={false}
+							navBar={() => {
+								return <UnauthenticatedBlueHeader />;
+							}}
+						/>
+						<Scene
+							key={ROUTES.nonAuthenticated.confirmPin}
+							component={ConfirmPin}
+							hideNavBar={false}
+							showLabel={false}
+							navBar={() => {
+								return <UnauthenticatedBlueHeader refreshOnBack={true} />;
+							}}
+						/>
+						<Scene
+							key={ROUTES.nonAuthenticated.loginPin}
+							component={LoginPin}
+							hideNavBar={false}
+							showLabel={false}
 							navBar={() => {
 								return <UnauthenticatedBlueHeader />;
 							}}
 						/>
 					</Stack>
-					<Scene key="Authenticated">
+					<Scene
+						key={ROUTES.checkAuthentication}
+						component={CheckAuthentication}
+						hideNavBar={true}
+					/>
+					<Scene key="authenticated">
 						<Tabs showLabel={false} tabBarStyle={styles.tabs} hideNavBar>
 							<Scene
 								hideNavBar
@@ -183,14 +216,15 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 	}
 }
 
-const mapStateToProps = (state: ApplicationState) => {
-	return {
-		accountState: state.account,
-		languageState: state.language,
-	};
-};
+// const mapStateToProps = (state: ApplicationState) => {
+// 	return {
+// 		languageState: state.language,
+// 	};
+// };
 
-export const MainRouter = connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(MainRouterComponent);
+// export const MainRouter = connect(
+// 	mapStateToProps,
+// 	mapDispatchToProps,
+// )(MainRouterComponent);
+
+export const MainRouter = MainRouterComponent;

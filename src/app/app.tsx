@@ -1,20 +1,16 @@
 import React from "react";
-import {
-	SafeAreaView,
-	StyleSheet,
-	View,
-	Text,
-	StatusBar,
-	Button,
-} from "react-native";
+import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { getApplicationStateStore } from "@mele-wallet/redux/application-state-store";
 import { MainRouter } from "@mele-wallet/app/router/main-router";
+const { store, persister } = getApplicationStateStore();
 
 const App = () => {
 	return (
-		<Provider store={getApplicationStateStore()}>
-			<MainRouter />
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persister}>
+				<MainRouter />
+			</PersistGate>
 		</Provider>
 	);
 };
