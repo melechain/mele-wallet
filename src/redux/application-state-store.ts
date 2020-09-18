@@ -10,6 +10,7 @@ import { rootSaga } from "./saga";
 import MainApiService from "@mele-wallet/common/api/main-api-service";
 import languageReducer from "@mele-wallet/redux/reducers/language-reducer";
 import staticReducer from "@mele-wallet/redux/reducers/static-reducer";
+import statisticsReducer from "@mele-wallet/redux/reducers/statistics-reducer";
 
 const AccountPersistConfig = {
 	key: "static",
@@ -21,6 +22,7 @@ export const reducers: Reducer<ApplicationState> = combineReducers<
 >({
 	account: accountReducer,
 	language: languageReducer,
+	statistics: statisticsReducer,
 	static: persistReducer(AccountPersistConfig, staticReducer) as any,
 });
 

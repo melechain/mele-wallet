@@ -3,6 +3,7 @@ import {
 	IStaticReducerAction,
 } from "../reducers/static-reducer";
 import BaseActionCreator from "./base-action-creator";
+import { Actions } from "react-native-router-flux";
 
 export default class StaticActionCreator extends BaseActionCreator<
 	StaticStateActionTypes,

@@ -1,8 +1,9 @@
 import { StyleSheet } from "react-native";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export const styles = StyleSheet.create({
 	content: {
-		height: 88,
+		height: getStatusBarHeight(true) + 43,
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "flex-end",

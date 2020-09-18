@@ -9,7 +9,7 @@ import {
 	Alert,
 	Animated,
 } from "react-native";
-import Clipboard from "@react-native-community/clipboard";
+
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -20,6 +20,8 @@ import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { styles } from "./styles";
 import { Pin } from "@mele-wallet/app/common/pin-component/pin-component";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
+import { ROUTES } from "@mele-wallet/app/router/routes";
+import { Actions } from "react-native-router-flux";
 
 interface ILoginPinComponentProps {
 	actionCreators: IActionCreators;

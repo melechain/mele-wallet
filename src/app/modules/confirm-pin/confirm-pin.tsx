@@ -20,6 +20,8 @@ import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { styles } from "./styles";
 import { Pin } from "@mele-wallet/app/common/pin-component/pin-component";
+import { Actions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface IConfirmPinComponentProps {
 	actionCreators: IActionCreators;

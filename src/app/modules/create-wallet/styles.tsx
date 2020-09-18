@@ -47,6 +47,7 @@ export const styles = StyleSheet.create({
 		paddingRight: 20,
 		display: "flex",
 		flexDirection: "row",
+		alignItems: "center",
 	},
 	wordNumber: {
 		color: "#013EC4",

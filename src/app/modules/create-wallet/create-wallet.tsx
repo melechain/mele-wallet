@@ -75,7 +75,11 @@ class CreateWalletComponent extends Component<
 								<Text style={[styles.wordNumber, commonStyles.fontBold]}>
 									{index + 1}
 								</Text>
-								<Text style={[styles.wordText, commonStyles.fontBook]}>
+								<Text
+									numberOfLines={1}
+									adjustsFontSizeToFit={true}
+									style={[styles.wordText, commonStyles.fontBook]}
+								>
 									{word}
 								</Text>
 							</View>

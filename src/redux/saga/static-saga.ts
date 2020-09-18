@@ -15,5 +15,5 @@ export const staticSaga = function* handleMessage(params: any): SagaIterator {
 };
 
 function* redirectToLogin(action: IStaticReducerAction): SagaIterator {
-	Actions.replace(ROUTES.checkAuthentication);
+	Actions.jump(ROUTES.checkAuthentication);
 }

@@ -26,7 +26,7 @@ import { UnauthenticatedBlueHeader } from "@mele-wallet/app/router/header/unauth
 import { UnauthenticatedWhiteHeader } from "@mele-wallet/app/router/header/unauthenticated-white-header";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { ConfirmPin } from "@mele-wallet/app/modules/confirm-pin/confirm-pin";
-import { CheckAuthentication } from "@mele-wallet/app/modules/check-authentication/check-authentication";
+import { CheckAuthentication } from "@mele-wallet/app/modules/loader/check-authentication";
 import { LoginPin } from "@mele-wallet/app/modules/login-pin/login-pin";
 
 interface IMainRouterComponentProps {}
@@ -61,8 +61,13 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							hideNavBar={false}
 							showLabel={false}
 							navBar={() => {
+								console.log(ROUTES.nonAuthenticated.createWallet);
 								return (
-									<UnauthenticatedWhiteHeader title="Create a Mele Wallet" />
+									<UnauthenticatedWhiteHeader
+										refreshOnBack={true}
+										componentKey={ROUTES.nonAuthenticated.createWallet}
+										title="Create a Mele Wallet"
+									/>
 								);
 							}}
 						/>
@@ -74,6 +79,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							navBar={() => {
 								return (
 									<UnauthenticatedWhiteHeader
+										componentKey={ROUTES.nonAuthenticated.confirmWallet}
 										refreshOnBack={true}
 										title="Passphrase Verification"
 									/>
@@ -87,7 +93,11 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							showLabel={false}
 							initial={false}
 							navBar={() => {
-								return <UnauthenticatedBlueHeader />;
+								return (
+									<UnauthenticatedBlueHeader
+										componentKey={ROUTES.nonAuthenticated.createPin}
+									/>
+								);
 							}}
 						/>
 						<Scene
@@ -97,16 +107,26 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							showLabel={false}
 							initial={false}
 							navBar={() => {
-								return <UnauthenticatedBlueHeader />;
+								return (
+									<UnauthenticatedBlueHeader
+										componentKey={ROUTES.nonAuthenticated.createPin}
+									/>
+								);
 							}}
 						/>
+
 						<Scene
 							key={ROUTES.nonAuthenticated.confirmPin}
 							component={ConfirmPin}
 							hideNavBar={false}
 							showLabel={false}
 							navBar={() => {
-								return <UnauthenticatedBlueHeader refreshOnBack={true} />;
+								return (
+									<UnauthenticatedBlueHeader
+										refreshOnBack={true}
+										componentKey={ROUTES.nonAuthenticated.confirmPin}
+									/>
+								);
 							}}
 						/>
 						<Scene
@@ -115,7 +135,11 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							hideNavBar={false}
 							showLabel={false}
 							navBar={() => {
-								return <UnauthenticatedBlueHeader />;
+								return (
+									<UnauthenticatedBlueHeader
+										componentKey={ROUTES.nonAuthenticated.loginPin}
+									/>
+								);
 							}}
 						/>
 					</Stack>
@@ -124,12 +148,12 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 						component={CheckAuthentication}
 						hideNavBar={true}
 					/>
-					<Scene key="authenticated">
+					<Scene key="authenticated" hideNavBar>
 						<Tabs showLabel={false} tabBarStyle={styles.tabs} hideNavBar>
 							<Scene
 								hideNavBar
+								showLabel={false}
 								component={Home}
-								title="Home"
 								key={ROUTES.authenticated.home}
 								initial
 								icon={() => {
