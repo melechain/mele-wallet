@@ -3,7 +3,7 @@ import {
 	AccountStateActionTypes,
 	IAccountReducerAction,
 } from "../actions-types/account-types";
-import { IAccountModel } from "mele-wallet/common/model/account.model";
+import { IAccountModel } from "@mele-wallet/common/model/account.model";
 
 export class AccountState {
 	isLoggingIn: boolean = false;
