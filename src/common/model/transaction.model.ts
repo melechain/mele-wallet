@@ -1,7 +1,13 @@
 export interface ITransactionModel {
 	id: string;
-	from: string;
-	to: string;
+	from: {
+		email: string;
+		name: string;
+	};
+	to: {
+		email: string;
+		name: string;
+	};
 	type: string;
 	amount: number;
 	createdAt: string;
