@@ -1,5 +1,5 @@
 export interface IAccountModel {
-	balance: number;
+	balance: string;
 	bearer: string;
 	bearerExp: string;
 	createdAt: string;
