@@ -9,7 +9,7 @@ export interface ITransactionModel {
 		name: string;
 	};
 	type: string;
-	amount: number;
+	amount: string;
 	createdAt: string;
 	approvedAt: string;
 	updatedAt: string;
