@@ -41,6 +41,6 @@ export const getApplicationStateStore = () => {
 	sagaMiddleware.run(rootSaga, {});
 	let persister = persistStore(store);
 
-	MainApiService.APPLICATION_STORE = store;
+	MainApiService.APPLICATION_STORE = store as any;
 	return { store, persister };
 };

@@ -24,7 +24,7 @@ import Ripple from "react-native-material-ripple";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { Mele, MnemonicSigner, Utils } from "mele-sdk";
 import { TextField } from "@mele-wallet/app/common/fields/text-field";
-import { Random } from "@mele-wallet/app/common/utils/random";
+import { Random } from "@mele-wallet/common/utils/random";
 import Delete from "@mele-wallet/resources/icons/delete.svg";
 
 interface IPinComponentProps extends ViewProps {

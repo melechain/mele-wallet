@@ -1,17 +1,19 @@
 export enum StaticStateActionTypes {
 	SET_MNEMONIC_AND_PIN = "@@STATIC/SET_MNEMONIC_AND_PIN",
-	CHECK_PIN = "@@STATIC/CHECK_PIN",
+	SET_ACCOUNT_ID = "@@STATIC/SET_ACCOUNT_ID",
 }
 
 export interface IStaticReducerAction {
+	type: StaticStateActionTypes;
 	mnemonic: string;
 	pin: string;
-	type: StaticStateActionTypes;
+	accountId: string;
 }
 
 export class StaticState {
 	mnemonic: string = "";
 	pin: string = "";
+	accountId: string = "";
 }
 
 export const initialState: StaticState = new StaticState();
@@ -25,7 +27,12 @@ const staticReducer = (
 			return {
 				mnemonic: action.mnemonic,
 				pin: action.pin,
-				...action,
+				accountId: "",
+			};
+		case StaticStateActionTypes.SET_ACCOUNT_ID:
+			return {
+				...state,
+				accountId: action.accountId,
 			};
 		default:
 			return {

@@ -15,9 +15,13 @@ import ScanBarcodeIcon from "@mele-wallet/resources/icons/scan-barcode.svg";
 import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
 import Ripple from "react-native-material-ripple";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
-import { Wallet } from "@mele-wallet/app/common/utils/wallet";
+import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { Action } from "@mele-wallet/app/modules/home/actions";
+import { Actions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
+import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
+import { IAccountModel } from "@mele-wallet/common/model/account.model";
 
 interface IHomeComponentProps {
 	actionCreators: IActionCreators;
@@ -27,6 +31,8 @@ interface IHomeComponentProps {
 
 class HomeComponent extends Component<IHomeComponentProps> {
 	render() {
+		const account: IAccountModel =
+			this.props.accountState.account || ({} as any);
 		const wallet = new Wallet(this.props.staticState.mnemonic);
 		return (
 			<ScrollView
@@ -40,13 +46,16 @@ class HomeComponent extends Component<IHomeComponentProps> {
 							<Text style={[styles.title, commonStyles.fontBold]}>Balance</Text>
 							<View style={[styles.balanceContainer]}>
 								<Text style={[commonStyles.whiteHeader, styles.balance]}>
-									$0,00
+									${MeleCalculator.centsToUSDFormatted(account.balance)}
 								</Text>
 								<WiteInfoIcon style={styles.infoIcon} />
 							</View>
 						</View>
 						<View style={[styles.barcodeIconContainer]}>
 							<Ripple
+								onPress={() => {
+									Actions.jump(ROUTES.scanQRCode);
+								}}
 								style={[styles.barcodeIcon]}
 								rippleContainerBorderRadius={30}
 							>
@@ -54,7 +63,10 @@ class HomeComponent extends Component<IHomeComponentProps> {
 							</Ripple>
 						</View>
 					</View>
-					<Calculator centsAmount={5000} style={[styles.calculator]} />
+					<Calculator
+						centsAmount={account.balance || "0"}
+						style={[styles.calculator]}
+					/>
 					<Ripple
 						style={[styles.walletAddressContainer]}
 						onPress={() => {

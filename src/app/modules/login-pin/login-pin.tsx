@@ -113,10 +113,7 @@ class LoginPinComponent extends Component<
 						}}
 						onPinReady={(pin: string) => {
 							if (pin == this.props.staticState.pin) {
-								this.props.actionCreators.static.setMnemonicAndPin(
-									this.props.staticState.mnemonic,
-									this.props.staticState.pin,
-								);
+								Actions.jump(ROUTES.checkAuthentication);
 							} else {
 								this.startShake();
 								this.setState({

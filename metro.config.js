@@ -16,7 +16,7 @@ module.exports = (async () => {
 		},
 		resolver: {
 			assetExts: assetExts.filter((ext) => ext !== "svg"),
-			sourceExts: [...sourceExts, "svg"],
+			sourceExts: [...sourceExts, "svg", "umd.js"],
 			extraNodeModules: require("node-libs-react-native"),
 		},
 	};

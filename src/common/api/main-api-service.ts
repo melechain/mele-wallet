@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig, Method, AxiosResponse } from "axios";
 import { Errors } from "../error/errors";
+import { Wallet } from "../../common/utils/wallet";
+import base64 from "base-64";
 
 declare const global: {};
 
@@ -28,6 +30,11 @@ export default class MainApiService {
 					bearerExp: string;
 				};
 			};
+			// handle wallet auth here
+			static?: {
+				accountId: string;
+				mnemonic: string;
+			};
 		};
 	};
 
@@ -44,7 +51,17 @@ export default class MainApiService {
 			defaultHeaders["Content-Type"] = "application/json";
 		}
 
-		if (MainApiService.APPLICATION_STORE.getState().account.account) {
+		if (MainApiService.APPLICATION_STORE.getState().static) {
+			const staticState = MainApiService.APPLICATION_STORE.getState().static!;
+
+			//this means that we are in the wallet because we apps do not have staticState
+			if (staticState.accountId && staticState.mnemonic) {
+				const wallet = new Wallet(staticState.mnemonic);
+				defaultHeaders["Authorization"] = `Mele ${base64.encode(
+					staticState.accountId + wallet.getAddress(),
+				)}`;
+			}
+		} else if (MainApiService.APPLICATION_STORE.getState().account.account) {
 			defaultHeaders["Authorization"] = `Bearer ${
 				MainApiService.APPLICATION_STORE.getState().account.account!.bearer
 			}`;

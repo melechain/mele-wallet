@@ -15,7 +15,7 @@ import ScanBarcodeIcon from "@mele-wallet/resources/icons/scan-barcode.svg";
 import ShieldRed from "@mele-wallet/resources/icons/shield-red.svg";
 import Ripple from "react-native-material-ripple";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
-import { Wallet } from "@mele-wallet/app/common/utils/wallet";
+import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 
 interface IActionComponentProps {}

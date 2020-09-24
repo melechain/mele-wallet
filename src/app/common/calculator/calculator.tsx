@@ -11,15 +11,13 @@ import InfoGrayIcon from "@mele-wallet/resources/icons/info-grey.svg";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 
 interface CalculatorProps extends ViewProps {
-	centsAmount: number;
+	centsAmount: string;
 	statisticsState: StatisticsState;
 }
 
 class CalculatorComponent extends React.Component<CalculatorProps> {
 	render() {
-		let melecUSD = MeleCalculator.centsToUSDFormatted(
-			Math.ceil((this.props.centsAmount / 3) * 2),
-		);
+		let melecUSD = MeleCalculator;
 		let meleCoins = 0;
 		let meleCoinPrice = 0;
 		let melegUSD = MeleCalculator.centsToUSDFormatted(

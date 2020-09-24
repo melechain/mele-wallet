@@ -24,10 +24,14 @@ import { ConfirmWallet } from "@mele-wallet/app/modules/confirm-wallet/confirm-w
 import { CreatePin } from "@mele-wallet/app/modules/create-pin/create-pin";
 import { UnauthenticatedBlueHeader } from "@mele-wallet/app/router/header/unauthenticated-blue-header";
 import { UnauthenticatedWhiteHeader } from "@mele-wallet/app/router/header/unauthenticated-white-header";
+import { AuthenticatedWhiteHeader } from "@mele-wallet/app/router/header/authenticated-white-header";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { ConfirmPin } from "@mele-wallet/app/modules/confirm-pin/confirm-pin";
 import { CheckAuthentication } from "@mele-wallet/app/modules/loader/check-authentication";
 import { LoginPin } from "@mele-wallet/app/modules/login-pin/login-pin";
+import { ScanQRCode } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code";
+import { AuthenticatedBlueHeader } from "@mele-wallet/app/router/header/authenticated-blue-header";
+import { WalletSync } from "@mele-wallet/app/modules/loader/wallet-sync";
 
 interface IMainRouterComponentProps {}
 
@@ -146,6 +150,23 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 					<Scene
 						key={ROUTES.checkAuthentication}
 						component={CheckAuthentication}
+						hideNavBar={true}
+					/>
+					<Scene
+						key={ROUTES.scanQRCode}
+						component={ScanQRCode}
+						navBar={() => {
+							return (
+								<AuthenticatedBlueHeader
+									componentKey={ROUTES.scanQRCode}
+									title="Scan QR Code"
+								/>
+							);
+						}}
+					/>
+					<Scene
+						key={ROUTES.walletSync}
+						component={WalletSync}
 						hideNavBar={true}
 					/>
 					<Scene key="authenticated" hideNavBar>

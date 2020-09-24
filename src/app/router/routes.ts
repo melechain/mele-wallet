@@ -1,5 +1,7 @@
 export const ROUTES = {
 	checkAuthentication: "checkAuthentication",
+	scanQRCode: "scanQRCode",
+	walletSync: "walletSync",
 	nonAuthenticated: {
 		registrationOrLogin: "nonAuthenticated.registrationOrLogin",
 		createWallet: "nonAuthenticated.createWallet",
