@@ -27,35 +27,27 @@ interface IWalletSyncComponentProps {
 
 class WalletSyncComponent extends Component<IWalletSyncComponentProps> {
 	componentDidMount() {
-		if (!this.props.accountId) {
-			Actions.replace(ROUTES.authenticated.home);
-		}
-		const wallet = new Wallet(this.props.staticState.mnemonic);
-		this.props.actionCreators.account.walletSync(
-			this.props.accountId,
-			wallet.getAddress(),
-		);
-		if (this.props.accountState.account) {
-			Actions.replace(ROUTES.authenticated.home);
-		}
+		setTimeout(() => {
+			if (!this.props.accountId) {
+				Actions.replace(ROUTES.authenticated.home);
+			}
+			const wallet = new Wallet(this.props.staticState.mnemonic);
+			this.props.actionCreators.account.walletSync(
+				this.props.accountId,
+				wallet.getAddress(),
+			);
+			// if (this.props.accountState.account) {
+			//     Actions.replace(ROUTES.authenticated.home);
+			// }
+		}, 1);
 	}
 
 	componentDidUpdate(prevProps: IWalletSyncComponentProps) {
 		if (this.props.accountState.walletSyncStatus === WalletSyncStatus.ERROR) {
-			console.log("ERRORRRRRR");
-			console.log("ERRORRRRRR");
-			console.log("ERRORRRRRR");
-			console.log("ERRORRRRRR");
-			console.log("ERRORRRRRR");
-			Actions.replace(ROUTES.authenticated.home);
+			Actions.replace(ROUTES.scanQRCodeError);
 		}
 		if (this.props.accountState.walletSyncStatus === WalletSyncStatus.SUCCESS) {
-			console.log("SUCCESSSSS");
-			console.log("SUCCESSSSS");
-			console.log("SUCCESSSSS");
-			console.log("SUCCESSSSS");
-			console.log("SUCCESSSSS");
-			Actions.replace(ROUTES.authenticated.home);
+			Actions.replace(ROUTES.scanQRCodeSuccess);
 		}
 	}
 

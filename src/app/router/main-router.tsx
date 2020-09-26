@@ -32,6 +32,8 @@ import { LoginPin } from "@mele-wallet/app/modules/login-pin/login-pin";
 import { ScanQRCode } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code";
 import { AuthenticatedBlueHeader } from "@mele-wallet/app/router/header/authenticated-blue-header";
 import { WalletSync } from "@mele-wallet/app/modules/loader/wallet-sync";
+import { ScanQRCodeSuccess } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-success";
+import { ScanQRCodeError } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-error";
 
 interface IMainRouterComponentProps {}
 
@@ -55,7 +57,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 						<Scene
 							key={ROUTES.nonAuthenticated.registrationOrLogin}
 							component={RegistrationOrLogin}
-							initial={true}
+							//initial={true}
 							hideNavBar
 							showLabel={false}
 						/>
@@ -151,6 +153,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 						key={ROUTES.checkAuthentication}
 						component={CheckAuthentication}
 						hideNavBar={true}
+						gesturesEnabled={false}
 					/>
 					<Scene
 						key={ROUTES.scanQRCode}
@@ -168,6 +171,20 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 						key={ROUTES.walletSync}
 						component={WalletSync}
 						hideNavBar={true}
+						gesturesEnabled={false}
+					/>
+
+					<Scene
+						key={ROUTES.scanQRCodeSuccess}
+						component={ScanQRCodeSuccess}
+						hideNavBar={true}
+						gesturesEnabled={false}
+					/>
+					<Scene
+						key={ROUTES.scanQRCodeError}
+						component={ScanQRCodeError}
+						hideNavBar={true}
+						gesturesEnabled={false}
 					/>
 					<Scene key="authenticated" hideNavBar>
 						<Tabs showLabel={false} tabBarStyle={styles.tabs} hideNavBar>

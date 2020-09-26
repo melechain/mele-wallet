@@ -13,14 +13,19 @@ import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import WiteInfoIcon from "@mele-wallet/resources/icons/info-white.svg";
 import ScanBarcodeIcon from "@mele-wallet/resources/icons/scan-barcode.svg";
 import ShieldRed from "@mele-wallet/resources/icons/shield-red.svg";
+import ShieldGreen from "@mele-wallet/resources/icons/shield-green.svg";
 import Ripple from "react-native-material-ripple";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
+import { Actions as FluxActions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
-interface IActionComponentProps {}
+interface IActionsComponentProps {
+	staticState: StaticState;
+}
 
-class ActionComponent extends Component<IActionComponentProps> {
+class ActionsComponent extends Component<IActionsComponentProps> {
 	render() {
 		return (
 			<View style={[actionStyles.content]}>
@@ -31,7 +36,7 @@ class ActionComponent extends Component<IActionComponentProps> {
 				</View>
 				<View style={[actionStyles.actionArea]}>
 					<View style={[actionStyles.eachAction]}>
-						<View style={[actionStyles.actionIcon]}>
+						<View style={[actionStyles.actionIconRed]}>
 							<ShieldRed style={[actionStyles.actionLogo]} />
 						</View>
 						<Text style={[actionStyles.actionText, commonStyles.fontBook]}>
@@ -47,22 +52,34 @@ class ActionComponent extends Component<IActionComponentProps> {
 						</Ripple>
 					</View>
 					<View style={[actionStyles.eachAction]}>
-						<View style={[actionStyles.actionIcon]}>
-							<ShieldRed />
-						</View>
+						{this.props.staticState.accountId ? (
+							<View style={[actionStyles.actionIconGreen]}>
+								<ShieldGreen />
+							</View>
+						) : (
+							<View style={[actionStyles.actionIconRed]}>
+								<ShieldRed />
+							</View>
+						)}
 
 						<Text style={[actionStyles.actionText, commonStyles.fontBook]}>
-							Wallet Not Connected
+							{this.props.staticState.accountId
+								? "Wallet Connected"
+								: "Wallet Not Connected"}
 						</Text>
-
-						<Ripple
-							rippleContainerBorderRadius={16}
-							style={[actionStyles.actionButton]}
-						>
-							<Text style={[actionStyles.buttonTitle, commonStyles.fontBold]}>
-								Scan QR
-							</Text>
-						</Ripple>
+						{!this.props.staticState.accountId ? (
+							<Ripple
+								onPress={() => {
+									FluxActions.jump(ROUTES.scanQRCode);
+								}}
+								rippleContainerBorderRadius={16}
+								style={[actionStyles.actionButton]}
+							>
+								<Text style={[actionStyles.buttonTitle, commonStyles.fontBold]}>
+									Scan QR
+								</Text>
+							</Ripple>
+						) : null}
 					</View>
 				</View>
 			</View>
@@ -77,7 +94,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	};
 };
 
-export const Action = connect(
+export const Actions = connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(ActionComponent);
+)(ActionsComponent);

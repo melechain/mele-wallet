@@ -17,7 +17,7 @@ import Ripple from "react-native-material-ripple";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
-import { Action } from "@mele-wallet/app/modules/home/actions";
+import { Actions as UserActions } from "@mele-wallet/app/modules/home/actions";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
@@ -46,21 +46,23 @@ class HomeComponent extends Component<IHomeComponentProps> {
 							<Text style={[styles.title, commonStyles.fontBold]}>Balance</Text>
 							<View style={[styles.balanceContainer]}>
 								<Text style={[commonStyles.whiteHeader, styles.balance]}>
-									${MeleCalculator.centsToUSDFormatted(account.balance)}
+									${MeleCalculator.centsToUSDFormatted(account.balance || "0")}
 								</Text>
 								<WiteInfoIcon style={styles.infoIcon} />
 							</View>
 						</View>
 						<View style={[styles.barcodeIconContainer]}>
-							<Ripple
-								onPress={() => {
-									Actions.jump(ROUTES.scanQRCode);
-								}}
-								style={[styles.barcodeIcon]}
-								rippleContainerBorderRadius={30}
-							>
-								<ScanBarcodeIcon />
-							</Ripple>
+							{!this.props.staticState.accountId ? (
+								<Ripple
+									onPress={() => {
+										Actions.jump(ROUTES.scanQRCode);
+									}}
+									style={[styles.barcodeIcon]}
+									rippleContainerBorderRadius={30}
+								>
+									<ScanBarcodeIcon />
+								</Ripple>
+							) : null}
 						</View>
 					</View>
 					<Calculator
@@ -84,7 +86,7 @@ class HomeComponent extends Component<IHomeComponentProps> {
 					</Ripple>
 				</View>
 				<View style={[styles.actions]}>
-					<Action />
+					<UserActions />
 				</View>
 			</ScrollView>
 		);

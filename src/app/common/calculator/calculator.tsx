@@ -17,27 +17,43 @@ interface CalculatorProps extends ViewProps {
 
 class CalculatorComponent extends React.Component<CalculatorProps> {
 	render() {
-		let melecUSD = MeleCalculator;
-		let meleCoins = 0;
-		let meleCoinPrice = 0;
-		let melegUSD = MeleCalculator.centsToUSDFormatted(
-			Math.floor(this.props.centsAmount / 3),
+		let meleCoins = "0";
+		let meleCoinPrice = "0";
+		let melegUSD = MeleCalculator.CentsToUSDMeleGPortionFormatted(
+			this.props.centsAmount || "0",
 		);
-		let meleGold: any = 0;
-		let meleGoldPrice = 0;
+		let melecUSD = MeleCalculator.CentsToUSDMeleCPortionFormatted(
+			this.props.centsAmount || "0",
+		);
+		let meleGold: any = "0";
+		let priceOfGoldPerGram = "0";
+		let melgPerGramOfGold = "1";
 
 		if (this.props.statisticsState.loaded) {
-			meleCoinPrice = this.props.statisticsState.staticInfo!.melecPrice;
-			meleCoins = MeleCalculator.CentsToMeleCFormatted(
+			meleCoins = "0";
+			meleCoinPrice = "0";
+			melegUSD = MeleCalculator.CentsToUSDMeleGPortionFormatted(
 				this.props.centsAmount,
-				meleCoinPrice,
 			);
+			meleGold = "0";
 
-			meleGoldPrice = this.props.statisticsState.staticInfo!.melegPrice;
-			meleGold = MeleCalculator.CentsToMeleGFormatted(
-				this.props.centsAmount,
-				meleGoldPrice,
-			);
+			if (this.props.statisticsState.loaded) {
+				meleCoinPrice = this.props.statisticsState.staticInfo!.melecPrice;
+				meleCoins = MeleCalculator.CentsToMeleCFormatted(
+					this.props.centsAmount,
+					meleCoinPrice,
+				);
+
+				priceOfGoldPerGram = this.props.statisticsState.staticInfo!
+					.priceOfGoldPerGram;
+				melgPerGramOfGold = this.props.statisticsState.staticInfo!
+					.melgPerGramOfGold;
+				meleGold = MeleCalculator.CentsToMeleGFormatted(
+					this.props.centsAmount,
+					melgPerGramOfGold,
+					priceOfGoldPerGram,
+				);
+			}
 		}
 
 		return (
@@ -65,21 +81,36 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 							>
 								MELC
 							</Text>
-							<Text style={[styles.coinRate]}>${meleCoinPrice / 100}</Text>
+							<Text style={[styles.coinRate]}>
+								${MeleCalculator.getMelCPrice(meleCoinPrice)}
+							</Text>
 						</View>
 					</View>
 				</View>
-				{this.getMelegoldPart(meleGold, melegUSD, meleGoldPrice)}
+				{this.getMelegoldPart(
+					meleGold,
+					melegUSD,
+					melgPerGramOfGold,
+					priceOfGoldPerGram,
+				)}
 			</View>
 		);
 	}
 
-	getMelegoldPart(meleGold: string, melegUSD: string, meleGoldPrice: number) {
+	getMelegoldPart(
+		meleGold: string,
+		melegUSD: string,
+		melgPerGramOfGold: string,
+		priceOfGoldPerGram: string,
+	) {
 		return (
 			<View style={[styles.meleDisplay, styles.rightDisplay]}>
 				<View style={[styles.meleDisplayNumbers]}>
 					<View>
-						<Text style={[styles.coinCount, commonStyles.fontBold]}>
+						<Text
+							style={[styles.coinCount, commonStyles.fontBold]}
+							numberOfLines={1}
+						>
 							{meleGold}
 						</Text>
 						<Text style={[styles.usdCount]}>${melegUSD}</Text>
@@ -95,7 +126,13 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 						>
 							MELG
 						</Text>
-						<Text style={[styles.coinRate]}>${meleGoldPrice / 100}</Text>
+						<Text style={[styles.coinRate]}>
+							$
+							{MeleCalculator.getMelGPrice(
+								melgPerGramOfGold,
+								priceOfGoldPerGram,
+							)}
+						</Text>
 					</View>
 				</View>
 			</View>

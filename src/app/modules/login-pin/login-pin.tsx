@@ -1,14 +1,5 @@
 import React, { Component } from "react";
-import {
-	Button,
-	View,
-	Text,
-	Image,
-	Switch,
-	ScrollView,
-	Alert,
-	Animated,
-} from "react-native";
+import { View, Text, Image, ScrollView, Animated } from "react-native";
 
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
@@ -113,7 +104,7 @@ class LoginPinComponent extends Component<
 						}}
 						onPinReady={(pin: string) => {
 							if (pin == this.props.staticState.pin) {
-								Actions.jump(ROUTES.checkAuthentication);
+								Actions.push(ROUTES.checkAuthentication);
 							} else {
 								this.startShake();
 								this.setState({

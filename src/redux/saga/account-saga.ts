@@ -10,6 +10,8 @@ import {
 	StaticStateActionTypes,
 	StaticState,
 } from "@mele-wallet/redux/reducers/static-reducer";
+import StatisticsService from "@mele-wallet/common/api/statistics-service";
+import { StatisticsStateActionTypes } from "@mele-wallet/redux/reducers/statistics-reducer";
 
 export const accountSaga = function* handleMessage(params: any): SagaIterator {
 	yield takeEvery(AccountStateActionTypes.WALLET_SYNC_REQUEST, walletSync);
@@ -33,10 +35,6 @@ function* walletSync(action: IAccountReducerAction): SagaIterator {
 			type: StaticStateActionTypes.SET_ACCOUNT_ID,
 			accountId: action.accountId,
 		});
-
-		// yield put({
-		//     type: AccountStateActionTypes.ACCOUNT_SYNC_REQUEST
-		// })
 	} catch (e) {
 		yield put({
 			type: AccountStateActionTypes.WALLET_SYNC_ERROR,
@@ -47,47 +45,13 @@ function* walletSync(action: IAccountReducerAction): SagaIterator {
 function* accountSync(action: IAccountReducerAction): SagaIterator {
 	try {
 		const response = yield call(accountService.checkSession);
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>", response);
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
-		console.log("RESPONSE!!!!!! <========>>>");
 		yield put({
 			type: AccountStateActionTypes.ACCOUNT_SYNC_SUCCESSFUL,
 			account: response,
 		});
 	} catch (e) {
-		console.log("ERRRORRRRRRR");
 		yield put({
 			type: AccountStateActionTypes.ACCOUNT_SYNC_ERROR,
 		});
 	}
 }
-
-// let accountState = yield select((state: any) => {
-//     return state.account;
-// });
-// console.log("doing this!!!");
-// const response = yield call(
-//     accountService.login,
-//     action.username,
-//     action.password,
-// );
-// yield put({
-//     type: AccountStateActionTypes.LOG_IN_SUCCESSFUL,
-//     account: response,
-// });
-// //async
-// //yield call
-
-// console.log(accountState, "ACCOUNTSTATE11111");
-// accountState = yield select((state: any) => {
-//     return state.account;
-// });
-// console.log(accountState, "ACCOUNTSTATE2222");

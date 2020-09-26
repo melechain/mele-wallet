@@ -2,6 +2,9 @@ import { Reducer, Action } from "redux";
 import { IAccountModel } from "@mele-wallet/common/model/account.model";
 
 export enum StatisticsStateActionTypes {
+	LOAD_STATIC_INFO_REQUEST = "@@STATISTICS/LOAD_STATIC_INFO_REQUEST",
+	LOAD_STATIC_INFO_SUCCESS = "@@STATISTICS/LOAD_STATIC_INFO_SUCCESS",
+	LOAD_STATIC_INFO_ERROR = "@@STATISTICS/LOAD_STATIC_INFO_ERROR",
 	LOAD_STATISTICS_REQUEST = "@@STATISTICS/LOAD_STATISTICS_REQUEST",
 	LOAD_STATISTICS_SUCCESS = "@@STATISTICS/LOAD_STATISTICS_SUCCESS",
 	LOAD_STATISTICS_ERROR = "@@STATISTICS/LOAD_STATISTICS_ERROR",
@@ -26,8 +29,9 @@ enum DailyTransactionsLoadStatus {
 interface IStaticInfo {
 	melecTarget: number;
 	melegTarget: number;
-	melecPrice: number;
-	melegPrice: number;
+	melecPrice: string;
+	priceOfGoldPerGram: string;
+	melgPerGramOfGold: string;
 	createdAt: string;
 }
 
@@ -80,6 +84,16 @@ const statisticsReducer = (
 			return {
 				...state,
 				loaded: false,
+			};
+		case StatisticsStateActionTypes.LOAD_STATIC_INFO_SUCCESS:
+			return {
+				...state,
+				staticInfo: action.staticInfo,
+				loaded: true,
+			};
+		case StatisticsStateActionTypes.LOAD_STATIC_INFO_ERROR:
+			return {
+				...state,
 			};
 		case StatisticsStateActionTypes.LOAD_DAILY_TRANSACTIONS_REQUEST:
 			return {

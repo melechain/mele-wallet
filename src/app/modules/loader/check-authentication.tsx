@@ -20,23 +20,15 @@ interface ICheckAuthenticationComponentProps {
 	accountState: AccountState;
 	staticState: StaticState;
 }
-interface ICheckAuthenticationComponentStore {
-	authCheckStarted: boolean;
-}
 
 class CheckAuthenticationComponent extends Component<
-	ICheckAuthenticationComponentProps,
-	ICheckAuthenticationComponentStore
+	ICheckAuthenticationComponentProps
 > {
-	constructor(props: ICheckAuthenticationComponentProps) {
-		super(props);
-		this.state = {
-			authCheckStarted: false,
-		};
-	}
-
 	componentDidMount() {
-		this.props.actionCreators.account.accountSyncReset();
+		setTimeout(() => {
+			this.props.actionCreators.account.accountSyncReset();
+			this.props.actionCreators.statistics.searchStaticInfo();
+		}, 1);
 	}
 	componentDidUpdate() {
 		this.checkWallet();

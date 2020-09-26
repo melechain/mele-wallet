@@ -12,7 +12,11 @@ export const statisticsSaga = function* handleMessage(
 ): SagaIterator {
 	yield takeLatest(
 		StatisticsStateActionTypes.LOAD_STATISTICS_REQUEST,
-		transactionSend,
+		loadStatistics,
+	);
+	yield takeLatest(
+		StatisticsStateActionTypes.LOAD_STATIC_INFO_REQUEST,
+		loadStaticInfo,
 	);
 	yield takeLatest(
 		StatisticsStateActionTypes.LOAD_DAILY_TRANSACTIONS_REQUEST,
@@ -20,10 +24,14 @@ export const statisticsSaga = function* handleMessage(
 	);
 };
 
-function* transactionSend(action: IStatisticsReducerAction): SagaIterator {
+function* loadStatistics(action: IStatisticsReducerAction): SagaIterator {
 	try {
 		const staticInfo = yield call(statisticsService.getStaticInfo);
 		const statisticsInfo = yield call(statisticsService.getStatisticsNumbers);
+
+		staticInfo.melecPrice = "370370000";
+		staticInfo.priceOfGoldPerGram = "61570000000";
+		staticInfo.melgPerGramOfGold = "10";
 
 		return yield put({
 			type: StatisticsStateActionTypes.LOAD_STATISTICS_SUCCESS,
@@ -33,6 +41,24 @@ function* transactionSend(action: IStatisticsReducerAction): SagaIterator {
 	} catch (e) {
 		return yield put({
 			type: StatisticsStateActionTypes.LOAD_STATISTICS_ERROR,
+		});
+	}
+}
+function* loadStaticInfo(action: IStatisticsReducerAction): SagaIterator {
+	try {
+		const staticInfo = yield call(statisticsService.getStaticInfo);
+
+		staticInfo.melecPrice = "370370000";
+		staticInfo.priceOfGoldPerGram = "61570000000";
+		staticInfo.melgPerGramOfGold = "10";
+
+		return yield put({
+			type: StatisticsStateActionTypes.LOAD_STATIC_INFO_SUCCESS,
+			staticInfo: staticInfo,
+		});
+	} catch (e) {
+		return yield put({
+			type: StatisticsStateActionTypes.LOAD_STATIC_INFO_ERROR,
 		});
 	}
 }

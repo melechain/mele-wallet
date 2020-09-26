@@ -128,7 +128,7 @@ class ConfirmWalletComponent extends Component<
 	buttonDisabled = () => {
 		// if find returns nothing, it means that all the words match
 		// TODO -remove this!!!
-		return false;
+		//return false;
 		return !!this.state.mnemonicConfirmFields.find((index: number) => {
 			return this.props.mnemonic[index] != this.state.enteredWords[index];
 		});

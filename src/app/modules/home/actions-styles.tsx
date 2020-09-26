@@ -46,10 +46,19 @@ export const actionStyles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 	},
-	actionIcon: {
+	actionIconRed: {
 		width: 24,
 		height: 24,
 		backgroundColor: "#FBE9E8",
+		borderRadius: 12,
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	actionIconGreen: {
+		width: 24,
+		height: 24,
+		backgroundColor: "#ECFAF5",
 		borderRadius: 12,
 		display: "flex",
 		justifyContent: "center",
