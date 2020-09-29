@@ -101,11 +101,11 @@ export class MeleCalculator {
 	}
 
 	public static centsToUSD = (cents: string) => {
-		return (parseInt(cents) / 100).toString(10);
+		return (parseInt(cents) / 100).toString();
 	};
 
 	public static centsToUSDFormatted = (cents: string, decimals: number = 2) => {
-		return MeleCalculator.centsToUSD(cents);
+		return MeleCalculator.USDFormatted(MeleCalculator.centsToUSD(cents));
 	};
 	public static USDFormatted = (USD: string) => {
 		return MeleCalculator.formatNumber(USD);
@@ -122,7 +122,9 @@ export class MeleCalculator {
 		let [round, decimal] = numb.split(".");
 
 		round = round.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-
-		return [round, decimal].join(".");
+		if (decimal) {
+			return [round, decimal].join(".");
+		}
+		return round;
 	};
 }

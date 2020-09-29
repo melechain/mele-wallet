@@ -29,8 +29,8 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	pinInputText: {
-		fontSize: 40,
-		fontFamily: "Circular Std",
+		marginTop: 5,
+		fontSize: 60,
 		color: "#FFFFFF",
 	},
 	currentPinLine: {

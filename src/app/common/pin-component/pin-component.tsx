@@ -91,8 +91,9 @@ class PinComponent extends Component<IPinComponentProps, IPinComponentState> {
 						return (
 							<View style={styles.pin} key={numberIndex}>
 								<View style={styles.pinInput}>
-									<Text style={styles.pinInputText}>
-										{this.getPin()[numberIndex] || ""}
+									<Text style={[styles.pinInputText]}>
+										{/* {this.getPin()[numberIndex] || ""} */}
+										{this.getPin()[numberIndex] ? "*" : ""}
 									</Text>
 								</View>
 								<View

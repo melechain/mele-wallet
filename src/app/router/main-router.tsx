@@ -41,7 +41,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 	render() {
 		return (
 			<Router>
-				<Scene>
+				<Scene key="root">
 					<Stack
 						key="nonAuthenticated"
 						{...{
@@ -82,6 +82,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							component={ConfirmWallet}
 							hideNavBar={false}
 							showLabel={false}
+							gesturesEnabled={false}
 							navBar={() => {
 								return (
 									<UnauthenticatedWhiteHeader
