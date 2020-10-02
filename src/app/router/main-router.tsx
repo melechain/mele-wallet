@@ -34,10 +34,9 @@ import { AuthenticatedBlueHeader } from "@mele-wallet/app/router/header/authenti
 import { WalletSync } from "@mele-wallet/app/modules/loader/wallet-sync";
 import { ScanQRCodeSuccess } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-success";
 import { ScanQRCodeError } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-error";
+import { SplashScreen } from "@mele-wallet/app/modules/splash-screen/splash-screen";
 
-interface IMainRouterComponentProps {}
-
-class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
+class MainRouterComponent extends React.Component {
 	render() {
 		return (
 			<Router>
@@ -48,7 +47,7 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 							headerBackTitleVisible: false,
 						}}
 						tintColor={"#091841"}
-						initial={true}
+						initial={false}
 						hideNavBar={true}
 						titleStyle={{
 							...commonStyles.buttonBlackText,
@@ -136,20 +135,43 @@ class MainRouterComponent extends React.Component<IMainRouterComponentProps> {
 								);
 							}}
 						/>
+
 						<Scene
-							key={ROUTES.nonAuthenticated.loginPin}
+							key={ROUTES.nonAuthenticated.loginPinFirstTime}
 							component={LoginPin}
 							hideNavBar={false}
 							showLabel={false}
 							navBar={() => {
 								return (
 									<UnauthenticatedBlueHeader
-										componentKey={ROUTES.nonAuthenticated.loginPin}
+										componentKey={ROUTES.nonAuthenticated.loginPinFirstTime}
 									/>
 								);
 							}}
 						/>
 					</Stack>
+					<Scene
+						key={ROUTES.splashScreen}
+						component={SplashScreen}
+						hideNavBar={true}
+						showLabel={false}
+						initial={true}
+					/>
+					<Scene
+						key={ROUTES.nonAuthenticated.loginPin}
+						component={LoginPin}
+						hideNavBar={true}
+						showLabel={false}
+						initial={false}
+						// navBar={() => {
+						// 	return (
+						// 		<UnauthenticatedBlueHeader
+						//             disableBackButton={true}
+						// 			componentKey={ROUTES.nonAuthenticated.loginPin}
+						// 		/>
+						// 	);
+						// }}
+					/>
 					<Scene
 						key={ROUTES.checkAuthentication}
 						component={CheckAuthentication}

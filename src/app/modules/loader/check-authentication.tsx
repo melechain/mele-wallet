@@ -14,6 +14,7 @@ import {
 	AccountState,
 	AccountSyncStatus,
 } from "@mele-wallet/redux/reducers/account-reducer";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface ICheckAuthenticationComponentProps {
 	actionCreators: IActionCreators;
@@ -25,10 +26,8 @@ class CheckAuthenticationComponent extends Component<
 	ICheckAuthenticationComponentProps
 > {
 	componentDidMount() {
-		setTimeout(() => {
-			this.props.actionCreators.account.accountSyncReset();
-			this.props.actionCreators.statistics.searchStaticInfo();
-		}, 1);
+		this.props.actionCreators.account.accountSyncReset();
+		this.props.actionCreators.statistics.searchStaticInfo();
 	}
 	componentDidUpdate() {
 		this.checkWallet();
@@ -52,6 +51,8 @@ class CheckAuthenticationComponent extends Component<
 			}
 		} else if (this.props.staticState.mnemonic && this.props.staticState.pin) {
 			Actions.reset("authenticated");
+		} else {
+			Actions.reset(ROUTES.nonAuthenticated.createWallet);
 		}
 	};
 

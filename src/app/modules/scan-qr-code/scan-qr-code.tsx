@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Alert, Dimensions } from "react-native";
+import { View, Text, Alert, Dimensions, Button, Linking } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -44,7 +44,8 @@ class ScanQRCodeComponent extends Component<
 		return (
 			<View style={[styles.content, commonStyles.blueBackground]}>
 				<QRScanner
-					containerStyle={styles.containerStyle}
+					fadeIn={false}
+					containerStyle={[styles.containerStyle]}
 					cameraStyle={{
 						height: Dimensions.get("window").height,
 					}}
@@ -52,9 +53,19 @@ class ScanQRCodeComponent extends Component<
 					bottomViewStyle={styles.bottomViewStyle}
 					onRead={this.onSuccess}
 					flashMode={RNCamera.Constants.FlashMode.off}
+					permissionDialogMessage="You need to grant this app camera access in Settings to scan your QR code!"
 					notAuthorizedView={
-						<View>
-							<Text>Please allow Camera!</Text>
+						<View style={[styles.content]}>
+							<Text style={[styles.errorText]}>
+								You need to grant this app camera access in Settings to scan
+								your QR code!
+							</Text>
+							<Button
+								title="go to settings"
+								onPress={() => {
+									Linking.openSettings();
+								}}
+							/>
 						</View>
 					}
 				/>

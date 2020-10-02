@@ -33,7 +33,7 @@ class HomeComponent extends Component<IHomeComponentProps> {
 	render() {
 		const account: IAccountModel =
 			this.props.accountState.account || ({} as any);
-		const wallet = new Wallet(this.props.staticState.mnemonic);
+		const wallet = Wallet.getWallet(this.props.staticState.mnemonic);
 		return (
 			<ScrollView
 				style={[styles.scrollView]}

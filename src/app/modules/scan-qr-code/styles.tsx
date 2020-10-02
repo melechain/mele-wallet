@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
 		borderRadius: 50,
 	},
 	successMessage: {
-		width: 176,
+		textAlign: "center",
 		height: 56,
 		marginTop: 15,
 	},
@@ -67,6 +67,9 @@ export const styles = StyleSheet.create({
 		fontSize: 14,
 		textAlign: "center",
 		color: "#101654",
+	},
+	errorText: {
+		textAlign: "center",
 	},
 	containerStyle: { height: "100%" },
 	topViewStyle: { height: 0, flex: 0 },

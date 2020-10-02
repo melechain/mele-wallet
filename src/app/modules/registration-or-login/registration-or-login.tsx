@@ -35,7 +35,7 @@ class RegistrationOrLoginComponent extends Component<
 					<YellowButton
 						text="Have a wallet?"
 						onPress={() => {
-							Actions.jump(ROUTES.nonAuthenticated.loginPin);
+							Actions.jump(ROUTES.nonAuthenticated.loginPinFirstTime);
 						}}
 					/>
 					<BlueButton

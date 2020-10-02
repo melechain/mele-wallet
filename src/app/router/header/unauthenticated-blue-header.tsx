@@ -16,6 +16,7 @@ export interface HeaderComponentProps extends ViewProps {
 	title?: string;
 	refreshOnBack?: boolean;
 	componentKey: string;
+	disableBackButton?: boolean;
 }
 
 export class UnauthenticatedBlueHeader extends Component<HeaderComponentProps> {
@@ -26,7 +27,6 @@ export class UnauthenticatedBlueHeader extends Component<HeaderComponentProps> {
 		};
 	}
 	backAction = () => {
-		console.log(this.props);
 		if (Actions.currentScene !== this.props.componentKey) {
 			return false;
 		}
@@ -39,19 +39,23 @@ export class UnauthenticatedBlueHeader extends Component<HeaderComponentProps> {
 		return true;
 	};
 
+	getBackButton = () => {
+		if (this.props.disableBackButton) {
+			return null;
+		}
+		return (
+			<TouchableOpacity style={styles.backButton} onPress={this.backAction}>
+				<BackButton height={20} width={20} />
+				<Text style={[styles.text, commonStyles.fontBold]}>Back</Text>
+			</TouchableOpacity>
+		);
+	};
+
 	render() {
 		return (
 			<View style={[styles.content, commonStyles.blueBackground]}>
 				<View style={styles.navigation}>
-					<View style={styles.buttonContainer}>
-						<TouchableOpacity
-							style={styles.backButton}
-							onPress={this.backAction}
-						>
-							<BackButton height={20} width={20} />
-							<Text style={[styles.text, commonStyles.fontBold]}>Back</Text>
-						</TouchableOpacity>
-					</View>
+					<View style={styles.buttonContainer}>{this.getBackButton()}</View>
 
 					<LockGreen height={20} width={20} style={styles.lock_icon} />
 				</View>

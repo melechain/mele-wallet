@@ -112,10 +112,6 @@ export class MeleCalculator {
 	};
 
 	public static formatNumber = (numb: string, decimals: number = 20) => {
-		// let [round, decimal] = parseFloat(numb.toFixed(decimals))
-		// 	.toString()
-		// 	.split(".");
-
 		if (numb === "0") {
 			return "0";
 		}

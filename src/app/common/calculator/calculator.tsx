@@ -104,7 +104,7 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 		priceOfGoldPerGram: string,
 	) {
 		return (
-			<View style={[styles.meleDisplay, styles.rightDisplay]}>
+			<View style={[styles.meleDisplay]}>
 				<View style={[styles.meleDisplayNumbers]}>
 					<View>
 						<Text
@@ -117,9 +117,9 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 					</View>
 				</View>
 				<View style={[styles.meleDisplayNotions]}>
-					<View style={[styles.notificationIcon]}>
+					{/* <View style={[styles.notificationIcon]}>
 						<InfoGrayIcon width={5} height={20} />
-					</View>
+					</View> */}
 					<View style={[styles.meleNotions]}>
 						<Text
 							style={[styles.coinName, styles.meleGold, commonStyles.fontBold]}

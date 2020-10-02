@@ -3,10 +3,11 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 	meleCalculator: {
 		display: "flex",
-		flexDirection: "row",
+		flexDirection: "column",
 		width: "100%",
 	},
 	meleDisplay: {
+		width: "100%",
 		flex: 1,
 		backgroundColor: "#0F2BA9",
 		borderRadius: 6,
@@ -15,13 +16,10 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 		padding: 12,
 	},
-	rightDisplay: {
-		marginLeft: 10,
-	},
 	meleDisplayNumbers: {
 		display: "flex",
 		flexDirection: "row",
-		flex: 1,
+		flex: 2,
 		borderRightWidth: 1,
 		borderStyle: "solid",
 		borderColor: "#0D299F",

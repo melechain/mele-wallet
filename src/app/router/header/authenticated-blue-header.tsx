@@ -16,6 +16,7 @@ export interface HeaderComponentProps extends ViewProps {
 	title?: string;
 	refreshOnBack?: boolean;
 	componentKey: string;
+	disableBackButton?: boolean;
 }
 
 export class AuthenticatedBlueHeader extends Component<HeaderComponentProps> {
@@ -26,7 +27,6 @@ export class AuthenticatedBlueHeader extends Component<HeaderComponentProps> {
 		};
 	}
 	backAction = () => {
-		console.log(this.props);
 		if (Actions.currentScene !== this.props.componentKey) {
 			return false;
 		}

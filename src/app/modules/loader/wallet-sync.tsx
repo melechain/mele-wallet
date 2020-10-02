@@ -31,7 +31,7 @@ class WalletSyncComponent extends Component<IWalletSyncComponentProps> {
 			if (!this.props.accountId) {
 				Actions.replace(ROUTES.authenticated.home);
 			}
-			const wallet = new Wallet(this.props.staticState.mnemonic);
+			const wallet = Wallet.getWallet(this.props.staticState.mnemonic);
 			this.props.actionCreators.account.walletSync(
 				this.props.accountId,
 				wallet.getAddress(),

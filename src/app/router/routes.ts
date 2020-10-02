@@ -1,4 +1,5 @@
 export const ROUTES = {
+	splashScreen: "splashScreen",
 	checkAuthentication: "checkAuthentication",
 	scanQRCode: "scanQRCode",
 	scanQRCodeSuccess: "scanQRCodeSuccess",
@@ -11,6 +12,7 @@ export const ROUTES = {
 		createPin: "nonAuthenticated.createPin",
 		confirmPin: "nonAuthenticated.confirmPin",
 		loginPin: "nonAuthenticated.loginPin",
+		loginPinFirstTime: "nonAuthenticated.loginPinFirstTime",
 	},
 	authenticated: {
 		home: "nonAuthenticated.home",

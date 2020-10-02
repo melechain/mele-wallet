@@ -56,9 +56,11 @@ export default class MainApiService {
 
 			//this means that we are in the wallet because we apps do not have staticState
 			if (staticState.accountId && staticState.mnemonic) {
-				const wallet = new Wallet(staticState.mnemonic);
+				const walletAddress = Wallet.getWallet(
+					staticState.mnemonic,
+				).getAddress();
 				defaultHeaders["Authorization"] = `Mele ${base64.encode(
-					staticState.accountId + wallet.getAddress(),
+					staticState.accountId + walletAddress,
 				)}`;
 			}
 		} else if (MainApiService.APPLICATION_STORE.getState().account.account) {
