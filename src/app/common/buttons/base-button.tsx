@@ -7,9 +7,7 @@ import { mapDispatchToProps } from "@mele-wallet/redux/methods/map-dispatch-to-p
 import Ripple from "react-native-material-ripple";
 import { Text } from "react-native";
 import { IButtonComponentProps } from "@mele-wallet/app/common/buttons/button-props";
-interface IBaseButtonProps extends IButtonComponentProps {
-	textStyle: any;
-}
+interface IBaseButtonProps extends IButtonComponentProps {}
 
 class BaseButtonComponent extends Component<IBaseButtonProps> {
 	getDisabledOverlay = () => {

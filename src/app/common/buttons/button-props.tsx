@@ -18,5 +18,6 @@ export interface IButtonComponentProps extends ViewProps {
 	children?: React.ReactNode;
 	text?: string;
 	disabled?: boolean;
+	textStyle?: any;
 	onPress?: () => void;
 }

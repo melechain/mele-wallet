@@ -10,6 +10,23 @@ import BuyIcon from "@mele-wallet/resources/icons/buy.svg";
 import HistoryIcon from "@mele-wallet/resources/icons/history.svg";
 import SendIcon from "@mele-wallet/resources/icons/send.svg";
 import HomeIcon from "@mele-wallet/resources/icons/home.svg";
+
+import DisabledSendIcon from "@mele-wallet/resources/icons/tab-bar-icons/disabled-send.svg";
+
+import InactiveHomeIcon from "@mele-wallet/resources/icons/tab-bar-icons/inactive-home.svg";
+import ActiveHomeIcon from "@mele-wallet/resources/icons/tab-bar-icons/active-home.svg";
+
+import InactiveBuyIcon from "@mele-wallet/resources/icons/tab-bar-icons/inactive-buy.svg";
+import ActiveBuyIcon from "@mele-wallet/resources/icons/tab-bar-icons/active-buy.svg";
+import DisabledBuyIcon from "@mele-wallet/resources/icons/tab-bar-icons/disabled-buy.svg";
+
+import DisabledMoreIcon from "@mele-wallet/resources/icons/tab-bar-icons/disabled-more.svg";
+import InactiveMoreIcon from "@mele-wallet/resources/icons/tab-bar-icons/inactive-more.svg";
+import ActiveMoreIcon from "@mele-wallet/resources/icons/tab-bar-icons/active-more.svg";
+
+import InactiveHistoryIcon from "@mele-wallet/resources/icons/tab-bar-icons/inactive-history.svg";
+import ActiveHistoryIcon from "@mele-wallet/resources/icons/tab-bar-icons/active-history.svg";
+
 import MoreIcon from "@mele-wallet/resources/icons/more.svg";
 import { styles } from "@mele-wallet/app/router/styles";
 import ApplicationState from "@mele-wallet/redux/application-state";
@@ -35,6 +52,7 @@ import { WalletSync } from "@mele-wallet/app/modules/loader/wallet-sync";
 import { ScanQRCodeSuccess } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-success";
 import { ScanQRCodeError } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-error";
 import { SplashScreen } from "@mele-wallet/app/modules/splash-screen/splash-screen";
+import { Transaction } from "@mele-wallet/app/modules/transaction/transaction";
 
 class MainRouterComponent extends React.Component {
 	render() {
@@ -66,7 +84,6 @@ class MainRouterComponent extends React.Component {
 							hideNavBar={false}
 							showLabel={false}
 							navBar={() => {
-								console.log(ROUTES.nonAuthenticated.createWallet);
 								return (
 									<UnauthenticatedWhiteHeader
 										refreshOnBack={true}
@@ -209,6 +226,19 @@ class MainRouterComponent extends React.Component {
 						hideNavBar={true}
 						gesturesEnabled={false}
 					/>
+					<Scene
+						key={ROUTES.authenticated.transaction}
+						component={Transaction}
+						hideNavBar={false}
+						showLabel={false}
+						navBar={() => {
+							return (
+								<AuthenticatedWhiteHeader
+									componentKey={ROUTES.authenticated.transaction}
+								/>
+							);
+						}}
+					/>
 					<Scene key="authenticated" hideNavBar>
 						<Tabs showLabel={false} tabBarStyle={styles.tabs} hideNavBar>
 							<Scene
@@ -217,15 +247,44 @@ class MainRouterComponent extends React.Component {
 								component={Home}
 								key={ROUTES.authenticated.home}
 								initial
-								icon={() => {
-									return (
-										<View style={styles.tabButton}>
-											<View style={styles.iconAntText}>
-												<HomeIcon />
-												<Text style={styles.buttonText}>Home</Text>
+								icon={(p: any, a: any) => {
+									if (p.navigation.isFocused()) {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<ActiveHomeIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextActive,
+															commonStyles.fontBold,
+														]}
+													>
+														Home
+													</Text>
+												</View>
 											</View>
-										</View>
-									);
+										);
+									} else {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<InactiveHomeIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextInactive,
+															commonStyles.fontBold,
+														]}
+													>
+														Home
+													</Text>
+												</View>
+											</View>
+										);
+									}
 								}}
 							/>
 							<Scene
@@ -233,12 +292,24 @@ class MainRouterComponent extends React.Component {
 								component={Buy}
 								title="Buy"
 								key={ROUTES.authenticated.buy}
-								icon={() => {
+								tabBarOnPress={() => {
+									return;
+								}}
+								icon={(p: any) => {
 									return (
 										<View style={styles.tabButton}>
 											<View style={styles.iconAntText}>
-												<BuyIcon />
-												<Text style={styles.buttonText}>Buy</Text>
+												<View style={styles.icon}>
+													<DisabledBuyIcon />
+												</View>
+												<Text
+													style={[
+														styles.buttonTextDisabled,
+														commonStyles.fontBold,
+													]}
+												>
+													Buy
+												</Text>
 											</View>
 										</View>
 									);
@@ -249,11 +320,14 @@ class MainRouterComponent extends React.Component {
 								component={Send}
 								title="Send"
 								key={ROUTES.authenticated.send}
+								tabBarOnPress={() => {
+									return;
+								}}
 								icon={() => {
 									return (
 										<View style={styles.tabButton}>
 											<View style={styles.sentIconContainer}>
-												<SendIcon />
+												<DisabledSendIcon />
 											</View>
 										</View>
 									);
@@ -265,15 +339,44 @@ class MainRouterComponent extends React.Component {
 								title="History"
 								key={ROUTES.authenticated.history}
 								back={false}
-								icon={() => {
-									return (
-										<View style={styles.tabButton}>
-											<View style={styles.iconAntText}>
-												<HistoryIcon />
-												<Text style={styles.buttonText}>History</Text>
+								icon={(p: any) => {
+									if (p.navigation.isFocused()) {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<ActiveHistoryIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextActive,
+															commonStyles.fontBold,
+														]}
+													>
+														History
+													</Text>
+												</View>
 											</View>
-										</View>
-									);
+										);
+									} else {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<InactiveHistoryIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextInactive,
+															commonStyles.fontBold,
+														]}
+													>
+														History
+													</Text>
+												</View>
+											</View>
+										);
+									}
 								}}
 							/>
 							<Scene
@@ -282,12 +385,21 @@ class MainRouterComponent extends React.Component {
 								title="More"
 								key={ROUTES.authenticated.more}
 								back={false}
-								icon={() => {
+								icon={(p: any) => {
 									return (
 										<View style={styles.tabButton}>
 											<View style={styles.iconAntText}>
-												<MoreIcon />
-												<Text style={styles.buttonText}>More</Text>
+												<View style={styles.icon}>
+													<DisabledMoreIcon />
+												</View>
+												<Text
+													style={[
+														styles.buttonTextDisabled,
+														commonStyles.fontBold,
+													]}
+												>
+													More
+												</Text>
 											</View>
 										</View>
 									);

@@ -28,7 +28,6 @@ class App extends React.PureComponent<IAppProps, IAppStore> {
 	}
 
 	handleAppStateChange = (appStateStatus: AppStateStatus) => {
-		console.log(appStateStatus, this.wentToBackgroundTimestamp);
 		if (appStateStatus === "active") {
 			if (
 				this.wentToBackgroundTimestamp != 0 &&

@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
 	},
 	walletAddressContainer: {
 		height: 50,
-		marginTop: 10,
+		marginTop: 1,
 		backgroundColor: "#0F2BA9",
 		borderRadius: 6,
 		display: "flex",
@@ -82,6 +82,11 @@ export const styles = StyleSheet.create({
 		paddingLeft: 20,
 		paddingRight: 20,
 		paddingTop: 20,
+		width: "100%",
+	},
+	transactions: {
+		backgroundColor: "#DDE5ED",
+		marginTop: 20,
 		width: "100%",
 	},
 });

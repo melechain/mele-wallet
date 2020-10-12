@@ -3,10 +3,12 @@ export interface ITransactionModel {
 	from: {
 		email: string;
 		name: string;
+		wallet: string;
 	};
 	to: {
 		email: string;
 		name: string;
+		wallet: string;
 	};
 	type: string;
 	amount: string;

@@ -12,6 +12,7 @@ import { styles } from "./styles";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { Wallet } from "@mele-wallet/common/utils/wallet";
 
 interface ISplashScreenComponentProps {
 	actionCreators: IActionCreators;
@@ -29,6 +30,8 @@ class SplashScreenComponent extends Component<
 	componentDidMount() {
 		setTimeout(() => {
 			if (this.props.staticState.mnemonic) {
+				//this generates the address here so it does not block the process hater
+				Wallet.getWallet(this.props.staticState.mnemonic);
 				Actions.replace(ROUTES.nonAuthenticated.loginPin);
 			} else {
 				Actions.replace("nonAuthenticated");

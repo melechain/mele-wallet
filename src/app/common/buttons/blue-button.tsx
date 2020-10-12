@@ -14,7 +14,10 @@ class BlueButtonComponent extends Component<IButtonComponentProps> {
 			style: [styles.button, styles.blueButton, this.props.style],
 		};
 		return (
-			<BaseButton {...newProps} textStyle={commonStyles.buttonWhiteText} />
+			<BaseButton
+				{...newProps}
+				textStyle={[commonStyles.buttonWhiteText, this.props.textStyle || {}]}
+			/>
 		);
 	}
 }

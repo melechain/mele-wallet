@@ -8,10 +8,8 @@ import {
 } from "react-native";
 import { styles } from "./styles";
 import BackButton from "@mele-wallet/resources/icons/back-arrow.svg";
-import LockGreen from "@mele-wallet/resources/icons/lock-green.svg";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { Actions } from "react-native-router-flux";
-import { Action } from "@mele-wallet/app/modules/home/actions";
 
 export interface HeaderComponentProps extends ViewProps {
 	title?: string;
@@ -28,7 +26,6 @@ export class AuthenticatedWhiteHeader extends Component<HeaderComponentProps> {
 	}
 
 	backAction = () => {
-		console.log(this.props);
 		if (Actions.currentScene !== this.props.componentKey) {
 			return false;
 		}
@@ -51,9 +48,9 @@ export class AuthenticatedWhiteHeader extends Component<HeaderComponentProps> {
 							onPress={this.backAction}
 						>
 							<BackButton height={22} width={22} />
-							{/* <Text style={[styles.text, commonStyles.fontBold]}>
-                                Back
-                            </Text> */}
+							<Text style={[styles.textBlack, commonStyles.fontBold]}>
+								Back
+							</Text>
 						</TouchableOpacity>
 
 						<Text

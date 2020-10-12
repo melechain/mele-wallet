@@ -22,6 +22,7 @@ import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { IAccountModel } from "@mele-wallet/common/model/account.model";
+import { Transactions } from "@mele-wallet/app/common/transactions/transactions";
 
 interface IHomeComponentProps {
 	actionCreators: IActionCreators;
@@ -87,6 +88,9 @@ class HomeComponent extends Component<IHomeComponentProps> {
 				</View>
 				<View style={[styles.actions]}>
 					<UserActions />
+				</View>
+				<View style={[styles.transactions]}>
+					<Transactions transactionListKeyword="HOME_RECENT_TRANSACTIONS" />
 				</View>
 			</ScrollView>
 		);

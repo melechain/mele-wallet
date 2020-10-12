@@ -20,5 +20,6 @@ export const ROUTES = {
 		send: "nonAuthenticated.send",
 		history: "nonAuthenticated.history",
 		more: "nonAuthenticated.more",
+		transaction: "nonAuthenticated.transaction",
 	},
 };

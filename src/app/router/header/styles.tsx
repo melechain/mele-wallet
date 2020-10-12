@@ -38,6 +38,11 @@ export const styles = StyleSheet.create({
 		fontSize: 16,
 		color: "#FFFFFF",
 	},
+	textBlack: {
+		marginLeft: 5,
+		fontSize: 16,
+		color: "#111551",
+	},
 	lock_icon: {
 		width: 40,
 		marginRight: 20,

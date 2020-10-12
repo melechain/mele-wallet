@@ -50,10 +50,7 @@ class ScanQRCodeSuccessComponent extends Component<
 					<ScanGreen style={{ height: 55, width: 55 }} />
 				</View>
 				<View style={[styles.successMessage]}>
-					<Text style={[styles.font, commonStyles.fontBold]}>
-						Your account has
-					</Text>
-					<Text style={[styles.font, commonStyles.fontBold]}>been synced!</Text>
+					<Text style={[styles.font, commonStyles.fontBold]}>Success!</Text>
 				</View>
 				<View style={[styles.subSuccessMessage]}>
 					<Text style={[styles.subFont]}>
