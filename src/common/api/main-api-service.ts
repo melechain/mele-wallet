@@ -6,7 +6,7 @@ import base64 from "base-64";
 declare const global: {};
 
 const getUrl = () => {
-	return "http://api.dev1.melechain.com";
+	return "https://api.dev1.melechain.com";
 };
 
 export const API_URL = getUrl();
