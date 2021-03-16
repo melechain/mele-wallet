@@ -73,6 +73,32 @@ export default class AccountService extends MainService {
 			},
 		});
 	};
+	updateAccount = async (
+		email: string,
+		name: string,
+		phone: string,
+	) => {
+		return await this.patch({
+			path: `/account`,
+			data: {
+				name: name,
+				email: email,
+				phone: phone,
+			},
+		});
+	};
+	updatePassword = async (
+		current: string,
+		password: string,
+	) => {
+		return await this.patch({
+			path: `/account`,
+			data: {
+				current: current,
+				password: password,
+			},
+		});
+	};
 	checkUsername = async (username: string) => {
 		return await this.get({
 			path: `/account/${username}`,
