@@ -26,11 +26,8 @@ export default class AccountService extends MainService {
 	};
 
 	logout = async () => {
-		return await this.patch({
-			path: `/account`,
-			data: {
-				bearer: null,
-			},
+		return await this.post({
+			path: `/account/logout`,
 		});
 	};
 	confirmEmail = async (token: string) => {
@@ -51,7 +48,7 @@ export default class AccountService extends MainService {
 		username: string,
 		name: string,
 		password: string,
-		uri: string,
+		language: string,
 	) => {
 		return await this.put({
 			path: `/account`,
@@ -59,7 +56,7 @@ export default class AccountService extends MainService {
 				name: name,
 				email: username,
 				password: password,
-				uri: uri,
+				currentLanguage: language,
 			},
 		});
 	};
@@ -73,24 +70,16 @@ export default class AccountService extends MainService {
 			},
 		});
 	};
-	updateAccount = async (
-		email: string,
-		name: string,
-		phone: string,
-	) => {
+	updateAccount = async (name: string, phone: string) => {
 		return await this.patch({
 			path: `/account`,
 			data: {
 				name: name,
-				email: email,
 				phone: phone,
 			},
 		});
 	};
-	updatePassword = async (
-		current: string,
-		password: string,
-	) => {
+	updatePassword = async (current: string, password: string) => {
 		return await this.patch({
 			path: `/account`,
 			data: {
@@ -105,12 +94,12 @@ export default class AccountService extends MainService {
 		});
 	};
 
-	passwordResetInitiate = async (username: string, uri: string) => {
+	passwordResetInitiate = async (username: string, language: string) => {
 		return await this.put({
 			path: `/reset`,
 			data: {
 				email: username,
-				uri: uri,
+				currentLanguage: language,
 			},
 		});
 	};
