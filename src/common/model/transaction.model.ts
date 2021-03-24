@@ -17,4 +17,29 @@ export interface ITransactionModel {
 	updatedAt: string;
 	status: string;
 	refCode: string;
+
+}
+
+export function emptyTransaction(): ITransactionModel {
+	return {
+		id: '',
+		from: {
+			email: '',
+			name: '',
+			wallet: '',
+		},
+		to: {
+			email: '',
+			name: '',
+			wallet: '',
+		},
+		type: '',
+		amount: '',
+		createdAt: '',
+		approvedAt: '',
+		updatedAt: '',
+		status: '',
+		refCode: '',
+	}
+
 }
