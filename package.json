@@ -22,6 +22,7 @@
 		"base-64": "^0.1.0",
 		"bn.js": "^5.1.3",
 		"build-url": "^2.0.0",
+		"jetifier": "^1.6.6",
 		"mele-sdk": "0.0.5",
 		"moment": "^2.29.0",
 		"node-libs-react-native": "^1.2.0",

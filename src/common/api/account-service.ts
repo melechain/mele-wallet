@@ -13,7 +13,7 @@ export default class AccountService extends MainService {
 
 	login = async (username: string, password: string) => {
 		return await this.get({
-			path: "/account",
+			path: `/account`,
 			headers: {
 				Authorization: `Basic ${base64.encode(username + ":" + password)}`,
 			},
@@ -22,13 +22,13 @@ export default class AccountService extends MainService {
 
 	checkSession = async () => {
 		return await this.get({
-			path: "/account",
+			path: `/account`,
 		});
 	};
 
 	logout = async () => {
 		return await this.post({
-			path: "/account/logout",
+			path: `/account/logout`,
 		});
 	};
 	confirmEmail = async (token: string) => {
@@ -52,7 +52,7 @@ export default class AccountService extends MainService {
 		language: string,
 	) => {
 		return await this.put({
-			path: "/account",
+			path: `/account`,
 			data: {
 				name: name,
 				email: username,
@@ -61,19 +61,19 @@ export default class AccountService extends MainService {
 			},
 		});
 	};
-	inviteAccount = async (username: string, name: string, language: string) => {
+	inviteAccount = async (username: string, name: string, uri: string) => {
 		return await this.put({
 			path: `/account`,
 			data: {
 				name: name,
 				email: username,
-				language: language,
+				uri: uri,
 			},
 		});
 	};
 	updateAccount = async (name: string, phone: string) => {
 		return await this.patch({
-			path: "/account",
+			path: `/account`,
 			data: {
 				name: name,
 				phone: phone,
@@ -82,7 +82,7 @@ export default class AccountService extends MainService {
 	};
 	updatePassword = async (current: string, password: string) => {
 		return await this.patch({
-			path: "/account",
+			path: `/account`,
 			data: {
 				current: current,
 				password: password,
