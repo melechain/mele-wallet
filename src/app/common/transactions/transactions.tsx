@@ -1,20 +1,11 @@
 import React, { Component } from "react";
-import {
-	View,
-	ScrollView,
-	Text,
-	Button,
-	TouchableOpacity,
-	ActivityIndicator,
-} from "react-native";
-import Clipboard from "@react-native-community/clipboard";
+import { View, Text, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
 	mapDispatchToProps,
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
-import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import ShieldBlue from "@mele-wallet/resources/icons/shield-blue.svg";
@@ -175,14 +166,15 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					transaction.status === "pending" ? "Pending" : "Complete";
 
 				let transactionTitle = transaction.refCode;
-				if (transactionTitle) {
+
+				if (!transactionTitle) {
 					if (
 						transaction.to.wallet ==
 						Wallet.getWallet(this.props!.staticState.mnemonic).getAddress()
 					) {
-						transactionTitle = transaction.to.wallet;
+						transactionTitle = `From: ${transaction.from.wallet}`;
 					} else {
-						transactionTitle = transaction.to.wallet;
+						transactionTitle = `To: ${transaction.to.wallet}`;
 					}
 				}
 				return (
@@ -197,6 +189,8 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					>
 						<View style={[styles.transactionContainerRow]}>
 							<Text
+								adjustsFontSizeToFit={true}
+								numberOfLines={1}
 								style={[
 									styles.transactionContainerAddress,
 									commonStyles.fontBold,

@@ -87,7 +87,7 @@ function* searchTransactions(action: ITransactionReducerAction): SagaIterator {
 	try {
 		const p: ISearchTransactionParameter = {
 			page: action.page,
-			size: action.size,
+			size: action.size || 9999,
 		};
 		if (action.transactionStatus) {
 			p.status = action.transactionStatus as any;

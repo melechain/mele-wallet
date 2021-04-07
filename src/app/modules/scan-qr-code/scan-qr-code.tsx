@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { View, Text, Alert, Dimensions, Button, Linking } from "react-native";
+import {
+	View,
+	Text,
+	Platform,
+	Dimensions,
+	Button,
+	Linking,
+	ActivityIndicator,
+	PermissionsAndroid,
+} from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -13,6 +22,7 @@ import { styles } from "./styles";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
+import Dialog from "react-native-dialog";
 
 interface IScanQRCodeComponentProps {
 	actionCreators: IActionCreators;
@@ -40,7 +50,6 @@ class ScanQRCodeComponent extends Component<
 
 	render() {
 		const QRScanner: any = QRCodeScanner;
-
 		return (
 			<View style={[styles.content, commonStyles.blueBackground]}>
 				<QRScanner
@@ -53,19 +62,29 @@ class ScanQRCodeComponent extends Component<
 					bottomViewStyle={styles.bottomViewStyle}
 					onRead={this.onSuccess}
 					flashMode={RNCamera.Constants.FlashMode.off}
+					permissionDialogTitle="Permission Required"
 					permissionDialogMessage="You need to grant this app camera access in Settings to scan your QR code!"
 					notAuthorizedView={
-						<View style={[styles.content]}>
-							<Text style={[styles.errorText]}>
-								You need to grant this app camera access in Settings to scan
-								your QR code!
-							</Text>
-							<Button
-								title="go to settings"
-								onPress={() => {
-									Linking.openSettings();
-								}}
-							/>
+						<View>
+							<Dialog.Container visible={true}>
+								<Dialog.Title>Permission Required</Dialog.Title>
+								<Dialog.Description>
+									You need to grant this app camera access in Settings to scan
+									your QR code!
+								</Dialog.Description>
+								<Dialog.Button
+									onPress={() => {
+										Linking.openSettings();
+									}}
+									label="Settings"
+								/>
+								<Dialog.Button
+									onPress={() => {
+										Actions.pop();
+									}}
+									label="Back"
+								/>
+							</Dialog.Container>
 						</View>
 					}
 				/>
