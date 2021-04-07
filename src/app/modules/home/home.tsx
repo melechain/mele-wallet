@@ -31,6 +31,10 @@ interface IHomeComponentProps {
 }
 
 class HomeComponent extends Component<IHomeComponentProps> {
+	componentDidMount() {
+		this.props.actionCreators.transaction.resetPurchaseFlow;
+	}
+
 	render() {
 		const account: IAccountModel =
 			this.props.accountState.account || ({} as any);

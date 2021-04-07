@@ -21,6 +21,8 @@ export enum TransactionStateActionTypes {
 	PURCHASE_SUCCESS = "@@TRANSACTION/PURCHASE_SUCCESS",
 	PURCHASE_ERROR = "@@TRANSACTION/PURCHASE_ERROR",
 	PURCHASE_STATUS_CLEAR = "@@TRANSACTION/PURCHASE_STATUS_CLEAR",
+	RESET_SEND_FLOW = "@@TRANSACTION/RESET_SEND_FLOW",
+	NOT_ENOUGH_COINS_SEND = "@@TRANSACTION/NOT_ENOUGH_COINS_SEND",
 }
 
 export enum PurchaseFlowStatus {
@@ -38,6 +40,7 @@ export enum TransactionStatus {
 	SUCCESS,
 	ERROR,
 	ENDED, // close window
+	NOT_ENOUGH_COINS_SEND,
 }
 export enum LoadTransactionsStatus {
 	NOT_REQUESTED,
@@ -152,6 +155,7 @@ const transactionReducer = (
 			return {
 				...state,
 				transactionStatus: TransactionStatus.SUCCESS,
+				loadedTransaction: action.loadedTransaction,
 			};
 		case TransactionStateActionTypes.CREATE_TRANSACTION_ERROR:
 			return {
@@ -193,12 +197,23 @@ const transactionReducer = (
 			return {
 				...state,
 				purchaseFlowStatus: PurchaseFlowStatus.PURCHASE_SUCCESS,
+				loadedTransaction: action.loadedTransaction,
 			};
 		case TransactionStateActionTypes.PURCHASE_STATUS_CLEAR:
 			return {
 				...state,
 				purchaseFlowStatus: PurchaseFlowStatus.NOT_STARTED,
 				generatedPurchaseCode: "",
+			};
+		case TransactionStateActionTypes.RESET_SEND_FLOW:
+			return {
+				...state,
+				transactionStatus: TransactionStatus.ENDED,
+			};
+		case TransactionStateActionTypes.NOT_ENOUGH_COINS_SEND:
+			return {
+				...state,
+				transactionStatus: TransactionStatus.NOT_ENOUGH_COINS_SEND,
 			};
 		default:
 			return {

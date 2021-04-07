@@ -23,7 +23,7 @@ export interface ISearchTransactionParameter {
 
 export default class TransactionService extends MainService {
 	transactionSend = async (to: string, amount: number) => {
-		return await this.put({
+		const response = await this.put({
 			path: `/transaction`,
 			data: {
 				to: to,
@@ -31,6 +31,7 @@ export default class TransactionService extends MainService {
 				amount: parseInt(amount as any),
 			},
 		});
+		return response;
 	};
 	transactionPurchase = async (amount: number, refCode: string) => {
 		return await this.put({

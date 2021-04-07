@@ -59,6 +59,10 @@ class HistoryComponent extends Component<
 		};
 	}
 
+	componentDidMount() {
+		this.props.actionCreators.transaction.resetPurchaseFlow;
+	}
+
 	render() {
 		return (
 			<ScrollView

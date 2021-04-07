@@ -16,4 +16,10 @@ export default class StaticActionCreator extends BaseActionCreator<
 			pin: pin,
 		});
 	};
+	updatePin = async (pin: string) => {
+		this.dispatch({
+			type: StaticStateActionTypes.UPDATE__PIN,
+			pin: pin,
+		});
+	};
 }

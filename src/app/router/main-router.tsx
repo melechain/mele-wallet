@@ -53,6 +53,8 @@ import { ScanQRCodeSuccess } from "@mele-wallet/app/modules/scan-qr-code/scan-qr
 import { ScanQRCodeError } from "@mele-wallet/app/modules/scan-qr-code/scan-qr-code-error";
 import { SplashScreen } from "@mele-wallet/app/modules/splash-screen/splash-screen";
 import { Transaction } from "@mele-wallet/app/modules/transaction/transaction";
+import { Terms } from "../modules/terms/terms";
+import { About } from "../modules/about/about";
 
 class MainRouterComponent extends React.Component {
 	render() {
@@ -124,6 +126,18 @@ class MainRouterComponent extends React.Component {
 							}}
 						/>
 						<Scene
+							key={ROUTES.authenticated.createPin}
+							component={CreatePin}
+							navBar={() => {
+								return (
+									<AuthenticatedBlueHeader
+										componentKey={ROUTES.authenticated.createPin}
+										title="Change Pin"
+									/>
+								);
+							}}
+						/>
+						<Scene
 							key={ROUTES.nonAuthenticated.createPin}
 							component={CreatePin}
 							hideNavBar={false}
@@ -137,7 +151,18 @@ class MainRouterComponent extends React.Component {
 								);
 							}}
 						/>
-
+						<Scene
+							key={ROUTES.authenticated.confirmPin}
+							component={ConfirmPin}
+							navBar={() => {
+								return (
+									<AuthenticatedBlueHeader
+										componentKey={ROUTES.authenticated.confirmPin}
+										title="Confirm Pin"
+									/>
+								);
+							}}
+						/>
 						<Scene
 							key={ROUTES.nonAuthenticated.confirmPin}
 							component={ConfirmPin}
@@ -173,6 +198,18 @@ class MainRouterComponent extends React.Component {
 						hideNavBar={true}
 						showLabel={false}
 						initial={true}
+					/>
+					<Scene
+						key={ROUTES.terms}
+						component={Terms}
+						hideNavBar={false}
+						gesturesEnabled={false}
+					/>
+					<Scene
+						key={ROUTES.about}
+						component={About}
+						hideNavBar={false}
+						gesturesEnabled={false}
 					/>
 					<Scene
 						key={ROUTES.nonAuthenticated.loginPin}
@@ -292,27 +329,45 @@ class MainRouterComponent extends React.Component {
 								component={Buy}
 								title="Buy"
 								key={ROUTES.authenticated.buy}
-								tabBarOnPress={() => {
-									return;
-								}}
-								icon={(p: any) => {
-									return (
-										<View style={styles.tabButton}>
-											<View style={styles.iconAntText}>
-												<View style={styles.icon}>
-													<DisabledBuyIcon />
+								back={false}
+								icon={(p: any, a: any) => {
+									if (p.navigation.isFocused()) {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<ActiveBuyIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextActive,
+															commonStyles.fontBold,
+														]}
+													>
+														Buy
+													</Text>
 												</View>
-												<Text
-													style={[
-														styles.buttonTextDisabled,
-														commonStyles.fontBold,
-													]}
-												>
-													Buy
-												</Text>
 											</View>
-										</View>
-									);
+										);
+									} else {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<InactiveBuyIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextInactive,
+															commonStyles.fontBold,
+														]}
+													>
+														Buy
+													</Text>
+												</View>
+											</View>
+										);
+									}
 								}}
 							/>
 							<Scene
@@ -320,14 +375,11 @@ class MainRouterComponent extends React.Component {
 								component={Send}
 								title="Send"
 								key={ROUTES.authenticated.send}
-								tabBarOnPress={() => {
-									return;
-								}}
-								icon={() => {
+								icon={(p: any) => {
 									return (
 										<View style={styles.tabButton}>
 											<View style={styles.sentIconContainer}>
-												<DisabledSendIcon />
+												<SendIcon />
 											</View>
 										</View>
 									);
@@ -386,23 +438,43 @@ class MainRouterComponent extends React.Component {
 								key={ROUTES.authenticated.more}
 								back={false}
 								icon={(p: any) => {
-									return (
-										<View style={styles.tabButton}>
-											<View style={styles.iconAntText}>
-												<View style={styles.icon}>
-													<DisabledMoreIcon />
+									if (p.navigation.isFocused()) {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<ActiveMoreIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextActive,
+															commonStyles.fontBold,
+														]}
+													>
+														More
+													</Text>
 												</View>
-												<Text
-													style={[
-														styles.buttonTextDisabled,
-														commonStyles.fontBold,
-													]}
-												>
-													More
-												</Text>
 											</View>
-										</View>
-									);
+										);
+									} else {
+										return (
+											<View style={styles.tabButton}>
+												<View style={styles.iconAntText}>
+													<View style={styles.icon}>
+														<InactiveMoreIcon />
+													</View>
+													<Text
+														style={[
+															styles.buttonTextInactive,
+															commonStyles.fontBold,
+														]}
+													>
+														More
+													</Text>
+												</View>
+											</View>
+										);
+									}
 								}}
 							/>
 						</Tabs>

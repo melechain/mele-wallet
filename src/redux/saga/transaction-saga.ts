@@ -59,6 +59,7 @@ function* processPurchase(action: ITransactionReducerAction): SagaIterator {
 		);
 		return yield put({
 			type: TransactionStateActionTypes.PURCHASE_SUCCESS,
+			loadedTransaction: response,
 		});
 	} catch (e) {
 		return yield put({
@@ -73,8 +74,10 @@ function* transactionSend(action: ITransactionReducerAction): SagaIterator {
 			action.to,
 			action.amount,
 		);
+		console.log("yes");
 		return yield put({
 			type: TransactionStateActionTypes.CREATE_TRANSACTION_SUCCESS,
+			loadedTransaction: response,
 		});
 	} catch (e) {
 		return yield put({

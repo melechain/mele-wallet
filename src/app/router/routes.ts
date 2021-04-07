@@ -5,6 +5,8 @@ export const ROUTES = {
 	scanQRCodeSuccess: "scanQRCodeSuccess",
 	scanQRCodeError: "scanQRCodeError",
 	walletSync: "walletSync",
+	terms: "terms",
+	about: "about",
 	nonAuthenticated: {
 		registrationOrLogin: "nonAuthenticated.registrationOrLogin",
 		createWallet: "nonAuthenticated.createWallet",
@@ -21,5 +23,7 @@ export const ROUTES = {
 		history: "nonAuthenticated.history",
 		more: "nonAuthenticated.more",
 		transaction: "nonAuthenticated.transaction",
+		createPin: "authenticated.createPin",
+		confirmPin: "authenticated.confirmPin",
 	},
 };

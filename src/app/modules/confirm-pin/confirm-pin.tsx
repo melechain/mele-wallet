@@ -28,6 +28,7 @@ interface IConfirmPinComponentProps {
 	accountState: AccountState;
 	mnemonic: string;
 	pin: string;
+	accountId?: string;
 }
 interface IConfirmPinComponentState {
 	pinConfirmation: string;
@@ -115,7 +116,14 @@ class ConfirmPinComponent extends Component<
 							});
 						}}
 						onPinReady={(pin: string) => {
-							if (pin == this.props.pin) {
+							if (
+								pin === this.props.pin &&
+								this.props.accountId !== undefined
+							) {
+								console.log("update!");
+								this.props.actionCreators.static.updatePin(pin);
+								Actions.jump(ROUTES.authenticated.home);
+							} else if (pin == this.props.pin) {
 								this.props.actionCreators.static.setMnemonicAndPin(
 									this.props.mnemonic,
 									pin,

@@ -13,7 +13,7 @@ export class LanguageState {
 	currentLanguage: "en" | "ar" = "en";
 	languages: { value: string; label: string }[] = [
 		{ value: "en", label: "English" },
-		{ value: "ar", label: "Arabic" },
+		// { value: "ar", label: "Arabic" },
 	];
 }
 

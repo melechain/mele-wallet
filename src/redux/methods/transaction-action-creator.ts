@@ -71,4 +71,14 @@ export default class TransactionActionCreator extends BaseActionCreator<
 			type: TransactionStateActionTypes.PURCHASE_STATUS_CLEAR,
 		});
 	};
+	resetSendFlow = async () => {
+		this.dispatch({
+			type: TransactionStateActionTypes.RESET_SEND_FLOW,
+		});
+	};
+	notEnoughCoins = async () => {
+		this.dispatch({
+			type: TransactionStateActionTypes.NOT_ENOUGH_COINS_SEND,
+		});
+	};
 }

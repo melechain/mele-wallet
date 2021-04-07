@@ -12,6 +12,7 @@ import languageReducer from "@mele-wallet/redux/reducers/language-reducer";
 import staticReducer from "@mele-wallet/redux/reducers/static-reducer";
 import statisticsReducer from "@mele-wallet/redux/reducers/statistics-reducer";
 import transactionReducer from "@mele-wallet/redux/reducers/transaction-reducer";
+import currencyReducer from "./reducers/currency-reducer";
 
 const AccountPersistConfig = {
 	key: "static",
@@ -25,6 +26,7 @@ export const reducers: Reducer<ApplicationState> = combineReducers<
 	language: languageReducer,
 	statistics: statisticsReducer,
 	transaction: transactionReducer,
+	currency: currencyReducer,
 	static: persistReducer(AccountPersistConfig, staticReducer) as any,
 });
 

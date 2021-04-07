@@ -22,10 +22,12 @@ import { Pin } from "@mele-wallet/app/common/pin-component/pin-component";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 //import BackButton from "@mele-wallet/resources/icons/back-arrow.png";
+import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 
 interface ICreatePinComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
+	staticState: StaticState;
 	mnemonic: string;
 }
 
@@ -50,10 +52,18 @@ class CreatePinComponent extends Component<ICreatePinComponentProps> {
 				</View>
 				<Pin
 					onPinReady={(pin: string) => {
-						Actions.jump(ROUTES.nonAuthenticated.confirmPin, {
-							mnemonic: this.props.mnemonic,
-							pin: pin,
-						});
+						if (this.props.staticState.accountId) {
+							Actions.jump(ROUTES.nonAuthenticated.confirmPin, {
+								mnemonic: this.props.mnemonic,
+								pin: pin,
+								accountId: this.props.staticState.accountId,
+							});
+						} else {
+							Actions.jump(ROUTES.nonAuthenticated.confirmPin, {
+								mnemonic: this.props.mnemonic,
+								pin: pin,
+							});
+						}
 					}}
 					style={styles.pinContainer}
 				/>
@@ -65,6 +75,7 @@ class CreatePinComponent extends Component<ICreatePinComponentProps> {
 const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
+		staticState: state.static,
 	};
 };
 
