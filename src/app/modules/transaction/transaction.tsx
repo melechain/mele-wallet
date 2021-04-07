@@ -25,6 +25,7 @@ import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calcula
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 import moment from "moment";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
+import { Wallet } from "@mele-wallet/common/utils/wallet";
 
 interface ITransactionComponentProps {
 	actionCreators: IActionCreators;
@@ -76,7 +77,22 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				<Calculator centsAmount={this.props.transaction.amount} />
 
 				<View style={[styles.infoList]}>
-					{this.getInfoBlock("Transaction Id", this.props.transaction.id)}
+					{/* {this.getInfoBlock("Transaction Id", this.props.transaction.id)} */}
+
+					{this.getInfoBlock("Sender", this.props.transaction.from.wallet, {
+						show:
+							!this.props.transaction.refCode &&
+							this.props.transaction.to.wallet ==
+								Wallet.getWallet(this.props.staticState.mnemonic).getAddress(),
+						capitalize: false,
+					})}
+					{this.getInfoBlock("Receiver", this.props.transaction.to.wallet, {
+						show:
+							!this.props.transaction.refCode &&
+							this.props.transaction.to.wallet !=
+								Wallet.getWallet(this.props.staticState.mnemonic).getAddress(),
+						capitalize: false,
+					})}
 					{this.getInfoBlock("Reference Code", this.props.transaction.refCode, {
 						show: !!this.props.transaction.refCode,
 						capitalize: false,

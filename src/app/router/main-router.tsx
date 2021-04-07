@@ -178,7 +178,7 @@ class MainRouterComponent extends React.Component {
 							}}
 						/>
 
-						<Scene
+						{/* <Scene
 							key={ROUTES.nonAuthenticated.loginPinFirstTime}
 							component={LoginPin}
 							hideNavBar={false}
@@ -190,7 +190,7 @@ class MainRouterComponent extends React.Component {
 									/>
 								);
 							}}
-						/>
+						/> */}
 					</Stack>
 					<Scene
 						key={ROUTES.splashScreen}
