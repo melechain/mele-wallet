@@ -25,6 +25,7 @@ import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
 import { NoCoinsAvailable } from "./no-coins-available";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
@@ -56,16 +57,24 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 	}
 
 	sendCoins = () => {
+		const replaced = parseFloat(
+			this.state.sendAmount.replace(",", ".").replace(" ", ""),
+		);
 		if (
 			this.props.accountState.account?.balance === undefined ||
-			parseFloat(this.props.accountState.account?.balance) <
-				parseFloat(this.state.sendAmount)
+			parseFloat(
+				MeleCalculator.centsToUSD(this.props.accountState.account?.balance),
+			) < parseFloat(this.state.sendAmount)
 		) {
 			this.props.actionCreators.transaction.notEnoughCoins();
 		} else {
 			this.props.actionCreators.transaction.transactionSend(
 				this.state.toAddress,
-				parseFloat(this.state.sendAmount),
+				parseFloat(
+					parseFloat(
+						parseFloat((replaced * 100).toFixed(2).toString()).toString(),
+					).toFixed(2),
+				),
 			);
 		}
 		this.setState({
@@ -119,7 +128,8 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							if (value.length > 10) {
 								return;
 							}
-							const reg = new RegExp("^[0-9]+$");
+
+							const reg = new RegExp("^[0-9.,]+$");
 
 							if (reg.test(value) || value === "") {
 								this.setState({
@@ -129,10 +139,10 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 						}}
 						value={this.state.sendAmount || ""}
 						placeholder="Amount"
-						iconRight={<Text>MELC</Text>}
+						iconRight={<Text>USD</Text>}
 					/>
 					<BlueButton
-						text="Send Allocated Coins"
+						text="Send USD"
 						onPress={() => {
 							this.sendCoins();
 						}}
@@ -140,7 +150,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							this.state.toAddress === "" ||
 							this.state.toAddress.length < 43 ||
 							this.state.sendAmount === "" ||
-							parseFloat(this.state.sendAmount) <= 0
+							parseFloat(this.state.sendAmount) < 0.000001
 						}
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}

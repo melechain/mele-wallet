@@ -90,8 +90,15 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 	};
 
 	purchaseCoins = () => {
+		const replaced = parseFloat(
+			this.state.purchaseAmount.replace(",", ".").replace(" ", ""),
+		);
 		this.props.actionCreators.transaction.processPurchase(
-			parseFloat(this.state.purchaseAmount) * 100,
+			parseFloat(
+				parseFloat(
+					parseFloat((replaced * 100).toFixed(2).toString()).toString(),
+				).toFixed(2),
+			),
 			this.props.transactionState.generatedPurchaseCode,
 		);
 		this.setState({
@@ -130,7 +137,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 							if (value.length > 10) {
 								return;
 							}
-							const reg = new RegExp("^[0-9]+$");
+							const reg = new RegExp("^[0-9.,]+$");
 
 							if (reg.test(value) || value === "") {
 								this.setState({
@@ -153,7 +160,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 					<BlueButton
 						disabled={
 							this.state.purchaseAmount === "" ||
-							this.props.accountState.account?.wallet === undefined
+							parseFloat(this.state.purchaseAmount) <= 0
 						}
 						text={
 							this.props.accountState.account?.wallet === undefined
@@ -161,7 +168,9 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 								: "Place Order"
 						}
 						onPress={() => {
-							this.generateNewPurchaseNumber();
+							this.props.accountState.account?.wallet === undefined
+								? Actions.jump(ROUTES.scanQRCode)
+								: this.generateNewPurchaseNumber();
 						}}
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}

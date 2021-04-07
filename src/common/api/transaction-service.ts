@@ -28,7 +28,7 @@ export default class TransactionService extends MainService {
 			data: {
 				to: to,
 				type: "transfer",
-				amount: parseInt(amount as any),
+				amount: amount,
 			},
 		});
 		return response;

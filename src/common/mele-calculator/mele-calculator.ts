@@ -56,6 +56,7 @@ export class MeleCalculator {
 		let melcUsd = centsExtended.mul(MELC_PART);
 		return Utils.fromUmelc(melcUsd.div(new BN(melcPrice))).toString();
 	}
+
 	public static CentsToMeleG(
 		cents: string,
 		p_melgPerGramOfGold: string,

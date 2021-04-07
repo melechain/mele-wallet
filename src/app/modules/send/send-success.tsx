@@ -14,6 +14,7 @@ import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
 import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
+import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 
 interface ISendSuccessProps {
 	languageState: LanguageState;
@@ -49,9 +50,12 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 				</Text>
 				<Text style={[styles.initContainer]}>
 					<Text style={[commonStyles.fontBold]}>
-						{this.props.transactionState.loadedTransaction?.amount} &nbsp;
+						{MeleCalculator.centsToUSDFormatted(
+							this.props.transactionState.loadedTransaction.amount,
+						)}{" "}
+						&nbsp;
 					</Text>
-					MELC were successfully transfered to{" "}
+					USD were successfully transfered to{" "}
 					<Text style={[commonStyles.fontBold]}>
 						{this.props.transactionState.loadedTransaction?.to.wallet}
 					</Text>

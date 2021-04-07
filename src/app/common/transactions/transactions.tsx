@@ -142,12 +142,15 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					<Text
 						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
 					>
-						Purchase MelC to get started.
+						Purchase MELC to get started.
 					</Text>
 					<BlueButton
 						text="Purchase Coins"
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}
+						onPress={() => {
+							Actions.jump(ROUTES.authenticated.buy);
+						}}
 					/>
 				</View>
 			);

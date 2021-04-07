@@ -61,13 +61,13 @@ export default class AccountService extends MainService {
 			},
 		});
 	};
-	inviteAccount = async (username: string, name: string, uri: string) => {
+	inviteAccount = async (username: string, name: string, language: string) => {
 		return await this.put({
-			path: "/account",
+			path: `/account`,
 			data: {
 				name: name,
 				email: username,
-				uri: uri,
+				currentLanguage: language,
 			},
 		});
 	};

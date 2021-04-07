@@ -52,7 +52,7 @@ class NoCoinsAvailableComponent extends React.Component<
 					/>
 				</View>
 				<View style={[styles.noCoinsContainer]}>
-					<NoCoins width={700} height={600} style={{ marginLeft: 120 }} />
+					<NoCoins width={700} height={700} style={{ marginLeft: 120 }} />
 				</View>
 			</ScrollView>
 		);
