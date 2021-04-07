@@ -128,6 +128,9 @@ class MainRouterComponent extends React.Component {
 						<Scene
 							key={ROUTES.authenticated.createPin}
 							component={CreatePin}
+							hideNavBar={false}
+							showLabel={false}
+							initial={false}
 							navBar={() => {
 								return (
 									<AuthenticatedBlueHeader
@@ -154,6 +157,10 @@ class MainRouterComponent extends React.Component {
 						<Scene
 							key={ROUTES.authenticated.confirmPin}
 							component={ConfirmPin}
+							hideNavBar={false}
+							showLabel={false}
+							initial={false}
+							back={true}
 							navBar={() => {
 								return (
 									<AuthenticatedBlueHeader

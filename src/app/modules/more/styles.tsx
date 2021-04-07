@@ -92,9 +92,31 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	transparentButtonPIN: {
+		height: 31,
+		backgroundColor: "rgba(52, 52, 52, 0)",
+		borderRadius: 16,
+		paddingLeft: 10,
+		paddingRight: 10,
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		flexDirection: "row",
+	},
 	transparentButtonTitle: {
 		color: "#101654",
 		opacity: 0.4,
+	},
+	transparentButtonTitlePIN: {
+		color: "#101654",
+		opacity: 0.4,
+		paddingLeft: 200,
+	},
+	actionTextPIN: {
+		flex: 1,
+		paddingLeft: 20,
+		color: "black",
+		fontSize: 12,
 	},
 	buttonTitle: {
 		fontSize: 12,

@@ -23,10 +23,16 @@ interface ISendSuccessProps {
 
 class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 	goToTransactionDetails = () => {
+		this.props.actionCreators.account.accountSync();
 		this.props.actionCreators.transaction.resetSendFlow();
 		Actions.jump(ROUTES.authenticated.transaction, {
 			transaction: this.props.transactionState.loadedTransaction,
 		});
+	};
+
+	goBack = () => {
+		this.props.actionCreators.transaction.resetSendFlow();
+		Actions.jump(ROUTES.authenticated.send);
 	};
 
 	render() {
@@ -42,19 +48,32 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 					Transaction Successfull!
 				</Text>
 				<Text style={[styles.initContainer]}>
-					{this.props.transactionState.loadedTransaction?.amount} coins were
-					successfully transfered to{" "}
-					{this.props.transactionState.loadedTransaction?.to.email}
+					<Text style={[commonStyles.fontBold]}>
+						{this.props.transactionState.loadedTransaction?.amount} &nbsp;
+					</Text>
+					MELC were successfully transfered to{" "}
+					<Text style={[commonStyles.fontBold]}>
+						{this.props.transactionState.loadedTransaction?.to.wallet}
+					</Text>
 				</Text>
-
-				<BlueButton
-					text="Transaction Details"
-					onPress={() => {
-						this.goToTransactionDetails();
-					}}
-					style={styles.purchaseCoins}
-					textStyle={styles.noTransactionsContainerButtonText}
-				/>
+				<View style={[styles.buttonsContainer]}>
+					<BlueButton
+						text="Transaction Details"
+						onPress={() => {
+							this.goToTransactionDetails();
+						}}
+						style={styles.successConfirm}
+						textStyle={styles.succesContainerButtonText}
+					/>
+					<BlueButton
+						text="Go Back"
+						onPress={() => {
+							this.goBack();
+						}}
+						style={styles.successGoBack}
+						textStyle={styles.successGoBackButtonText}
+					/>
+				</View>
 			</ScrollView>
 		);
 	}

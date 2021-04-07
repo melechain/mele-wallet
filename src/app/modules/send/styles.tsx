@@ -16,6 +16,16 @@ export const styles = StyleSheet.create({
 		display: "flex",
 		paddingTop: "20%",
 	},
+	noCoinsContent: {
+		flexDirection: "column",
+		backgroundColor: "#ffffff",
+		width: "100%",
+		alignItems: "center",
+		justifyContent: "center",
+		marginLeft: "auto",
+		marginRight: "auto",
+		display: "flex",
+	},
 	initTitle: {
 		paddingTop: 10,
 	},
@@ -128,6 +138,11 @@ export const styles = StyleSheet.create({
 		width: 120,
 		borderRadius: 40,
 	},
+	noCoinsContainer: {
+		width: 800,
+		height: 350,
+		overflow: "hidden",
+	},
 	successSmallIconContainer: {
 		display: "flex",
 		alignItems: "center",
@@ -142,5 +157,30 @@ export const styles = StyleSheet.create({
 		display: "flex",
 		flexDirection: "row",
 		alignSelf: "flex-start",
+	},
+	successConfirm: {
+		marginTop: 22,
+		marginBottom: 10,
+		width: "45%",
+		marginRight: 5,
+	},
+	successGoBack: {
+		marginTop: 22,
+		marginBottom: 10,
+		width: "45%",
+		backgroundColor: "white",
+		borderColor: "#1016541F",
+		borderWidth: 1,
+	},
+	successGoBackButtonText: {
+		fontSize: 14,
+		color: "#091841",
+	},
+	buttonsContainer: {
+		display: "flex",
+		flexDirection: "row",
+	},
+	succesContainerButtonText: {
+		fontSize: 12,
 	},
 });

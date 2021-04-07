@@ -106,20 +106,20 @@ class MoreComponent extends Component<IMoreComponentProps> {
 				</View>
 				<View style={[styles.actionArea]}>
 					<View style={[styles.eachAction]}>
-						<View style={[styles.Icon]}>
-							<LockGreenIcon style={[styles.actionLogo]} />
-						</View>
-						<Text style={[styles.actionText, commonStyles.fontBook]}>PIN</Text>
 						<Ripple
-							style={[styles.transparentButton]}
+							style={[styles.transparentButtonPIN]}
 							onPress={() => {
 								FluxActions.jump(ROUTES.authenticated.createPin, {
 									mnemonic: this.generateMnemonic().join(" "),
 								});
 							}}
 						>
+							<LockGreenIcon style={[styles.actionLogo]} />
 							<Text
-								style={[styles.transparentButtonTitle, commonStyles.fontBook]}
+								style={[
+									styles.transparentButtonTitlePIN,
+									commonStyles.fontBook,
+								]}
 							>
 								Change PIN &gt;
 							</Text>

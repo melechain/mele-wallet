@@ -13,46 +13,47 @@ import { ScrollView, Image, Text, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
-import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
+import NoCoins from "@mele-wallet/resources/images/no-coins-image.svg";
 
-interface IBuysSuccessProps {
+interface INoCoinsAvailableProps {
 	languageState: LanguageState;
 	transactionState: TransactionState;
 	actionCreators: IActionCreators;
 }
 
-class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
-	goToHistory = () => {
-		this.props.actionCreators.account.accountSync();
-		this.props.actionCreators.transaction.resetPurchaseFlow();
-		Actions.jump(ROUTES.authenticated.history);
+class NoCoinsAvailableComponent extends React.Component<
+	INoCoinsAvailableProps
+> {
+	buyCoins = () => {
+		this.props.actionCreators.transaction.resetSendFlow();
+		Actions.jump(ROUTES.authenticated.buy);
 	};
-
 	render() {
 		return (
 			<ScrollView
 				style={[styles.scrollView]}
-				contentContainerStyle={styles.content}
+				contentContainerStyle={styles.noCoinsContent}
 			>
-				<View style={[styles.successIconContainer]}>
-					<ShieldGreenIcon width={90} height={90} />
-				</View>
-				<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-					Thank you!
-				</Text>
-				<Text style={[styles.initContainer]}>
-					Your order is placed and can be viewed under transactions page as
-					pending until the admin approves that you have made the payment.
-				</Text>
+				<View style={[styles.content]}>
+					<Text style={[styles.initErrorTitle, commonStyles.blackHeader]}>
+						You have no coins yet! Purchase MELC to get started.
+					</Text>
+					<Text style={[styles.initContainer]}>
+						You need to have some coins in order to make a transfer!
+					</Text>
 
-				<BlueButton
-					text="Transactions"
-					onPress={() => {
-						this.goToHistory();
-					}}
-					style={styles.purchaseCoins}
-					textStyle={styles.noTransactionsContainerButtonText}
-				/>
+					<BlueButton
+						text="Purchase Coins"
+						onPress={() => {
+							this.buyCoins();
+						}}
+						style={styles.purchaseCoins}
+						textStyle={styles.noTransactionsContainerButtonText}
+					/>
+				</View>
+				<View style={[styles.noCoinsContainer]}>
+					<NoCoins width={700} height={600} style={{ marginLeft: 120 }} />
+				</View>
 			</ScrollView>
 		);
 	}
@@ -64,7 +65,7 @@ const mapStateToProps = (state: ApplicationState) => {
 		transactionState: state.transaction,
 	};
 };
-export const BuySuccess = connect(
+export const NoCoinsAvailable = connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(BuySuccessComponent);
+)(NoCoinsAvailableComponent);

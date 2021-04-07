@@ -6,7 +6,10 @@ import {
 	mapDispatchToProps,
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
-import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
+import {
+	AccountState,
+	WalletSyncStatus,
+} from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import {
 	PurchaseFlowStatus,
@@ -20,6 +23,8 @@ import Clipboard from "@react-native-community/clipboard";
 import Ripple from "react-native-material-ripple";
 import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
 import { BuySuccess } from "./buy-success";
+import { Actions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface IBuyComponentProps {
 	actionCreators: IActionCreators;
@@ -89,6 +94,9 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 			parseFloat(this.state.purchaseAmount) * 100,
 			this.props.transactionState.generatedPurchaseCode,
 		);
+		this.setState({
+			purchaseAmount: "",
+		});
 	};
 	generateNewPurchaseNumber = () => {
 		this.props.actionCreators.transaction.generateNewPurchaseNumber();
@@ -143,8 +151,15 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 						style={[styles.calculator]}
 					/>
 					<BlueButton
-						disabled={this.state.purchaseAmount === ""}
-						text="Place Order"
+						disabled={
+							this.state.purchaseAmount === "" ||
+							this.props.accountState.account?.wallet === undefined
+						}
+						text={
+							this.props.accountState.account?.wallet === undefined
+								? "Please connect your account first"
+								: "Place Order"
+						}
 						onPress={() => {
 							this.generateNewPurchaseNumber();
 						}}
@@ -157,9 +172,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 			this.props.transactionState.purchaseFlowStatus ===
 				PurchaseFlowStatus.PURCHASE_NUMBER_SUCCESS ||
 			this.props.transactionState.purchaseFlowStatus ===
-				PurchaseFlowStatus.PURCHASE_REQUESTED ||
-			this.props.transactionState.purchaseFlowStatus ===
-				PurchaseFlowStatus.PURCHASE_ERROR
+				PurchaseFlowStatus.PURCHASE_REQUESTED
 		) {
 			return (
 				<ScrollView

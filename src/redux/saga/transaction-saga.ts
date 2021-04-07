@@ -31,9 +31,7 @@ export const transactionSaga = function* handleMessage(
 	);
 };
 
-function* generateNewPurchaseNumber(
-	action: ITransactionReducerAction,
-): SagaIterator {
+function* generateNewPurchaseNumber(): SagaIterator {
 	try {
 		const response = yield call(transactionService.getNewTransactionNumber);
 		const pad = "000000";
@@ -74,7 +72,6 @@ function* transactionSend(action: ITransactionReducerAction): SagaIterator {
 			action.to,
 			action.amount,
 		);
-		console.log("yes");
 		return yield put({
 			type: TransactionStateActionTypes.CREATE_TRANSACTION_SUCCESS,
 			loadedTransaction: response,

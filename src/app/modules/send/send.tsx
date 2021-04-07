@@ -6,7 +6,10 @@ import {
 	mapDispatchToProps,
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
-import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
+import {
+	AccountState,
+	WalletSyncStatus,
+} from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import {
 	TransactionState,
@@ -19,6 +22,9 @@ import { SendSuccess } from "./send-success";
 import { SendNoCoins } from "./send-no-coins";
 import { SendError } from "./send-error";
 import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
+import { NoCoinsAvailable } from "./no-coins-available";
+import { Actions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
@@ -62,6 +68,10 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 				parseFloat(this.state.sendAmount),
 			);
 		}
+		this.setState({
+			sendAmount: "",
+			toAddress: "",
+		});
 	};
 
 	render() {
@@ -75,6 +85,11 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 		) {
 			return <SendNoCoins />;
 		} else if (
+			this.props.accountState.account?.balance === undefined ||
+			parseFloat(this.props.accountState.account?.balance) === 0
+		)
+			return <NoCoinsAvailable />;
+		else if (
 			this.props.transactionState.transactionStatus !==
 			TransactionStatus.SUCCESS
 		) {
@@ -122,7 +137,10 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							this.sendCoins();
 						}}
 						disabled={
-							this.state.toAddress === "" || this.state.sendAmount === ""
+							this.state.toAddress === "" ||
+							this.state.toAddress.length < 43 ||
+							this.state.sendAmount === "" ||
+							parseFloat(this.state.sendAmount) <= 0
 						}
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}
