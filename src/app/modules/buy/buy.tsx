@@ -90,15 +90,8 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 	};
 
 	purchaseCoins = () => {
-		const replaced = parseFloat(
-			this.state.purchaseAmount.replace(",", ".").replace(" ", ""),
-		);
 		this.props.actionCreators.transaction.processPurchase(
-			parseFloat(
-				parseFloat(
-					parseFloat((replaced * 100).toFixed(2).toString()).toString(),
-				).toFixed(2),
-			),
+			parseFloat(this.state.purchaseAmount) * 100,
 			this.props.transactionState.generatedPurchaseCode,
 		);
 		this.setState({
@@ -137,7 +130,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 							if (value.length > 10) {
 								return;
 							}
-							const reg = new RegExp("^[0-9.,]+$");
+							const reg = new RegExp("^[0-9]+$");
 
 							if (reg.test(value) || value === "") {
 								this.setState({

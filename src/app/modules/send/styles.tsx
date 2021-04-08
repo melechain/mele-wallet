@@ -51,9 +51,6 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 		textAlign: "center",
 	},
-	calculator: {
-		paddingTop: 20,
-	},
 	purchaseCoins: {
 		marginTop: 22,
 		marginBottom: 10,

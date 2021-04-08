@@ -22,8 +22,14 @@ interface IBuysSuccessProps {
 }
 
 class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
-	goToHistory = () => {
-		this.props.actionCreators.account.accountSync();
+	goToHistory = async () => {
+		await this.props.actionCreators.transaction.searchTransactions({
+			page: 1,
+			size: 10,
+			transactionType: undefined,
+			transactionStatus: undefined,
+			transactionListKeyword: "",
+		});
 		this.props.actionCreators.transaction.resetPurchaseFlow();
 		Actions.jump(ROUTES.authenticated.history);
 	};

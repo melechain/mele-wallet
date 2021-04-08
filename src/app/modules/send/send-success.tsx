@@ -23,15 +23,23 @@ interface ISendSuccessProps {
 }
 
 class SendSuccessComponent extends React.Component<ISendSuccessProps> {
-	goToTransactionDetails = () => {
-		this.props.actionCreators.account.accountSync();
+	goToTransactionDetails = async () => {
+		await this.props.actionCreators.account.accountSync();
 		this.props.actionCreators.transaction.resetSendFlow();
 		Actions.jump(ROUTES.authenticated.transaction, {
 			transaction: this.props.transactionState.loadedTransaction,
 		});
 	};
 
-	goBack = () => {
+	goBack = async () => {
+		await this.props.actionCreators.account.accountSync();
+		await this.props.actionCreators.transaction.searchTransactions({
+			page: 1,
+			size: 10,
+			transactionType: undefined,
+			transactionStatus: undefined,
+			transactionListKeyword: "",
+		});
 		this.props.actionCreators.transaction.resetSendFlow();
 		Actions.jump(ROUTES.authenticated.send);
 	};

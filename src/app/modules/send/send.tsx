@@ -26,6 +26,7 @@ import { NoCoinsAvailable } from "./no-coins-available";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
+import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
@@ -107,21 +108,13 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 					style={[styles.scrollView]}
 					contentContainerStyle={styles.content}
 				>
-					<View style={[styles.recepientContainer]}>
-						<View style={[styles.successSmallIconContainer]}>
-							<ShieldGreenIcon width={10} height={10} />
-						</View>
-						<Text style={[styles.initSendTitle]}>PASTE RECEPIENT ADDRESS</Text>
-					</View>
-					<BaseField
-						onChangeText={(e: string) => {
-							this.setState({
-								toAddress: e,
-							});
-						}}
-						value={this.state.toAddress || ""}
-						style={[styles.sendFields]}
-					/>
+					<Image source={require("@mele-wallet/resources/images/logo.png")} />
+					<Text style={[styles.initTitle, commonStyles.blackHeader]}>
+						Send coins
+					</Text>
+					<Text style={[styles.initContainer]}>
+						Send coins to your friends and family
+					</Text>
 					<BaseField
 						onChangeText={(e: string) => {
 							const value = e;
@@ -129,20 +122,46 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 								return;
 							}
 
-							const reg = new RegExp("^[0-9.,]+$");
-
+							const reg = new RegExp("^[0-9.]+$");
 							if (reg.test(value) || value === "") {
-								this.setState({
-									sendAmount: e,
-								});
+								if (e.length === 1 && parseFloat(e) > 0) {
+									this.setState({
+										sendAmount: e,
+									});
+								} else if (e.length > 1) {
+									this.setState({
+										sendAmount: e,
+									});
+								} else if (value === "") {
+									this.setState({
+										sendAmount: e,
+									});
+								}
 							}
 						}}
 						value={this.state.sendAmount || ""}
-						placeholder="Amount"
+						placeholder="Enter amount"
 						iconRight={<Text>USD</Text>}
 					/>
+					<BaseField
+						onChangeText={(e: string) => {
+							this.setState({
+								toAddress: e,
+							});
+						}}
+						value={this.state.toAddress || ""}
+						style={[styles.sendFields, { paddingTop: 10 }]}
+						placeholder="Enter Recepient Address"
+					/>
+					<Calculator
+						centsAmount={
+							this.state.sendAmount
+								? (parseFloat(this.state.sendAmount) * 100).toString()
+								: "0"
+						}
+					/>
 					<BlueButton
-						text="Send USD"
+						text="Send Coins"
 						onPress={() => {
 							this.sendCoins();
 						}}

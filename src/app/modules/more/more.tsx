@@ -22,7 +22,7 @@ import Ripple from "react-native-material-ripple";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
-import { Actions as FluxActions } from "react-native-router-flux";
+import { Actions, Actions as FluxActions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { LanguageState } from "./../../../redux/reducers/language-reducer";
 import { CurrencyState } from "@mele-wallet/redux/reducers/currency-reducer";

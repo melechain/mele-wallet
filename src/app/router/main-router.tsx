@@ -1,5 +1,12 @@
 import React from "react";
-import { Router, Scene, Actions, Tabs, Stack } from "react-native-router-flux";
+import {
+	Router,
+	Scene,
+	Actions,
+	Tabs,
+	Stack,
+	ActionConst,
+} from "react-native-router-flux";
 import { Home } from "@mele-wallet/app/modules/home/home";
 import { Buy } from "@mele-wallet/app/modules/buy/buy";
 import { View, Text, Image } from "react-native";
@@ -131,6 +138,8 @@ class MainRouterComponent extends React.Component {
 							hideNavBar={false}
 							showLabel={false}
 							initial={false}
+							back
+							backToInitial={false}
 							navBar={() => {
 								return (
 									<AuthenticatedBlueHeader

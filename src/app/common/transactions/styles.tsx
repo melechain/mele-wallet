@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+	scroll: {
+		width: "100%",
+	},
 	content: {
 		flexDirection: "column",
 		width: "100%",

@@ -7,6 +7,7 @@ import {
 	Switch,
 	ScrollView,
 	Alert,
+	BackHandler,
 } from "react-native";
 import Clipboard from "@react-native-community/clipboard";
 import { connect } from "react-redux";
@@ -35,6 +36,18 @@ class CreatePinComponent extends Component<ICreatePinComponentProps> {
 	constructor(props: ICreatePinComponentProps) {
 		super(props);
 	}
+
+	componentDidMount() {
+		if (
+			Actions.prevScene.name === "authenticated.more" ||
+			Actions.prevScene.toString() === "authenticated.more"
+		)
+			BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+	}
+
+	handleBackButton = () => {
+		Actions.jump(ROUTES.authenticated.more);
+	};
 
 	render() {
 		return (

@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, StatusBar } from "react-native";
+import {
+	View,
+	Text,
+	ScrollView,
+	StatusBar,
+	RefreshControl,
+} from "react-native";
 import Clipboard from "@react-native-community/clipboard";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
@@ -30,10 +36,31 @@ interface IHomeComponentProps {
 	staticState: StaticState;
 }
 
-class HomeComponent extends Component<IHomeComponentProps> {
+interface IHomeComponentState {
+	refreshing: boolean;
+}
+
+class HomeComponent extends Component<
+	IHomeComponentProps,
+	IHomeComponentState
+> {
+	constructor(props: IHomeComponentProps) {
+		super(props);
+		this.state = {
+			refreshing: false,
+		};
+		this._refresh = this._refresh.bind(this);
+	}
+
 	componentDidMount() {
 		this.props.actionCreators.transaction.resetPurchaseFlow;
 	}
+
+	_refresh = async () => {
+		this.setState({ refreshing: true });
+		await this.props.actionCreators.account.accountSync();
+		this.setState({ refreshing: false });
+	};
 
 	render() {
 		const account: IAccountModel =
@@ -43,6 +70,12 @@ class HomeComponent extends Component<IHomeComponentProps> {
 			<ScrollView
 				style={[styles.scrollView]}
 				contentContainerStyle={styles.content}
+				refreshControl={
+					<RefreshControl
+						refreshing={this.state.refreshing}
+						onRefresh={() => this._refresh()}
+					/>
+				}
 			>
 				<StatusBar barStyle="light-content" />
 				<View style={[styles.header, commonStyles.blueBackground]}>
