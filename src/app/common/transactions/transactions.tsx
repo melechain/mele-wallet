@@ -147,7 +147,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					<Text
 						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
 					>
-						Purchase MELC to get started.
+						Purchase coins to get started.
 					</Text>
 					<BlueButton
 						text="Purchase Coins"

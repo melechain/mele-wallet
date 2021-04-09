@@ -119,7 +119,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 				>
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 					<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-						Purchase MELC
+						Purchase coins
 					</Text>
 					<Text style={[styles.initContainer]}>
 						To get coins please make a payment. You can send payment directly to

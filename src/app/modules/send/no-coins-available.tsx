@@ -37,7 +37,7 @@ class NoCoinsAvailableComponent extends React.Component<
 			>
 				<View style={[styles.content]}>
 					<Text style={[styles.initErrorTitle, commonStyles.blackHeader]}>
-						You have no coins! Purchase MELC to make a transfer.
+						You have no coins! Purchase coins to make a transfer.
 					</Text>
 					<Text style={[styles.initContainer]}>
 						You need to have some coins in order to make a transfer!
