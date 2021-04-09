@@ -75,7 +75,7 @@ class HistoryComponent extends Component<
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
 			size: 100,
-			transactionType: "purchase",
+			transactionType: undefined,
 			transactionStatus: undefined,
 			transactionListKeyword: "HISTORY_PURCHASES",
 		});

@@ -35,7 +35,7 @@ class ActionsComponent extends Component<IActionsComponentProps> {
 					</Text>
 				</View>
 				<View style={[actionStyles.actionArea]}>
-					<View style={[actionStyles.eachAction]}>
+					{/* <View style={[actionStyles.eachAction]}>
 						<View style={[actionStyles.actionIconRed]}>
 							<ShieldRed style={[actionStyles.actionLogo]} />
 						</View>
@@ -50,7 +50,7 @@ class ActionsComponent extends Component<IActionsComponentProps> {
 								Verify
 							</Text>
 						</Ripple>
-					</View>
+					</View> */}
 					<View style={[actionStyles.eachAction]}>
 						{this.props.staticState.accountId ? (
 							<View style={[actionStyles.actionIconGreen]}>

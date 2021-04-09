@@ -32,12 +32,12 @@ class RegistrationOrLoginComponent extends Component<
 					</Text>
 				</View>
 				<View style={styles.buttonContainer}>
-					<YellowButton
+					{/* <YellowButton
 						text="Have a wallet?"
 						onPress={() => {
 							Actions.jump(ROUTES.nonAuthenticated.loginPinFirstTime);
 						}}
-					/>
+					/> */}
 					<BlueButton
 						onPress={() => {
 							Actions.jump(ROUTES.nonAuthenticated.createWallet);
