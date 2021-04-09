@@ -9,7 +9,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import React from "react";
 import { connect } from "react-redux";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
-import { ScrollView, Image, Text, View } from "react-native";
+import { ScrollView, Image, Text, View, StatusBar } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
@@ -27,6 +27,7 @@ class SendNoCoinsComponent extends React.Component<ISendNoCoinsProps> {
 		Actions.jump(ROUTES.authenticated.buy);
 	};
 	render() {
+		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
 				style={[styles.scrollView]}

@@ -30,23 +30,28 @@ interface ICreatePinComponentProps {
 	accountState: AccountState;
 	staticState: StaticState;
 	mnemonic: string;
+	from: string;
 }
 
 class CreatePinComponent extends Component<ICreatePinComponentProps> {
 	constructor(props: ICreatePinComponentProps) {
 		super(props);
+		this.handleBackButton = this.handleBackButton.bind(this);
 	}
 
 	componentDidMount() {
-		if (
-			Actions.prevScene.name === "authenticated.more" ||
-			Actions.prevScene.toString() === "authenticated.more"
-		)
+		if (this.props.from === "more") {
 			BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+		}
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
 	}
 
 	handleBackButton = () => {
 		Actions.jump(ROUTES.authenticated.more);
+		return true;
 	};
 
 	render() {

@@ -107,21 +107,23 @@ class HomeComponent extends Component<
 						centsAmount={account.balance || "0"}
 						style={[styles.calculator]}
 					/>
-					<Ripple
-						style={[styles.walletAddressContainer]}
-						onPress={() => {
-							Clipboard.setString(wallet.getAddress());
-						}}
-					>
-						<Text
-							style={[styles.walletAddress, commonStyles.fontBook]}
-							adjustsFontSizeToFit={true}
-							numberOfLines={1}
+					{this.props.accountState.account?.wallet && (
+						<Ripple
+							style={[styles.walletAddressContainer]}
+							onPress={() => {
+								Clipboard.setString(wallet.getAddress());
+							}}
 						>
-							{wallet.getAddress()}
-						</Text>
-						<CopyIcon style={[styles.walletCopy]} />
-					</Ripple>
+							<Text
+								style={[styles.walletAddress, commonStyles.fontBook]}
+								adjustsFontSizeToFit={true}
+								numberOfLines={1}
+							>
+								{this.props.accountState.account?.wallet}
+							</Text>
+							<CopyIcon style={[styles.walletCopy]} />
+						</Ripple>
+					)}
 				</View>
 				<View style={[styles.actions]}>
 					<UserActions />

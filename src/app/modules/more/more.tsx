@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text } from "react-native";
+import { View, ScrollView, Text, StatusBar } from "react-native";
 import Clipboard from "@react-native-community/clipboard";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
@@ -49,6 +49,7 @@ class MoreComponent extends Component<IMoreComponentProps> {
 	};
 
 	render() {
+		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
 				style={[styles.scrollView]}
@@ -111,6 +112,7 @@ class MoreComponent extends Component<IMoreComponentProps> {
 							onPress={() => {
 								FluxActions.jump(ROUTES.authenticated.createPin, {
 									mnemonic: this.generateMnemonic().join(" "),
+									from: "more",
 								});
 							}}
 						>

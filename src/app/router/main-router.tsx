@@ -135,10 +135,8 @@ class MainRouterComponent extends React.Component {
 						<Scene
 							key={ROUTES.authenticated.createPin}
 							component={CreatePin}
-							hideNavBar={false}
 							showLabel={false}
 							initial={false}
-							back
 							backToInitial={false}
 							navBar={() => {
 								return (

@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Button, View, Text, ScrollView, StatusBar } from "react-native";
+import {
+	Button,
+	View,
+	Text,
+	ScrollView,
+	StatusBar,
+	RefreshControl,
+} from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -19,6 +26,7 @@ interface IHistoryComponentProps {
 }
 interface IHistoryComponentState {
 	activeTab: number;
+	refreshing: boolean;
 }
 
 interface ITabConfig {
@@ -56,11 +64,29 @@ class HistoryComponent extends Component<
 		super(props);
 		this.state = {
 			activeTab: 0,
+			refreshing: false,
 		};
+		this._refresh = this._refresh.bind(this);
 	}
+
+	_refresh = async () => {
+		this.setState({ refreshing: true });
+		await this.props.actionCreators.account.accountSync();
+		this.props.actionCreators.transaction.searchTransactions({
+			page: 1,
+			size: 100,
+			transactionType: "purchase",
+			transactionStatus: undefined,
+			transactionListKeyword: "HISTORY_PURCHASES",
+		});
+		this.setState({ refreshing: false });
+	};
 
 	componentDidMount() {
 		this.props.actionCreators.transaction.resetPurchaseFlow;
+		this.setState({
+			activeTab: 0,
+		});
 	}
 
 	render() {
@@ -68,6 +94,12 @@ class HistoryComponent extends Component<
 			<ScrollView
 				style={[styles.scrollView]}
 				contentContainerStyle={styles.content}
+				refreshControl={
+					<RefreshControl
+						refreshing={this.state.refreshing}
+						onRefresh={() => this._refresh()}
+					/>
+				}
 			>
 				<StatusBar barStyle="light-content" animated={true} />
 				<View style={[styles.header, commonStyles.blueBackground]}>

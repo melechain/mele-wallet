@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, View, Text, ScrollView, Image } from "react-native";
+import { Button, View, Text, ScrollView, Image, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -85,6 +85,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 	};
 
 	render() {
+		StatusBar.setBarStyle("dark-content", true);
 		if (
 			this.props.transactionState.transactionStatus === TransactionStatus.ERROR
 		) {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, RefreshControl } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -16,6 +16,7 @@ import {
 	TransactionState,
 	LoadTransactionsStatus,
 	ITransactionList,
+	PurchaseFlowStatus,
 } from "@mele-wallet/redux/reducers/transaction-reducer";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { ITransactionModel } from "@mele-wallet/common/model/transaction.model";
@@ -23,6 +24,7 @@ import moment from "moment";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface ITransactionComponentProps {
 	transactionState: TransactionState;
@@ -38,7 +40,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 	componentDidMount() {
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
-			size: 10,
+			size: 100,
 			transactionType: this.props.transactionType,
 			transactionStatus: this.props.transactionStatus,
 			transactionListKeyword: this.props.transactionListKeyword,
@@ -51,7 +53,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 		) {
 			this.props.actionCreators.transaction.searchTransactions({
 				page: 1,
-				size: 10,
+				size: 100,
 				transactionType: this.props.transactionType,
 				transactionStatus: this.props.transactionStatus,
 				transactionListKeyword: this.props.transactionListKeyword,
@@ -60,7 +62,10 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 	}
 	render() {
 		return (
-			<View style={[styles.content]}>
+			<ScrollView
+				style={[styles.scroll]}
+				contentContainerStyle={[styles.content]}
+			>
 				<View style={[styles.transactionsTitleContainer]}>
 					<ShieldBlue />
 					<Text style={[styles.transactionsTitle, commonStyles.fontBook]}>
@@ -75,7 +80,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				<View style={[styles.transactionsList]}>
 					{this.getTransactionList()}
 				</View>
-			</View>
+			</ScrollView>
 		);
 	}
 

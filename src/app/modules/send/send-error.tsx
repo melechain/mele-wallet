@@ -9,7 +9,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import React from "react";
 import { connect } from "react-redux";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, StatusBar, Text, View } from "react-native";
 import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
 import ShieldRedIcon from "@mele-wallet/resources/icons/shielded-error.svg";
 
@@ -25,6 +25,7 @@ class SendErrorComponent extends React.Component<ISendErrorProps> {
 	};
 
 	render() {
+		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
 				style={[styles.scrollView]}
