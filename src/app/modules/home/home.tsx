@@ -59,6 +59,13 @@ class HomeComponent extends Component<
 	_refresh = async () => {
 		this.setState({ refreshing: true });
 		await this.props.actionCreators.account.accountSync();
+		await this.props.actionCreators.transaction.searchTransactions({
+			page: 1,
+			size: 100,
+			transactionType: undefined,
+			transactionStatus: undefined,
+			transactionListKeyword: "HOME_RECENT_TRANSACTIONS",
+		});
 		this.setState({ refreshing: false });
 	};
 
@@ -107,23 +114,24 @@ class HomeComponent extends Component<
 						centsAmount={account.balance || "0"}
 						style={[styles.calculator]}
 					/>
-					{this.props.accountState.account?.wallet && (
-						<Ripple
-							style={[styles.walletAddressContainer]}
-							onPress={() => {
-								Clipboard.setString(wallet.getAddress());
-							}}
+
+					<Ripple
+						style={[styles.walletAddressContainer]}
+						onPress={() => {
+							Clipboard.setString(wallet.getAddress());
+						}}
+					>
+						<Text
+							style={[styles.walletAddress, commonStyles.fontBook]}
+							adjustsFontSizeToFit={true}
+							numberOfLines={1}
 						>
-							<Text
-								style={[styles.walletAddress, commonStyles.fontBook]}
-								adjustsFontSizeToFit={true}
-								numberOfLines={1}
-							>
-								{this.props.accountState.account?.wallet}
-							</Text>
-							<CopyIcon style={[styles.walletCopy]} />
-						</Ripple>
-					)}
+							{this.props.accountState.account?.wallet
+								? this.props.accountState.account?.wallet
+								: ""}
+						</Text>
+						<CopyIcon style={[styles.walletCopy]} />
+					</Ripple>
 				</View>
 				<View style={[styles.actions]}>
 					<UserActions />

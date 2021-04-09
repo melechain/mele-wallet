@@ -159,7 +159,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				textStyles.push(styles.capitalizedText);
 			}
 			valueToShow = (
-				<Text adjustsFontSizeToFit={true} numberOfLines={1} style={textStyles}>
+				<Text adjustsFontSizeToFit={true} numberOfLines={2} style={textStyles}>
 					{value}
 				</Text>
 			);

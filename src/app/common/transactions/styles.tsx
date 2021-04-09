@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	transactionContainerAddress: {
-		fontSize: 12,
+		fontSize: 14,
 		color: "#101654",
 		flex: 1,
 	},

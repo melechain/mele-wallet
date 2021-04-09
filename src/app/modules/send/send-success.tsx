@@ -41,9 +41,16 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
 			size: 100,
-			transactionType: "purchase",
+			transactionType: "transfer",
 			transactionStatus: undefined,
-			transactionListKeyword: "HISTORY_PURCHASES",
+			transactionListKeyword: "HISTORY_TRANSFERS",
+		});
+		this.props.actionCreators.transaction.searchTransactions({
+			page: 1,
+			size: 100,
+			transactionType: undefined,
+			transactionStatus: undefined,
+			transactionListKeyword: "HOME_RECENT_TRANSACTIONS",
 		});
 	}
 
