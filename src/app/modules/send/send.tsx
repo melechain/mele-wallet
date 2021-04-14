@@ -1,15 +1,12 @@
 import React, { Component } from "react";
-import { Button, View, Text, ScrollView, Image, StatusBar } from "react-native";
+import { Text, ScrollView, Image, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
 	mapDispatchToProps,
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
-import {
-	AccountState,
-	WalletSyncStatus,
-} from "@mele-wallet/redux/reducers/account-reducer";
+import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import {
 	TransactionState,
@@ -21,17 +18,16 @@ import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { SendSuccess } from "./send-success";
 import { SendNoCoins } from "./send-no-coins";
 import { SendError } from "./send-error";
-import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
 import { NoCoinsAvailable } from "./no-coins-available";
-import { Actions } from "react-native-router-flux";
-import { ROUTES } from "@mele-wallet/app/router/routes";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	transactionState: TransactionState;
+	languageState: LanguageState;
 }
 
 interface ISendState {
@@ -39,6 +35,11 @@ interface ISendState {
 	toAddress: string;
 	notEnoughCoins: boolean;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class SendComponent extends Component<ISendComponentProps, ISendState> {
 	constructor(props: ISendComponentProps) {
@@ -85,6 +86,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		if (
 			this.props.transactionState.transactionStatus === TransactionStatus.ERROR
@@ -111,10 +113,10 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 				>
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 					<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-						Send coins
+						{localeData.send.title}
 					</Text>
 					<Text style={[styles.initContainer]}>
-						Send coins to your friends and family
+						{localeData.send.description}
 					</Text>
 					<BaseField
 						onChangeText={(e: string) => {
@@ -141,7 +143,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							}
 						}}
 						value={this.state.sendAmount || ""}
-						placeholder="Enter amount"
+						placeholder={localeData.send.amount}
 						iconRight={<Text>USD</Text>}
 					/>
 					<BaseField
@@ -152,7 +154,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 						}}
 						value={this.state.toAddress || ""}
 						style={[styles.sendFields, { paddingTop: 10 }]}
-						placeholder="Enter Recepient Address"
+						placeholder={localeData.send.recepient}
 					/>
 					<Calculator
 						centsAmount={
@@ -162,7 +164,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 						}
 					/>
 					<BlueButton
-						text="Send Coins"
+						text={localeData.send.sendButton}
 						onPress={() => {
 							this.sendCoins();
 						}}
@@ -190,6 +192,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		transactionState: state.transaction,
+		languageState: state.language,
 	};
 };
 

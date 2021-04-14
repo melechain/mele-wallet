@@ -9,7 +9,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import React from "react";
 import { connect } from "react-redux";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
-import { ScrollView, Image, Text, View, StatusBar } from "react-native";
+import { ScrollView, Text, View, StatusBar } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
@@ -21,12 +21,18 @@ interface ISendNoCoinsProps {
 	actionCreators: IActionCreators;
 }
 
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
+
 class SendNoCoinsComponent extends React.Component<ISendNoCoinsProps> {
 	buyCoins = () => {
 		this.props.actionCreators.transaction.resetSendFlow();
 		Actions.jump(ROUTES.authenticated.buy);
 	};
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -37,14 +43,14 @@ class SendNoCoinsComponent extends React.Component<ISendNoCoinsProps> {
 					<ShieldRedIcon width={90} height={90} />
 				</View>
 				<Text style={[styles.initErrorTitle, commonStyles.blackHeader]}>
-					You don't have enough coins!
+					{localeData.send.noCoinsTitle}
 				</Text>
 				<Text style={[styles.initContainer]}>
-					You don't have enough coins to make this transaction.
+					{localeData.send.noCoinsDesc}
 				</Text>
 
 				<BlueButton
-					text="Purchase Coins"
+					text={localeData.send.noCoinsButton}
 					onPress={() => {
 						this.buyCoins();
 					}}

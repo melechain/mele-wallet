@@ -42,6 +42,7 @@ export const styles = StyleSheet.create({
 		width: 163,
 		height: 56,
 		marginTop: 15,
+		paddingBottom: 5,
 	},
 	errorQRLogo: {
 		width: 127,

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Alert, Dimensions } from "react-native";
+import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -8,11 +8,9 @@ import {
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { RNCamera } from "react-native-camera";
 import { styles } from "./styles";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
-import Ripple from "react-native-material-ripple";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import ScanGreen from "@mele-wallet/resources/icons/scan-green.svg";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
@@ -24,6 +22,11 @@ interface IScanQRCodeSuccessComponentProps {
 interface IScanQRCodeSuccessComponentState {
 	accountId: string;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class ScanQRCodeSuccessComponent extends Component<
 	IScanQRCodeSuccessComponentProps,
@@ -42,7 +45,10 @@ class ScanQRCodeSuccessComponent extends Component<
 	};
 
 	render() {
-		const QRScanner: any = QRCodeScanner;
+		const localeData =
+			this.props.languageState !== undefined
+				? languages[this.props.languageState.currentLanguage]
+				: languages["en"];
 
 		return (
 			<View style={[styles.content, commonStyles.whiteBackground]}>
@@ -50,15 +56,17 @@ class ScanQRCodeSuccessComponent extends Component<
 					<ScanGreen style={{ height: 55, width: 55 }} />
 				</View>
 				<View style={[styles.successMessage]}>
-					<Text style={[styles.font, commonStyles.fontBold]}>Success!</Text>
+					<Text style={[styles.font, commonStyles.fontBold]}>
+						{localeData.qrCode.successTitle}
+					</Text>
 				</View>
 				<View style={[styles.subSuccessMessage]}>
 					<Text style={[styles.subFont]}>
-						Your account has been successfully synced!
+						{localeData.qrCode.successDescription}
 					</Text>
 				</View>
 				<BlueButton
-					text="Dashboard"
+					text={localeData.qrCode.dashboard}
 					style={[styles.button]}
 					onPress={() => {
 						Actions.replace(ROUTES.checkAuthentication);

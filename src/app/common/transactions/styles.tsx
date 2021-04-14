@@ -44,10 +44,12 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 		paddingTop: 30,
 		paddingBottom: 30,
+		textAlign: "center",
 	},
 	noTransactionsContainerText: {
 		color: "#101654",
 		fontSize: 14,
+		textAlign: "center",
 	},
 	noTransactionsContainerButtonText: {
 		fontSize: 14,

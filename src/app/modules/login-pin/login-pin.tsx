@@ -13,14 +13,21 @@ import { Pin } from "@mele-wallet/app/common/pin-component/pin-component";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { Actions } from "react-native-router-flux";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface ILoginPinComponentProps {
 	actionCreators: IActionCreators;
 	staticState: StaticState;
+	languageState: LanguageState;
 }
 interface ILoginPinComponentState {
 	pinConfirmation: string;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class LoginPinComponent extends Component<
 	ILoginPinComponentProps,
@@ -80,6 +87,10 @@ class LoginPinComponent extends Component<
 		]).start();
 	};
 	render() {
+		const localeData =
+			this.props.languageState !== undefined
+				? languages[this.props.languageState.currentLanguage]
+				: languages["en"];
 		return (
 			<ScrollView
 				style={[commonStyles.blueBackground, styles.scrollView]}
@@ -89,7 +100,7 @@ class LoginPinComponent extends Component<
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 
 					<Text style={[commonStyles.whiteSubHeader, styles.headerText]}>
-						Enter your PIN
+						{localeData.pin.enterPin}
 					</Text>
 				</View>
 				<Animated.View

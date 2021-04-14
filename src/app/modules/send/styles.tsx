@@ -164,6 +164,8 @@ export const styles = StyleSheet.create({
 	successGoBack: {
 		marginTop: 22,
 		marginBottom: 10,
+		textAlign: "center",
+		paddingLeft: 30,
 		width: "45%",
 		backgroundColor: "white",
 		borderColor: "#1016541F",

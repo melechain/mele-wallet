@@ -25,6 +25,11 @@ interface IWalletSyncComponentProps {
 	accountId: string;
 }
 
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
+
 class WalletSyncComponent extends Component<IWalletSyncComponentProps> {
 	componentDidMount() {
 		setTimeout(() => {
@@ -52,11 +57,15 @@ class WalletSyncComponent extends Component<IWalletSyncComponentProps> {
 	}
 
 	render() {
+		const localeData =
+			this.props.languageState !== undefined
+				? languages[this.props.languageState.currentLanguage]
+				: languages["en"];
 		return (
 			<View style={[styles.content, commonStyles.blueBackground]}>
 				<ActivityIndicator size="large" color="#F4BD00" />
 				<Text style={[styles.displayText, commonStyles.fontBook]}>
-					Tickling the backend...
+					{localeData.home.loading}
 				</Text>
 				<Text style={[styles.displayText, commonStyles.fontBook]}></Text>
 			</View>

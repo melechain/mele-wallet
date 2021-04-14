@@ -19,12 +19,18 @@ interface ISendErrorProps {
 	actionCreators: IActionCreators;
 }
 
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
+
 class SendErrorComponent extends React.Component<ISendErrorProps> {
 	tryAgain = () => {
 		this.props.actionCreators.transaction.resetSendFlow();
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -35,15 +41,14 @@ class SendErrorComponent extends React.Component<ISendErrorProps> {
 					<ShieldRedIcon width={90} height={90} />
 				</View>
 				<Text style={[styles.initErrorTitle, commonStyles.blackHeader]}>
-					This address doesn't exist!
+					{localeData.send.errorTitle}
 				</Text>
 				<Text style={[styles.initContainer]}>
-					Make sure you have entered the address correctly or check back with
-					the recepient to confirm the correct address.
+					{localeData.send.errorDescription}
 				</Text>
 
 				<BlueButton
-					text="Try Again"
+					text={localeData.send.errorButton}
 					onPress={() => {
 						this.tryAgain();
 					}}
