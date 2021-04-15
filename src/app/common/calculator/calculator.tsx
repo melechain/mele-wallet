@@ -8,6 +8,7 @@ import ApplicationState from "@mele-wallet/redux/application-state";
 import { View, Text, ViewProps } from "react-native";
 import { styles } from "./styles";
 import InfoGrayIcon from "@mele-wallet/resources/icons/info-grey.svg";
+import BlueInfoIcon from "@mele-wallet/resources/icons/info-blue.svg";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
@@ -118,22 +119,28 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 		return (
 			<View style={[styles.meleDisplay]}>
 				<View style={[styles.meleDisplayNumbers]}>
-					<View>
-						<Text
-							style={[styles.coinCount, commonStyles.fontBold]}
-							numberOfLines={1}
-						>
-							{meleGold}
-						</Text>
-						<Text style={[styles.usdCount]}>${melegUSD}</Text>
-					</View>
 					<Ripple
 						onPress={() => {
 							this.RBSheet.open();
 						}}
-						disableRipple
+						rippleOpacity={0}
+						style={[styles.meleDisplayNumbers]}
 					>
-						<InfoGrayIcon height={15} width={15} style={{ marginLeft: 130 }} />
+						<View>
+							<Text
+								style={[styles.coinCount, commonStyles.fontBold]}
+								numberOfLines={1}
+							>
+								{meleGold}
+							</Text>
+							<Text style={[styles.usdCount]}>${melegUSD}</Text>
+						</View>
+
+						<InfoGrayIcon
+							height={15}
+							width={15}
+							style={{ marginLeft: "40%" }}
+						/>
 					</Ripple>
 					<RBSheet
 						ref={(ref) => {
@@ -153,6 +160,9 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 							<Text style={[styles.calculatorText, commonStyles.fontBold]}>
 								{localeData.calculator.title}
 							</Text>
+							<BlueInfoIcon style={[styles.blueIcon]} />
+						</View>
+						<View style={[styles.explainerDescription]}>
 							<Text style={[styles.calculatorDesc]}>
 								{localeData.calculator.description}
 							</Text>

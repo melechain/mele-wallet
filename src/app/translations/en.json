@@ -1,7 +1,9 @@
 {
 	"home": {
 		"balance": "Balance",
-		"loading": "Loading home..."
+		"loading": "Loading home...",
+		"balancetitle": "The new gold standard blockchain",
+		"balanceDesc": "Cryptocurrency just got a major upgrade. Mele is the new gold-backed, delegated proof of stake blockchain. Giving you all the security of solid gold, with all the freedom of cryptocurrency. \nIt works as a two coin model. MELC is the coin that has all the action, acting as the platform reward and payment token. While MELG is the safe and steady gold-backed stable coin. \nTogether, the new blockchain gold standard is born."
 	},
 	"actions": {
 		"title": "Actions",

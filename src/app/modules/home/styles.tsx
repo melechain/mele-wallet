@@ -89,4 +89,28 @@ export const styles = StyleSheet.create({
 		marginTop: 20,
 		width: "100%",
 	},
+	calculatorText: {
+		fontSize: 20,
+		color: "#101654",
+		marginBottom: 20,
+		width: "100%",
+	},
+	explainerContainer: {
+		paddingTop: 20,
+		width: "80%",
+		textAlign: "center",
+	},
+	calculatorDesc: {
+		fontSize: 13,
+		color: "#101654",
+	},
+	explainerDescription: {
+		width: "80%",
+		textAlign: "center",
+	},
+	blueIcon: {
+		position: "absolute",
+		right: "2%",
+		top: "40%",
+	},
 });

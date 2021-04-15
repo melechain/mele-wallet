@@ -86,4 +86,13 @@ export const styles = StyleSheet.create({
 		fontSize: 14,
 		color: "#101654",
 	},
+	explainerDescription: {
+		width: "80%",
+		textAlign: "center",
+	},
+	blueIcon: {
+		position: "absolute",
+		right: "2%",
+		top: "55%",
+	},
 });

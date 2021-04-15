@@ -34,6 +34,7 @@ interface ISendState {
 	sendAmount: string;
 	toAddress: string;
 	notEnoughCoins: boolean;
+	formatted: number;
 }
 
 const languages = {
@@ -48,6 +49,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			sendAmount: "",
 			toAddress: "",
 			notEnoughCoins: false,
+			formatted: 0,
 		};
 	}
 
@@ -55,6 +57,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 		this.setState({
 			sendAmount: "",
 			toAddress: "",
+			formatted: 0,
 		});
 	}
 
@@ -82,6 +85,19 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 		this.setState({
 			sendAmount: "",
 			toAddress: "",
+			formatted: 0,
+		});
+	};
+
+	setFormattedCents = (e: any) => {
+		const replaced = parseFloat(e.replace(",", ".").replace(" ", ""));
+		this.setState({
+			sendAmount: e,
+			formatted: parseFloat(
+				parseFloat(
+					parseFloat((replaced * 100).toFixed(2).toString()).toString(),
+				).toFixed(2),
+			),
 		});
 	};
 
@@ -124,22 +140,24 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							if (value.length > 10) {
 								return;
 							}
+							if (value.includes(".")) {
+								const digits = value.split(".");
+								if (digits[1].length > 2) return;
+							}
 
-							const reg = new RegExp("^[0-9,]+$");
+							const test = value.replace(/[^.]/g, "").length;
+							if (test > 1) return;
+							if (value === ".") return;
+
+							const reg = new RegExp("^[0-9.]+$");
 							if (reg.test(value) || value === "") {
 								if (value === "") {
 									this.setState({
 										sendAmount: e,
 									});
 								}
-								if (e.length === 1 && parseFloat(e) > 0) {
-									this.setState({
-										sendAmount: e,
-									});
-								} else {
-									this.setState({
-										sendAmount: e,
-									});
+								if ((e.length === 1 && parseFloat(e) > 0) || e.length > 1) {
+									this.setFormattedCents(e);
 								}
 							}
 						}}
@@ -159,9 +177,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 					/>
 					<Calculator
 						centsAmount={
-							this.state.sendAmount
-								? (parseFloat(this.state.sendAmount) * 100).toString()
-								: "0"
+							this.state.formatted ? this.state.formatted.toString() : "0"
 						}
 					/>
 					<BlueButton
