@@ -117,9 +117,8 @@ class MoreComponent extends Component<IMoreComponentProps> {
 						<Ripple
 							style={[styles.transparentButtonPIN]}
 							onPress={() => {
-								FluxActions.jump(ROUTES.authenticated.createPin, {
+								FluxActions.jump(ROUTES.authenticated.changePin, {
 									mnemonic: this.generateMnemonic().join(" "),
-									from: "more",
 								});
 							}}
 						>

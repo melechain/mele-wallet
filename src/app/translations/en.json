@@ -61,7 +61,7 @@
 		"bankName": "Bank name: ",
 		"bankNameValue": "EL Nilein Bank",
 		"bankAddress": "Bank address: ",
-		"bankAddressValue": "hereby - Abu Dhabi - UAE",
+		"bankAddressValue": "Abu Dhabi, UAE",
 		"iban": "IBAN: ",
 		"ibanValue": "AE320250156000100510271",
 		"swift": "Swift/BIC: ",
@@ -80,7 +80,7 @@
 		"sendButton": "Send coins",
 		"successTitle": "Successful transaction",
 		"successDescOne": "You’ve transferred ",
-		"successDescTwo": " Mele coins to ",
+		"successDescTwo": " to ",
 		"transactionDetails": "Transaction Details",
 		"backToDash": "Go back to dashboard",
 		"noCoinsTitle": "Insufficient coins",
@@ -98,7 +98,8 @@
 		"chooseDescription": "You will need this PIN to access your wallet",
 		"verify": "Verify your PIN",
 		"verifyDescription": "Re-enter your PIN please",
-		"enterPin": "Enter your PIN"
+		"enterPin": "Enter your PIN",
+		"edit": "Change your PIN"
 	},
 	"wallet": {
 		"createWalletTitle": "Write down your passphrase",

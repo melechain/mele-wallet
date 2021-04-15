@@ -78,7 +78,8 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 					<Text style={[commonStyles.fontBold]}>
 						{MeleCalculator.centsToUSDFormatted(
 							this.props.transactionState.loadedTransaction.amount,
-						)}
+						)}{" "}
+						USD
 					</Text>
 					{localeData.send.successDescTwo}
 					<Text style={[commonStyles.fontBold]}>

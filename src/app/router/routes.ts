@@ -23,7 +23,7 @@ export const ROUTES = {
 		history: "nonAuthenticated.history",
 		more: "nonAuthenticated.more",
 		transaction: "nonAuthenticated.transaction",
-		createPin: "authenticated.createPin",
-		confirmPin: "authenticated.confirmPin",
+		changePin: "nonAuthenticated.changePin",
+		confirmPin: "nonAuthenticated.confirmPin",
 	},
 };

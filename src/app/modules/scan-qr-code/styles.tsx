@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
 	subSuccessMessage: {
 		width: 320,
 		height: 20,
-		marginTop: 15,
+		marginTop: 10,
 	},
 	subFont: {
 		fontFamily: "Circular std",
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
 	button: {
 		width: 163,
 		height: 56,
-		marginTop: 15,
+		marginTop: 20,
 		paddingBottom: 5,
 	},
 	errorQRLogo: {
