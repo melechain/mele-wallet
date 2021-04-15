@@ -211,7 +211,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 								numberOfLines={1}
 								style={[
 									styles.transactionContainerAddress,
-									commonStyles.fontBook,
+									commonStyles.fontBold,
 								]}
 							>
 								{transactionTitle}
