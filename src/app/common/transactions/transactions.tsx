@@ -208,7 +208,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 						<View style={[styles.transactionContainerRow]}>
 							<Text
 								adjustsFontSizeToFit={true}
-								numberOfLines={1}
+								numberOfLines={2}
 								style={[
 									styles.transactionContainerAddress,
 									commonStyles.fontBold,

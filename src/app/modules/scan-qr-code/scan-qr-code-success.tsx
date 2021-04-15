@@ -60,7 +60,7 @@ class ScanQRCodeSuccessComponent extends Component<
 						{localeData.qrCode.successTitle}
 					</Text>
 				</View>
-				<View style={[styles.subSuccessMessage]}>
+				<View style={[styles.subSuccessMessageDescription]}>
 					<Text style={[styles.subFont]}>
 						{localeData.qrCode.successDescription}
 					</Text>

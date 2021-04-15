@@ -21,6 +21,12 @@ export const styles = StyleSheet.create({
 		height: 56,
 		marginTop: 15,
 	},
+	subSuccessMessageDescription: {
+		textAlign: "center",
+		height: 40,
+		marginTop: -15,
+		marginBottom: 10,
+	},
 	font: {
 		fontFamily: "Circular std",
 		fontSize: 22,

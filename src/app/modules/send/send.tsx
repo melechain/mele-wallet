@@ -125,17 +125,18 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 								return;
 							}
 
-							const reg = new RegExp("^[0-9.]+$");
+							const reg = new RegExp("^[0-9,]+$");
 							if (reg.test(value) || value === "") {
+								if (value === "") {
+									this.setState({
+										sendAmount: e,
+									});
+								}
 								if (e.length === 1 && parseFloat(e) > 0) {
 									this.setState({
 										sendAmount: e,
 									});
-								} else if (e.length > 1) {
-									this.setState({
-										sendAmount: e,
-									});
-								} else if (value === "") {
+								} else {
 									this.setState({
 										sendAmount: e,
 									});

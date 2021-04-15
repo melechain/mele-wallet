@@ -123,5 +123,9 @@
 		"security": "Security",
 		"changePIN": "Change PIN",
 		"pin": "PIN"
+	},
+	"calculator": {
+		"title": "Your balance, explained",
+		"description": "Mele is a two-coin blockchain model. \nMELG is a gold-backed stable coin. \nMELC is a reward and payment token. \nWhen you buy coins you are buying an allocation of MELC and MELG at a ratio of 2:1."
 	}
 }
