@@ -36,13 +36,16 @@ class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
 			size: 100,
-			transactionType: "purchase",
+			transactionType: undefined,
 			transactionStatus: undefined,
 			transactionListKeyword: "HISTORY_PURCHASES",
 		});
+	}
+
+	componentWillUnmount() {
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
-			size: 100,
+			size: 50,
 			transactionType: undefined,
 			transactionStatus: undefined,
 			transactionListKeyword: "HOME_RECENT_TRANSACTIONS",

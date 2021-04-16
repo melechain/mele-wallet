@@ -46,6 +46,9 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 			this.props.transaction.status === "pending"
 				? localeData.transactions.pending
 				: localeData.transactions.complete;
+		const userWallet = Wallet.getWallet(
+			this.props.staticState.mnemonic,
+		).getAddress();
 
 		return (
 			<ScrollView
@@ -86,25 +89,17 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 						{
 							show:
 								!this.props.transaction.refCode &&
-								this.props.transaction.to.wallet ==
-									Wallet.getWallet(
-										this.props.staticState.mnemonic,
-									).getAddress(),
+								this.props.transaction.to.wallet === userWallet,
 							capitalize: false,
 						},
-						localeData,
 					)}
 					{this.getInfoBlock(
-						localeData.transactions.sender,
+						localeData.transactions.receiver,
 						this.props.transaction.to.wallet,
-						localeData,
 						{
 							show:
 								!this.props.transaction.refCode &&
-								this.props.transaction.to.wallet !=
-									Wallet.getWallet(
-										this.props.staticState.mnemonic,
-									).getAddress(),
+								this.props.transaction.to.wallet !== userWallet,
 							capitalize: false,
 						},
 					)}
@@ -115,7 +110,6 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 							show: !!this.props.transaction.refCode,
 							capitalize: false,
 						},
-						localeData,
 					)}
 					{this.getInfoBlock(
 						localeData.transactions.type,
@@ -124,7 +118,6 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 								{this.props.transaction.type}
 							</Text>
 						</View>,
-						localeData,
 					)}
 					{this.getInfoBlock(
 						localeData.transactions.status,
@@ -136,22 +129,19 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 									commonStyles.fontBook,
 								]}
 							>
-								{statusText === "pending"
+								{this.props.transaction.status === "pending"
 									? localeData.transactions.pending
 									: localeData.transactions.complete}
 							</Text>
 						</View>,
-						localeData,
 					)}
 					{this.getInfoBlock(
 						localeData.transactions.orderedDate,
 						moment(this.props.transaction.createdAt).format("D MMM yyyy"),
-						localeData,
 					)}
 					{this.getInfoBlock(
 						localeData.transactions.approvedDate,
 						moment(this.props.transaction.approvedAt).format("D MMM yyyy"),
-						localeData,
 						{ show: !!this.props.transaction.approvedAt },
 					)}
 				</View>
@@ -170,7 +160,6 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 	getInfoBlock = (
 		title: string,
 		value: React.ReactNode | string,
-		localeData: any,
 		config: {
 			show?: boolean;
 			capitalize?: boolean;

@@ -80,6 +80,7 @@ export const styles = StyleSheet.create({
 		fontSize: 11,
 		color: "#101654",
 		flex: 1,
+		marginBottom: 5,
 	},
 	transactionContainerAmountContainer: {
 		width: 48,
