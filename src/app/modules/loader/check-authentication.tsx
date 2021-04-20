@@ -15,12 +15,19 @@ import {
 	AccountSyncStatus,
 } from "@mele-wallet/redux/reducers/account-reducer";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface ICheckAuthenticationComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	staticState: StaticState;
+	languageState: LanguageState;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class CheckAuthenticationComponent extends Component<
 	ICheckAuthenticationComponentProps
@@ -57,11 +64,12 @@ class CheckAuthenticationComponent extends Component<
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		return (
 			<View style={[styles.content, commonStyles.blueBackground]}>
 				<ActivityIndicator size="large" color="#F4BD00" />
 				<Text style={[styles.displayText, commonStyles.fontBook]}>
-					Tickling the backend...
+					{localeData.home.loading}
 				</Text>
 			</View>
 		);
@@ -72,6 +80,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		staticState: state.static,
+		languageState: state.language,
 	};
 };
 

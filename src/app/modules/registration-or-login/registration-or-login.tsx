@@ -13,22 +13,33 @@ import { YellowButton } from "@mele-wallet/app/common/buttons/yellow-button";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface IRegistrationOrLoginComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
+	languageState: LanguageState;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class RegistrationOrLoginComponent extends Component<
 	IRegistrationOrLoginComponentProps
 > {
 	render() {
+		const localeData =
+			this.props.languageState !== undefined
+				? languages[this.props.languageState.currentLanguage]
+				: languages["en"];
 		return (
 			<View style={[commonStyles.blueBackground, styles.content]}>
 				<View style={styles.topContainer}>
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 					<Text style={[commonStyles.whiteHeader, styles.headerText]}>
-						Your Secure Mele Wallet
+						{localeData.wallet.loginTitle}
 					</Text>
 				</View>
 				<View style={styles.buttonContainer}>
@@ -43,7 +54,7 @@ class RegistrationOrLoginComponent extends Component<
 							Actions.jump(ROUTES.nonAuthenticated.createWallet);
 						}}
 						style={styles.createWalletButton}
-						text="Create a New Wallet"
+						text={localeData.wallet.createANewWallet}
 					/>
 				</View>
 			</View>

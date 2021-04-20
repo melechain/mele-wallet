@@ -1,15 +1,5 @@
 import React, { Component } from "react";
-import {
-	Button,
-	View,
-	Text,
-	Image,
-	Switch,
-	ScrollView,
-	BackHandler,
-} from "react-native";
-import Clipboard from "@react-native-community/clipboard";
-
+import { View, Text, ScrollView } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -20,18 +10,17 @@ import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { styles } from "./styles";
 import WalletLogo from "@mele-wallet/resources/images/wallet-logo.svg";
-import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
-import Ripple from "react-native-material-ripple";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
-import { Mele, MnemonicSigner, Utils } from "mele-sdk";
 import { TextField } from "@mele-wallet/app/common/fields/text-field";
 import { Random } from "@mele-wallet/common/utils/random";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface IConfirmWalletComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
+	languageState: LanguageState;
 	mnemonic: string[];
 }
 interface IConfirmWalletComponentState {
@@ -39,6 +28,11 @@ interface IConfirmWalletComponentState {
 	mnemonicConfirmFields: number[];
 	enteredWords: string[];
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class ConfirmWalletComponent extends Component<
 	IConfirmWalletComponentProps,
@@ -60,6 +54,7 @@ class ConfirmWalletComponent extends Component<
 	}
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		return (
 			<ScrollView
 				style={[commonStyles.whiteBackground, styles.scrollView]}
@@ -67,10 +62,10 @@ class ConfirmWalletComponent extends Component<
 			>
 				<WalletLogo style={styles.walletLogo} />
 				<Text style={[commonStyles.blackSubHeader, styles.headerText]}>
-					Please enter these two words from your passphrase
+					{localeData.wallet.confirmWalletTitle}
 				</Text>
 				<Text style={[commonStyles.blackSubHeader, styles.description]}>
-					and ensure you have kept a record!
+					{localeData.wallet.confirmWalletDescription}
 				</Text>
 				<View style={styles.textInputs}>
 					{this.state.mnemonicConfirmFields.map((index: number) => {
@@ -82,7 +77,7 @@ class ConfirmWalletComponent extends Component<
 							this.state.enteredWords[index] &&
 							this.state.enteredWords[index] != this.props.mnemonic[index]
 						) {
-							errors.push("Invalid word!");
+							errors.push(localeData.wallet.confirmWalletError);
 						} else if (
 							this.state.enteredWords[index] == this.props.mnemonic[index]
 						) {
@@ -97,7 +92,7 @@ class ConfirmWalletComponent extends Component<
 								iconLeft={
 									<Text style={[commonStyles.fontBold]}>#{currentIndex}</Text>
 								}
-								placeholder={`Enter Word #${currentIndex}`}
+								placeholder={localeData.wallet.enterWord}
 								onChangeText={(text: string) => {
 									const enteredWords = this.state.enteredWords;
 									enteredWords[index] = text;
@@ -115,7 +110,7 @@ class ConfirmWalletComponent extends Component<
 				<BlueButton
 					style={styles.confirmButton}
 					disabled={this.buttonDisabled()}
-					text="Confirm"
+					text={localeData.wallet.confirmWalletButton}
 					onPress={() => {
 						Actions.jump(ROUTES.nonAuthenticated.createPin, {
 							mnemonic: this.props.mnemonic.join(" "),
@@ -138,6 +133,7 @@ class ConfirmWalletComponent extends Component<
 const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
+		languageState: state.language,
 	};
 };
 

@@ -72,4 +72,27 @@ export const styles = StyleSheet.create({
 	meleGold: {
 		color: "#F4BD00",
 	},
+	calculatorText: {
+		fontSize: 20,
+		color: "#101654",
+		marginBottom: 20,
+	},
+	explainerContainer: {
+		paddingTop: 20,
+		width: "80%",
+		textAlign: "center",
+	},
+	calculatorDesc: {
+		fontSize: 14,
+		color: "#101654",
+	},
+	explainerDescription: {
+		width: "80%",
+		textAlign: "center",
+	},
+	blueIcon: {
+		position: "absolute",
+		right: "2%",
+		top: "55%",
+	},
 });

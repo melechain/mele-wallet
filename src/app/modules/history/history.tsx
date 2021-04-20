@@ -19,10 +19,12 @@ import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 
 import Ripple from "react-native-material-ripple";
 import { Transactions } from "@mele-wallet/app/common/transactions/transactions";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface IHistoryComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
+	languageState: LanguageState;
 }
 interface IHistoryComponentState {
 	activeTab: number;
@@ -38,23 +40,11 @@ interface ITabConfig {
 		transactionStatus?: string;
 	};
 }
-const TAB_CONFIG: ITabConfig[] = [
-	{
-		title: "Purchase",
-		transactionListKeyword: "HISTORY_PURCHASES",
-		filter: {
-			transactionType: "purchase",
-		},
-	},
-	{
-		title: "Transfer",
-		transactionListKeyword: "HISTORY_TRANSFERS",
-		filter: {
-			transactionType: "transfer",
-		},
-		customEmptyScreen: <Text>No recent Transfers!</Text>,
-	},
-];
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class HistoryComponent extends Component<
 	IHistoryComponentProps,
@@ -90,6 +80,25 @@ class HistoryComponent extends Component<
 	}
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
+		const TAB_CONFIG: ITabConfig[] = [
+			{
+				title: localeData.transactions.purchase,
+				transactionListKeyword: "HISTORY_PURCHASES",
+				filter: {
+					transactionType: "purchase",
+				},
+			},
+			{
+				title: localeData.transactions.transfer,
+				transactionListKeyword: "HISTORY_TRANSFERS",
+				filter: {
+					transactionType: "transfer",
+				},
+				customEmptyScreen: <Text>{localeData.transactions.noTransfer}</Text>,
+			},
+		];
+
 		return (
 			<ScrollView
 				style={[styles.scrollView]}
@@ -104,7 +113,7 @@ class HistoryComponent extends Component<
 				<StatusBar barStyle="light-content" animated={true} />
 				<View style={[styles.header, commonStyles.blueBackground]}>
 					<Text style={[styles.title, commonStyles.fontBold]}>
-						Transactions History
+						{localeData.transactions.title}
 					</Text>
 				</View>
 				<View style={[styles.tabs]}>
@@ -147,6 +156,7 @@ class HistoryComponent extends Component<
 const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
+		languageState: state.language,
 	};
 };
 

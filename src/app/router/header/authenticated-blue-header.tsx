@@ -11,6 +11,7 @@ import BackButton from "@mele-wallet/resources/icons/back-arrow-white.svg";
 import LockGreen from "@mele-wallet/resources/icons/lock-green.svg";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { Actions } from "react-native-router-flux";
+import { ROUTES } from "../routes";
 
 export interface HeaderComponentProps extends ViewProps {
 	title?: string;
@@ -30,7 +31,7 @@ export class AuthenticatedBlueHeader extends Component<HeaderComponentProps> {
 		if (Actions.currentScene !== this.props.componentKey) {
 			return false;
 		}
-		Actions.pop();
+		Actions.jump(ROUTES.authenticated.home);
 		if (this.props.refreshOnBack) {
 			setTimeout(() => {
 				Actions.refresh({ key: Math.random() });

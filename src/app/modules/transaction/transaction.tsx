@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-	View,
-	Text,
-	Image,
-	ScrollView,
-	Animated,
-	StatusBar,
-} from "react-native";
+import { View, Text, ScrollView, StatusBar } from "react-native";
 
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
@@ -16,9 +9,7 @@ import {
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { styles } from "./styles";
-import { Pin } from "@mele-wallet/app/common/pin-component/pin-component";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
-import { ROUTES } from "@mele-wallet/app/router/routes";
 import { Actions } from "react-native-router-flux";
 import { ITransactionModel } from "@mele-wallet/common/model/transaction.model";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
@@ -26,15 +17,23 @@ import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 import moment from "moment";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface ITransactionComponentProps {
 	actionCreators: IActionCreators;
 	staticState: StaticState;
 	transaction: ITransactionModel;
+	languageState: LanguageState;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class TransactionComponent extends Component<ITransactionComponentProps> {
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		const statusStyle =
 			this.props.transaction.status === "pending"
 				? styles.transactionStatusContainerYellow
@@ -44,7 +43,12 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				? styles.transactionStatusYellow
 				: styles.transactionStatusGreen;
 		const statusText =
-			this.props.transaction.status === "pending" ? "Pending" : "Complete";
+			this.props.transaction.status === "pending"
+				? localeData.transactions.pending
+				: localeData.transactions.complete;
+		const userWallet = Wallet.getWallet(
+			this.props.staticState.mnemonic,
+		).getAddress();
 
 		return (
 			<ScrollView
@@ -55,10 +59,10 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				<View style={[styles.header]}>
 					<View style={[styles.title]}>
 						<Text style={[styles.titleText, commonStyles.fontBold]}>
-							Transaction
+							{localeData.transactions.transactionTitleOne}
 						</Text>
 						<Text style={[styles.titleText, commonStyles.fontBold]}>
-							Details
+							{localeData.transactions.transactionTitleTwo}
 						</Text>
 					</View>
 
@@ -70,7 +74,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 							)}
 						</Text>
 						<Text style={[styles.balanceDescription, commonStyles.fontBook]}>
-							Amount in USD
+							USD
 						</Text>
 					</View>
 				</View>
@@ -79,26 +83,36 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				<View style={[styles.infoList]}>
 					{/* {this.getInfoBlock("Transaction Id", this.props.transaction.id)} */}
 
-					{this.getInfoBlock("Sender", this.props.transaction.from.wallet, {
-						show:
-							!this.props.transaction.refCode &&
-							this.props.transaction.to.wallet ==
-								Wallet.getWallet(this.props.staticState.mnemonic).getAddress(),
-						capitalize: false,
-					})}
-					{this.getInfoBlock("Receiver", this.props.transaction.to.wallet, {
-						show:
-							!this.props.transaction.refCode &&
-							this.props.transaction.to.wallet !=
-								Wallet.getWallet(this.props.staticState.mnemonic).getAddress(),
-						capitalize: false,
-					})}
-					{this.getInfoBlock("Reference Code", this.props.transaction.refCode, {
-						show: !!this.props.transaction.refCode,
-						capitalize: false,
-					})}
 					{this.getInfoBlock(
-						"Transaction type",
+						localeData.transactions.sender,
+						this.props.transaction.from.wallet,
+						{
+							show:
+								!this.props.transaction.refCode &&
+								this.props.transaction.to.wallet === userWallet,
+							capitalize: false,
+						},
+					)}
+					{this.getInfoBlock(
+						localeData.transactions.receiver,
+						this.props.transaction.to.wallet,
+						{
+							show:
+								!this.props.transaction.refCode &&
+								this.props.transaction.to.wallet !== userWallet,
+							capitalize: false,
+						},
+					)}
+					{this.getInfoBlock(
+						localeData.transactions.referenceCode,
+						this.props.transaction.refCode,
+						{
+							show: !!this.props.transaction.refCode,
+							capitalize: false,
+						},
+					)}
+					{this.getInfoBlock(
+						localeData.transactions.type,
 						<View style={[styles.transactionTypeContainer]}>
 							<Text style={[styles.transactionType, commonStyles.fontBook]}>
 								{this.props.transaction.type}
@@ -106,7 +120,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 						</View>,
 					)}
 					{this.getInfoBlock(
-						"Status",
+						localeData.transactions.status,
 						<View style={[styles.transactionStatusContainer, statusStyle]}>
 							<Text
 								style={[
@@ -115,16 +129,18 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 									commonStyles.fontBook,
 								]}
 							>
-								{statusText}
+								{this.props.transaction.status === "pending"
+									? localeData.transactions.pending
+									: localeData.transactions.complete}
 							</Text>
 						</View>,
 					)}
 					{this.getInfoBlock(
-						"Order Placed",
+						localeData.transactions.orderedDate,
 						moment(this.props.transaction.createdAt).format("D MMM yyyy"),
 					)}
 					{this.getInfoBlock(
-						"Date Approved",
+						localeData.transactions.approvedDate,
 						moment(this.props.transaction.approvedAt).format("D MMM yyyy"),
 						{ show: !!this.props.transaction.approvedAt },
 					)}
@@ -135,8 +151,8 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					}}
 					style={[styles.backButtonStyle]}
 					textStyle={styles.backButtonText}
-					text="Back"
-				></BlueButton>
+					text={localeData.transactions.backToTransactions}
+				/>
 			</ScrollView>
 		);
 	}
@@ -179,6 +195,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 const mapStateToProps = (state: ApplicationState) => {
 	return {
 		staticState: state.static,
+		languageState: state.language,
 	};
 };
 

@@ -17,6 +17,7 @@ import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import WiteInfoIcon from "@mele-wallet/resources/icons/info-white.svg";
+import BlueInfoIcon from "@mele-wallet/resources/icons/info-blue.svg";
 import ScanBarcodeIcon from "@mele-wallet/resources/icons/scan-barcode.svg";
 import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
 import Ripple from "react-native-material-ripple";
@@ -29,16 +30,24 @@ import { ROUTES } from "@mele-wallet/app/router/routes";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { IAccountModel } from "@mele-wallet/common/model/account.model";
 import { Transactions } from "@mele-wallet/app/common/transactions/transactions";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 interface IHomeComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	staticState: StaticState;
+	languageState: LanguageState;
 }
 
 interface IHomeComponentState {
 	refreshing: boolean;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class HomeComponent extends Component<
 	IHomeComponentProps,
@@ -70,6 +79,7 @@ class HomeComponent extends Component<
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		const account: IAccountModel =
 			this.props.accountState.account || ({} as any);
 		const wallet = Wallet.getWallet(this.props.staticState.mnemonic);
@@ -88,12 +98,54 @@ class HomeComponent extends Component<
 				<View style={[styles.header, commonStyles.blueBackground]}>
 					<View style={[styles.balanceHeader]}>
 						<View style={[styles.titleContainer]}>
-							<Text style={[styles.title, commonStyles.fontBold]}>Balance</Text>
+							<Text style={[styles.title, commonStyles.fontBold]}>
+								{localeData.home.balance}
+							</Text>
 							<View style={[styles.balanceContainer]}>
-								<Text style={[commonStyles.whiteHeader, styles.balance]}>
-									${MeleCalculator.centsToUSDFormatted(account.balance || "0")}
-								</Text>
-								<WiteInfoIcon style={styles.infoIcon} />
+								<Ripple
+									onPress={() => {
+										this.RBSheet.open();
+									}}
+									rippleOpacity={0}
+									style={[styles.balanceContainer]}
+								>
+									<Text style={[commonStyles.whiteHeader, styles.balance]}>
+										$
+										{MeleCalculator.centsToUSDFormatted(account.balance || "0")}
+									</Text>
+
+									<WiteInfoIcon style={styles.infoIcon} />
+								</Ripple>
+
+								<RBSheet
+									ref={(ref) => {
+										this.RBSheet = ref;
+									}}
+									openDuration={250}
+									height={350}
+									customStyles={{
+										container: {
+											borderTopLeftRadius: 20,
+											borderTopRightRadius: 20,
+											alignContent: "center",
+											alignItems: "center",
+										},
+									}}
+								>
+									<View style={[styles.explainerContainer]}>
+										<Text
+											style={[styles.calculatorText, commonStyles.fontBold]}
+										>
+											{localeData.home.balancetitle}
+										</Text>
+										<BlueInfoIcon style={[styles.blueIcon]} />
+									</View>
+									<View style={[styles.explainerDescription]}>
+										<Text style={[styles.calculatorDesc]}>
+											{localeData.home.balanceDesc}
+										</Text>
+									</View>
+								</RBSheet>
 							</View>
 						</View>
 						<View style={[styles.barcodeIconContainer]}>
@@ -148,6 +200,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		staticState: state.static,
+		languageState: state.language,
 	};
 };
 

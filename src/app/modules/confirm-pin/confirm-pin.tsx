@@ -1,15 +1,5 @@
 import React, { Component } from "react";
-import {
-	Button,
-	View,
-	Text,
-	Image,
-	Switch,
-	ScrollView,
-	Alert,
-	Animated,
-} from "react-native";
-import Clipboard from "@react-native-community/clipboard";
+import { View, Text, ScrollView, Animated } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -33,6 +23,11 @@ interface IConfirmPinComponentProps {
 interface IConfirmPinComponentState {
 	pinConfirmation: string;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class ConfirmPinComponent extends Component<
 	IConfirmPinComponentProps,
@@ -92,6 +87,10 @@ class ConfirmPinComponent extends Component<
 		]).start();
 	};
 	render() {
+		const localeData =
+			this.props.languageState !== undefined
+				? languages[this.props.languageState.currentLanguage]
+				: languages["en"];
 		return (
 			<ScrollView
 				style={[commonStyles.blueBackground, styles.scrollView]}
@@ -99,10 +98,10 @@ class ConfirmPinComponent extends Component<
 			>
 				<View style={styles.topContainer}>
 					<Text style={[commonStyles.whiteSubHeader, styles.headerText]}>
-						Verify PIN
+						{localeData.pin.verify}
 					</Text>
 					<Text style={[commonStyles.fontBook, styles.subHeaderText]}>
-						Re-enter your PIN please.
+						{localeData.pin.verifyDescription}
 					</Text>
 				</View>
 				<Animated.View
@@ -120,7 +119,6 @@ class ConfirmPinComponent extends Component<
 								pin === this.props.pin &&
 								this.props.accountId !== undefined
 							) {
-								console.log("update!");
 								this.props.actionCreators.static.updatePin(pin);
 								Actions.jump(ROUTES.authenticated.home);
 							} else if (pin == this.props.pin) {
@@ -146,6 +144,7 @@ class ConfirmPinComponent extends Component<
 const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
+		languageState: state.language,
 	};
 };
 

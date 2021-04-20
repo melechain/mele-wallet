@@ -154,10 +154,10 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file('your_key_name.keystore')
-            storePassword 'vodafone16'
-            keyAlias 'your_key_alias'
-            keyPassword 'vodafone16'
+            storeFile file('mele-wallet-key.keystore')
+            storePassword 'melecoined'
+            keyAlias 'mele-wallet-alias'
+            keyPassword 'melecoined'
         }
     }
     buildTypes {
@@ -167,8 +167,8 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            //signingConfig signingConfigs.release
+            //signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

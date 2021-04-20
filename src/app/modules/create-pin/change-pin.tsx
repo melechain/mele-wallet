@@ -16,7 +16,7 @@ import { ROUTES } from "@mele-wallet/app/router/routes";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
-interface ICreatePinComponentProps {
+interface IChangePinComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	staticState: StaticState;
@@ -30,8 +30,8 @@ const languages = {
 	ar: require("../../translations/ar.json"),
 };
 
-class CreatePinComponent extends Component<ICreatePinComponentProps> {
-	constructor(props: ICreatePinComponentProps) {
+class ChangePinComponent extends Component<IChangePinComponentProps> {
+	constructor(props: IChangePinComponentProps) {
 		super(props);
 	}
 
@@ -47,7 +47,7 @@ class CreatePinComponent extends Component<ICreatePinComponentProps> {
 			>
 				<View style={styles.topContainer}>
 					<Text style={[commonStyles.whiteSubHeader, styles.headerText]}>
-						{localeData.pin.choose}
+						{localeData.pin.edit}
 					</Text>
 					<Text style={[commonStyles.fontBook, styles.subHeaderText]}>
 						{localeData.pin.chooseDescription}
@@ -58,6 +58,7 @@ class CreatePinComponent extends Component<ICreatePinComponentProps> {
 						Actions.jump(ROUTES.nonAuthenticated.confirmPin, {
 							mnemonic: this.props.mnemonic,
 							pin: pin,
+							accountId: this.props.staticState.accountId,
 						});
 					}}
 					style={styles.pinContainer}
@@ -75,7 +76,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	};
 };
 
-export const CreatePin = connect(
+export const ChangePin = connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(CreatePinComponent);
+)(ChangePinComponent);

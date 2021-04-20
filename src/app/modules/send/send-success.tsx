@@ -9,7 +9,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import React from "react";
 import { connect } from "react-redux";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
-import { ScrollView, Image, Text, View, StatusBar } from "react-native";
+import { ScrollView, Text, View, StatusBar } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
@@ -21,6 +21,11 @@ interface ISendSuccessProps {
 	transactionState: TransactionState;
 	actionCreators: IActionCreators;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 	goToTransactionDetails = async () => {
@@ -34,7 +39,7 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 	goBack = async () => {
 		await this.props.actionCreators.account.accountSync();
 		this.props.actionCreators.transaction.resetSendFlow();
-		Actions.jump(ROUTES.authenticated.send);
+		Actions.jump(ROUTES.authenticated.home);
 	};
 
 	componentDidMount() {
@@ -55,6 +60,7 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 	}
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -65,23 +71,24 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 					<ShieldGreenIcon width={90} height={90} />
 				</View>
 				<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-					Transaction Successfull!
+					{localeData.send.successTitle}
 				</Text>
 				<Text style={[styles.initContainer]}>
+					{localeData.send.successDescOne}
 					<Text style={[commonStyles.fontBold]}>
 						{MeleCalculator.centsToUSDFormatted(
 							this.props.transactionState.loadedTransaction.amount,
 						)}{" "}
-						&nbsp;
+						USD
 					</Text>
-					USD were successfully transfered to{" "}
+					{localeData.send.successDescTwo}
 					<Text style={[commonStyles.fontBold]}>
 						{this.props.transactionState.loadedTransaction?.to.wallet}
 					</Text>
 				</Text>
 				<View style={[styles.buttonsContainer]}>
 					<BlueButton
-						text="Transaction Details"
+						text={localeData.send.transactionDetails}
 						onPress={() => {
 							this.goToTransactionDetails();
 						}}
@@ -89,7 +96,7 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 						textStyle={styles.succesContainerButtonText}
 					/>
 					<BlueButton
-						text="Go Back"
+						text={localeData.send.backToDash}
 						onPress={() => {
 							this.goBack();
 						}}

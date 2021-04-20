@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
 	transparentButtonTitlePIN: {
 		color: "#101654",
 		opacity: 0.4,
-		paddingLeft: 200,
+		paddingLeft: 175,
 	},
 	actionTextPIN: {
 		flex: 1,
@@ -121,5 +121,10 @@ export const styles = StyleSheet.create({
 	buttonTitle: {
 		fontSize: 12,
 		color: "#101654",
+	},
+	pinText: {
+		paddingLeft: 15,
+		color: "#101654",
+		fontSize: 12,
 	},
 });

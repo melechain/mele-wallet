@@ -1,15 +1,12 @@
 import React, { Component } from "react";
-import { Button, View, Text, ScrollView, Image, StatusBar } from "react-native";
+import { Text, ScrollView, Image, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
 	mapDispatchToProps,
 	IActionCreators,
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
-import {
-	AccountState,
-	WalletSyncStatus,
-} from "@mele-wallet/redux/reducers/account-reducer";
+import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import {
 	TransactionState,
@@ -21,24 +18,29 @@ import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { SendSuccess } from "./send-success";
 import { SendNoCoins } from "./send-no-coins";
 import { SendError } from "./send-error";
-import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
 import { NoCoinsAvailable } from "./no-coins-available";
-import { Actions } from "react-native-router-flux";
-import { ROUTES } from "@mele-wallet/app/router/routes";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	transactionState: TransactionState;
+	languageState: LanguageState;
 }
 
 interface ISendState {
 	sendAmount: string;
 	toAddress: string;
 	notEnoughCoins: boolean;
+	formatted: number;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class SendComponent extends Component<ISendComponentProps, ISendState> {
 	constructor(props: ISendComponentProps) {
@@ -47,6 +49,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			sendAmount: "",
 			toAddress: "",
 			notEnoughCoins: false,
+			formatted: 0,
 		};
 	}
 
@@ -54,6 +57,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 		this.setState({
 			sendAmount: "",
 			toAddress: "",
+			formatted: 0,
 		});
 	}
 
@@ -81,10 +85,24 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 		this.setState({
 			sendAmount: "",
 			toAddress: "",
+			formatted: 0,
+		});
+	};
+
+	setFormattedCents = (e: any) => {
+		const replaced = parseFloat(e.replace(",", ".").replace(" ", ""));
+		this.setState({
+			sendAmount: e,
+			formatted: parseFloat(
+				parseFloat(
+					parseFloat((replaced * 100).toFixed(2).toString()).toString(),
+				).toFixed(2),
+			),
 		});
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		if (
 			this.props.transactionState.transactionStatus === TransactionStatus.ERROR
@@ -111,10 +129,10 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 				>
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 					<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-						Send coins
+						{localeData.send.title}
 					</Text>
 					<Text style={[styles.initContainer]}>
-						Send coins to your friends and family
+						{localeData.send.description}
 					</Text>
 					<BaseField
 						onChangeText={(e: string) => {
@@ -122,26 +140,29 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							if (value.length > 10) {
 								return;
 							}
+							if (value.includes(".")) {
+								const digits = value.split(".");
+								if (digits[1].length > 2) return;
+							}
+
+							const test = value.replace(/[^.]/g, "").length;
+							if (test > 1) return;
+							if (value === ".") return;
 
 							const reg = new RegExp("^[0-9.]+$");
 							if (reg.test(value) || value === "") {
-								if (e.length === 1 && parseFloat(e) > 0) {
-									this.setState({
-										sendAmount: e,
-									});
-								} else if (e.length > 1) {
-									this.setState({
-										sendAmount: e,
-									});
-								} else if (value === "") {
+								if (value === "") {
 									this.setState({
 										sendAmount: e,
 									});
 								}
+								if ((e.length === 1 && parseFloat(e) > 0) || e.length > 1) {
+									this.setFormattedCents(e);
+								}
 							}
 						}}
 						value={this.state.sendAmount || ""}
-						placeholder="Enter amount"
+						placeholder={localeData.send.amount}
 						iconRight={<Text>USD</Text>}
 					/>
 					<BaseField
@@ -152,17 +173,15 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 						}}
 						value={this.state.toAddress || ""}
 						style={[styles.sendFields, { paddingTop: 10 }]}
-						placeholder="Enter Recepient Address"
+						placeholder={localeData.send.recepient}
 					/>
 					<Calculator
 						centsAmount={
-							this.state.sendAmount
-								? (parseFloat(this.state.sendAmount) * 100).toString()
-								: "0"
+							this.state.formatted ? this.state.formatted.toString() : "0"
 						}
 					/>
 					<BlueButton
-						text="Send Coins"
+						text={localeData.send.sendButton}
 						onPress={() => {
 							this.sendCoins();
 						}}
@@ -190,6 +209,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		transactionState: state.transaction,
+		languageState: state.language,
 	};
 };
 

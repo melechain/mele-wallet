@@ -62,6 +62,7 @@ import { SplashScreen } from "@mele-wallet/app/modules/splash-screen/splash-scre
 import { Transaction } from "@mele-wallet/app/modules/transaction/transaction";
 import { Terms } from "../modules/terms/terms";
 import { About } from "../modules/about/about";
+import { ChangePin } from "../modules/create-pin/change-pin";
 
 class MainRouterComponent extends React.Component {
 	render() {
@@ -133,16 +134,14 @@ class MainRouterComponent extends React.Component {
 							}}
 						/>
 						<Scene
-							key={ROUTES.authenticated.createPin}
-							component={CreatePin}
+							key={ROUTES.authenticated.changePin}
+							component={ChangePin}
+							hideNavBar={false}
 							showLabel={false}
-							initial={false}
-							backToInitial={false}
 							navBar={() => {
 								return (
 									<AuthenticatedBlueHeader
-										componentKey={ROUTES.authenticated.createPin}
-										title="Change Pin"
+										componentKey={ROUTES.authenticated.changePin}
 									/>
 								);
 							}}

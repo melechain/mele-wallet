@@ -8,15 +8,26 @@ import ApplicationState from "@mele-wallet/redux/application-state";
 import { View, Text, ViewProps } from "react-native";
 import { styles } from "./styles";
 import InfoGrayIcon from "@mele-wallet/resources/icons/info-grey.svg";
+import BlueInfoIcon from "@mele-wallet/resources/icons/info-blue.svg";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
+import Ripple from "react-native-material-ripple";
 
 interface CalculatorProps extends ViewProps {
 	centsAmount: string;
 	statisticsState: StatisticsState;
+	languageState: LanguageState;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class CalculatorComponent extends React.Component<CalculatorProps> {
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		let meleCoins = "0";
 		let meleCoinPrice = "0";
 		let melegUSD = MeleCalculator.CentsToUSDMeleGPortionFormatted(
@@ -92,6 +103,7 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 					melegUSD,
 					melgPerGramOfGold,
 					priceOfGoldPerGram,
+					localeData,
 				)}
 			</View>
 		);
@@ -102,19 +114,60 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 		melegUSD: string,
 		melgPerGramOfGold: string,
 		priceOfGoldPerGram: string,
+		localeData: any,
 	) {
 		return (
 			<View style={[styles.meleDisplay]}>
 				<View style={[styles.meleDisplayNumbers]}>
-					<View>
-						<Text
-							style={[styles.coinCount, commonStyles.fontBold]}
-							numberOfLines={1}
-						>
-							{meleGold}
-						</Text>
-						<Text style={[styles.usdCount]}>${melegUSD}</Text>
-					</View>
+					<Ripple
+						onPress={() => {
+							this.RBSheet.open();
+						}}
+						rippleOpacity={0}
+						style={[styles.meleDisplayNumbers]}
+					>
+						<View>
+							<Text
+								style={[styles.coinCount, commonStyles.fontBold]}
+								numberOfLines={1}
+							>
+								{meleGold}
+							</Text>
+							<Text style={[styles.usdCount]}>${melegUSD}</Text>
+						</View>
+
+						<InfoGrayIcon
+							height={15}
+							width={15}
+							style={{ marginLeft: "40%" }}
+						/>
+					</Ripple>
+					<RBSheet
+						ref={(ref) => {
+							this.RBSheet = ref;
+						}}
+						openDuration={250}
+						customStyles={{
+							container: {
+								borderTopLeftRadius: 20,
+								borderTopRightRadius: 20,
+								alignContent: "center",
+								alignItems: "center",
+							},
+						}}
+					>
+						<View style={[styles.explainerContainer]}>
+							<Text style={[styles.calculatorText, commonStyles.fontBold]}>
+								{localeData.calculator.title}
+							</Text>
+							<BlueInfoIcon style={[styles.blueIcon]} />
+						</View>
+						<View style={[styles.explainerDescription]}>
+							<Text style={[styles.calculatorDesc]}>
+								{localeData.calculator.description}
+							</Text>
+						</View>
+					</RBSheet>
 				</View>
 				<View style={[styles.meleDisplayNotions]}>
 					{/* <View style={[styles.notificationIcon]}>

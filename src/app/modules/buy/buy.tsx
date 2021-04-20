@@ -25,17 +25,24 @@ import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
 import { BuySuccess } from "./buy-success";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface IBuyComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	transactionState: TransactionState;
+	languageState: LanguageState;
 }
 
 interface IBuyState {
 	purchaseAmount: string;
 	codeCopied: boolean;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 	constructor(props: IBuyComponentProps) {
@@ -103,6 +110,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		if (
 			this.props.transactionState.purchaseFlowStatus ===
@@ -119,11 +127,10 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 				>
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 					<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-						Purchase coins
+						{localeData.buyCoins.phaseOneTitle}
 					</Text>
 					<Text style={[styles.initContainer]}>
-						To get coins please make a payment. You can send payment directly to
-						our address and we'll reimburse the coins upon payment received.
+						{localeData.buyCoins.phaseOneDescription}
 					</Text>
 					<BaseField
 						onChangeText={(e: string) => {
@@ -140,7 +147,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 							}
 						}}
 						value={this.state.purchaseAmount || ""}
-						placeholder="Amount"
+						placeholder={localeData.buyCoins.enterAmount}
 						iconRight={<Text>USD</Text>}
 					/>
 					<Calculator
@@ -158,8 +165,8 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 						}
 						text={
 							this.props.accountState.account?.wallet === undefined
-								? "Please connect your account first"
-								: "Place Order"
+								? localeData.buyCoins.connectAccount
+								: localeData.buyCoins.placeOrder
 						}
 						onPress={() => {
 							this.props.accountState.account?.wallet === undefined
@@ -184,11 +191,11 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 				>
 					<Image source={require("@mele-wallet/resources/images/logo.png")} />
 					<Text style={[styles.confirmationTitle]}>
-						Confirmation of Your Payment
+						{localeData.buyCoins.phaseTwoTitle}
 					</Text>
 					<View style={[styles.initContainer]}>
 						<Text style={[styles.confirmText]}>
-							Please use this reference code when you make the payment.
+							{localeData.buyCoins.phaseTwoDescription}
 						</Text>
 					</View>
 					<Ripple
@@ -204,7 +211,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 							adjustsFontSizeToFit={true}
 							numberOfLines={1}
 						>
-							Reference Code
+							{localeData.buyCoins.referenceCode}
 						</Text>
 						<Text
 							style={[styles.referenceCode, commonStyles.fontBook]}
@@ -216,60 +223,65 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 						<CopyIcon style={[styles.copyIcon]} />
 					</Ripple>
 					<View style={[styles.initContainer]}>
-						<Text style={[styles.confirmText]}>
-							Please make your payment of {this.state.purchaseAmount} USD
-							through bank to the below bank address. The token balance will
-							appear in your account only after your transaction gets approved
-							by our team.
+						<Text style={[styles.confirmText]} numberOfLines={4}>
+							{localeData.buyCoins.pleasePay} {this.state.purchaseAmount}
+							{" USD "}
+							{localeData.buyCoins.pleasePayTwo}
 						</Text>
 					</View>
 					<View style={[styles.initContainer]}>
 						<View style={[styles.informationEntry]}>
 							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
-								Account Name
+								{localeData.buyCoins.accountName}
 							</Text>
 							<Text style={[styles.informationValue]}>
-								شركة ملي كوين للاستثمار ش.ذ.م.م
+								{localeData.buyCoins.accountNameValue}
 							</Text>
 						</View>
 						<View style={[styles.informationEntry]}>
 							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
-								Account Number
-							</Text>
-							<Text style={[styles.informationValue]}>0156000100510271</Text>
-						</View>
-						<View style={[styles.informationEntry]}>
-							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
-								Bank Name
-							</Text>
-							<Text style={[styles.informationValue]}>EL Nilein Bank</Text>
-						</View>
-						<View style={[styles.informationEntry]}>
-							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
-								Bank Address
+								{localeData.buyCoins.accountNumber}
 							</Text>
 							<Text style={[styles.informationValue]}>
-								hereby - Abu Dhabi - UAE
+								{localeData.buyCoins.accountNumberValue}
 							</Text>
 						</View>
 						<View style={[styles.informationEntry]}>
 							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
-								IBAN
+								{localeData.buyCoins.bankName}
 							</Text>
 							<Text style={[styles.informationValue]}>
-								AE320250156000100510271
+								{localeData.buyCoins.bankNameValue}
 							</Text>
 						</View>
 						<View style={[styles.informationEntry]}>
 							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
-								Swift/BIC
+								{localeData.buyCoins.bankAddress}
 							</Text>
-							<Text style={[styles.informationValue]}>NILBAEAA</Text>
+							<Text style={[styles.informationValue]}>
+								{localeData.buyCoins.bankAddressValue}
+							</Text>
+						</View>
+						<View style={[styles.informationEntry]}>
+							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
+								{localeData.buyCoins.iban}
+							</Text>
+							<Text style={[styles.informationValue]}>
+								{localeData.buyCoins.ibanValue}
+							</Text>
+						</View>
+						<View style={[styles.informationEntry]}>
+							<Text style={[styles.informationTitle, commonStyles.fontBold]}>
+								{localeData.buyCoins.swift}
+							</Text>
+							<Text style={[styles.informationValue]}>
+								{localeData.buyCoins.swiftValue}
+							</Text>
 						</View>
 					</View>
 					<View style={[styles.buttonsContainer]}>
 						<BlueButton
-							text="Place Order"
+							text={localeData.buyCoins.phaseTwoPlaceOrder}
 							onPress={() => {
 								this.purchaseCoins();
 							}}
@@ -277,7 +289,7 @@ class BuyComponent extends Component<IBuyComponentProps, IBuyState> {
 							textStyle={styles.noTransactionsContainerButtonText}
 						/>
 						<BlueButton
-							text="Cancel Order"
+							text={localeData.buyCoins.phaseTwoCancelOrder}
 							onPress={() => {
 								this.resetPurchaseFlow();
 							}}
@@ -295,6 +307,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		transactionState: state.transaction,
+		languageState: state.language,
 	};
 };
 

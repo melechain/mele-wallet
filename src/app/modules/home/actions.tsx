@@ -20,18 +20,26 @@ import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { Actions as FluxActions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface IActionsComponentProps {
 	staticState: StaticState;
+	languageState: LanguageState;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class ActionsComponent extends Component<IActionsComponentProps> {
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		return (
 			<View style={[actionStyles.content]}>
 				<View style={[actionStyles.actionTitleContainer]}>
 					<Text style={[actionStyles.actionTitle, commonStyles.fontBook]}>
-						Actions Needed
+						{localeData.actions.title}
 					</Text>
 				</View>
 				<View style={[actionStyles.actionArea]}>
@@ -64,8 +72,8 @@ class ActionsComponent extends Component<IActionsComponentProps> {
 
 						<Text style={[actionStyles.actionText, commonStyles.fontBook]}>
 							{this.props.staticState.accountId
-								? "Wallet Connected"
-								: "Wallet Not Connected"}
+								? localeData.actions.walletConnected
+								: localeData.actions.walletNotConnected}
 						</Text>
 						{!this.props.staticState.accountId ? (
 							<Ripple
@@ -76,7 +84,7 @@ class ActionsComponent extends Component<IActionsComponentProps> {
 								style={[actionStyles.actionButton]}
 							>
 								<Text style={[actionStyles.buttonTitle, commonStyles.fontBold]}>
-									Scan QR
+									{localeData.actions.scanQR}
 								</Text>
 							</Ripple>
 						) : null}
@@ -91,6 +99,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		staticState: state.static,
+		languageState: state.language,
 	};
 };
 

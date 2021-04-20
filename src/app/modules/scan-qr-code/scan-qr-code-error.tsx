@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Alert, Dimensions } from "react-native";
+import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -8,13 +8,11 @@ import {
 } from "@mele-wallet/redux/methods/map-dispatch-to-props";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { RNCamera } from "react-native-camera";
 import { styles } from "./styles";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import ShieldedError from "@mele-wallet/resources/icons/shielded-error.svg";
-import Ripple from "react-native-material-ripple";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 
 interface IScanQRCodeErrorComponentProps {
@@ -24,6 +22,11 @@ interface IScanQRCodeErrorComponentProps {
 interface IScanQRCodeErrorComponentState {
 	accountId: string;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class ScanQRCodeErrorComponent extends Component<
 	IScanQRCodeErrorComponentProps,
@@ -42,7 +45,10 @@ class ScanQRCodeErrorComponent extends Component<
 	};
 
 	render() {
-		const QRScanner: any = QRCodeScanner;
+		const localeData =
+			this.props.languageState !== undefined
+				? languages[this.props.languageState.currentLanguage]
+				: languages["en"];
 
 		return (
 			<View style={[styles.content, commonStyles.whiteBackground]}>
@@ -51,16 +57,16 @@ class ScanQRCodeErrorComponent extends Component<
 				</View>
 				<View style={[styles.errorMessage]}>
 					<Text style={[styles.font, commonStyles.fontBold]}>
-						Error encountered!
+						{localeData.qrCode.errorTitle}
 					</Text>
 				</View>
 				<View style={[styles.subErrorMessage]}>
 					<Text style={[styles.subFont]}>
-						Your wallet couldn't not be synced with the account!
+						{localeData.qrCode.errorDescription}
 					</Text>
 				</View>
 				<BlueButton
-					text="Dashboard"
+					text={localeData.qrCode.dashboard}
 					style={[styles.button]}
 					onPress={() => {
 						Actions.replace(ROUTES.checkAuthentication);

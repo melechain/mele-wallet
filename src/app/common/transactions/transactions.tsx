@@ -25,6 +25,7 @@ import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calcula
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { ScrollView } from "react-native-gesture-handler";
+import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 
 interface ITransactionComponentProps {
 	transactionState: TransactionState;
@@ -34,7 +35,13 @@ interface ITransactionComponentProps {
 	transactionStatus?: string;
 	transactionListKeyword: string;
 	customEmptyScreen?: React.ReactNode;
+	languageState: LanguageState;
 }
+
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
 
 class TransactionComponent extends Component<ITransactionComponentProps> {
 	componentDidMount() {
@@ -61,6 +68,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 		}
 	}
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		return (
 			<ScrollView
 				style={[styles.scroll]}
@@ -69,7 +77,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				<View style={[styles.transactionsTitleContainer]}>
 					<ShieldBlue />
 					<Text style={[styles.transactionsTitle, commonStyles.fontBook]}>
-						Transactions
+						{localeData.transactions.title}
 					</Text>
 					{/* <TouchableOpacity onPress={()=>{
                         Actions.jump(ROUTES.authenticated.history)
@@ -78,13 +86,13 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
                     </TouchableOpacity> */}
 				</View>
 				<View style={[styles.transactionsList]}>
-					{this.getTransactionList()}
+					{this.getTransactionList(localeData)}
 				</View>
 			</ScrollView>
 		);
 	}
 
-	getTransactionList = () => {
+	getTransactionList = (localeData: any) => {
 		const loadedTransactionList =
 			this.props.transactionState.loadedTransactionLists[
 				this.props.transactionListKeyword
@@ -119,15 +127,15 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					<Text
 						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
 					>
-						You have no transactions yet!
+						{localeData.transactions.noTransactionsOne}
 					</Text>
-					<Text
+					{/* <Text
 						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
 					>
-						Connect your Account to get started.
-					</Text>
+						{localeData.transactions.noTransactionsTwo}
+					</Text> */}
 					<BlueButton
-						text="Connect Account"
+						text={localeData.transactions.connect}
 						onPress={() => {
 							Actions.jump(ROUTES.scanQRCode);
 						}}
@@ -142,15 +150,15 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 					<Text
 						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
 					>
-						You have no transactions yet!
+						{localeData.transactions.noTransactionsOne}
 					</Text>
 					<Text
 						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
 					>
-						Purchase coins to get started.
+						{localeData.transactions.noTransactionsThree}
 					</Text>
 					<BlueButton
-						text="Purchase Coins"
+						text={localeData.transactions.buyCoins}
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}
 						onPress={() => {
@@ -171,7 +179,9 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 						? styles.transactionStatusYellow
 						: styles.transactionStatusGreen;
 				const statusText =
-					transaction.status === "pending" ? "Pending" : "Complete";
+					transaction.status === "pending"
+						? localeData.transactions.pending
+						: localeData.transactions.complete;
 
 				let transactionTitle = transaction.refCode;
 
@@ -198,7 +208,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 						<View style={[styles.transactionContainerRow]}>
 							<Text
 								adjustsFontSizeToFit={true}
-								numberOfLines={1}
+								numberOfLines={2}
 								style={[
 									styles.transactionContainerAddress,
 									commonStyles.fontBold,
@@ -249,6 +259,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		transactionState: state.transaction,
 		staticState: state.static,
+		languageState: state.language,
 	};
 };
 

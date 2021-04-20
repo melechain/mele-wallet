@@ -86,6 +86,7 @@ export const styles = StyleSheet.create({
 		borderRadius: 4,
 		marginTop: 17,
 		width: "100%",
+		paddingBottom: 5,
 	},
 	backButtonText: {
 		color: "#101654",

@@ -21,6 +21,11 @@ interface IBuysSuccessProps {
 	actionCreators: IActionCreators;
 }
 
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
+
 class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
 	goToHistory = async () => {
 		this.props.actionCreators.transaction.resetPurchaseFlow();
@@ -31,13 +36,16 @@ class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
 			size: 100,
-			transactionType: "purchase",
+			transactionType: undefined,
 			transactionStatus: undefined,
 			transactionListKeyword: "HISTORY_PURCHASES",
 		});
+	}
+
+	componentWillUnmount() {
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
-			size: 100,
+			size: 50,
 			transactionType: undefined,
 			transactionStatus: undefined,
 			transactionListKeyword: "HOME_RECENT_TRANSACTIONS",
@@ -45,6 +53,7 @@ class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
 	}
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -55,15 +64,14 @@ class BuySuccessComponent extends React.Component<IBuysSuccessProps> {
 					<ShieldGreenIcon width={90} height={90} />
 				</View>
 				<Text style={[styles.initTitle, commonStyles.blackHeader]}>
-					Thank you!
+					{localeData.buyCoins.successTitle}
 				</Text>
 				<Text style={[styles.initContainer]}>
-					Your order is placed and can be viewed under transactions page as
-					pending until the admin approves that you have made the payment.
+					{localeData.buyCoins.succcessDescription}
 				</Text>
 
 				<BlueButton
-					text="Transactions"
+					text={localeData.buyCoins.succcessButton}
 					onPress={() => {
 						this.goToHistory();
 					}}

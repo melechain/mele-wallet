@@ -39,6 +39,11 @@ interface IMoreComponentProps {
 	accountState: AccountState;
 }
 
+const languages = {
+	en: require("../../translations/en.json"),
+	ar: require("../../translations/ar.json"),
+};
+
 class MoreComponent extends Component<IMoreComponentProps> {
 	componentDidMount() {
 		this.props.actionCreators.transaction.resetPurchaseFlow;
@@ -49,6 +54,7 @@ class MoreComponent extends Component<IMoreComponentProps> {
 	};
 
 	render() {
+		const localeData = languages[this.props.languageState.currentLanguage];
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -56,7 +62,9 @@ class MoreComponent extends Component<IMoreComponentProps> {
 				contentContainerStyle={styles.content}
 			>
 				<View style={[styles.actionTitleContainer, { marginTop: 40 }]}>
-					<Text style={[styles.actionTitle, commonStyles.fontBold]}>More</Text>
+					<Text style={[styles.actionTitle, commonStyles.fontBold]}>
+						{localeData.more.title}
+					</Text>
 				</View>
 				<View style={[styles.actionArea]}>
 					{/* <View style={[styles.eachAction]}>
@@ -80,10 +88,9 @@ class MoreComponent extends Component<IMoreComponentProps> {
 							<WalletIcon style={[styles.actionLogo]} />
 						</View>
 						<Text style={[styles.actionText, commonStyles.fontBook]}>
-							Wallet Status -
 							{this.props.staticState.accountId
-								? " Connected"
-								: " Not Connected"}
+								? localeData.more.connected
+								: localeData.more.notConnected}
 						</Text>
 						{!this.props.staticState.accountId ? (
 							<Ripple
@@ -94,7 +101,7 @@ class MoreComponent extends Component<IMoreComponentProps> {
 								style={[styles.actionButton]}
 							>
 								<Text style={[styles.buttonTitle, commonStyles.fontBold]}>
-									Scan QR
+									{localeData.more.scan}
 								</Text>
 							</Ripple>
 						) : null}
@@ -102,7 +109,7 @@ class MoreComponent extends Component<IMoreComponentProps> {
 				</View>
 				<View style={[styles.actionTitleContainer]}>
 					<Text style={[styles.actionTitle, commonStyles.fontBold]}>
-						Security
+						{localeData.more.security}
 					</Text>
 				</View>
 				<View style={[styles.actionArea]}>
@@ -110,20 +117,22 @@ class MoreComponent extends Component<IMoreComponentProps> {
 						<Ripple
 							style={[styles.transparentButtonPIN]}
 							onPress={() => {
-								FluxActions.jump(ROUTES.authenticated.createPin, {
+								FluxActions.jump(ROUTES.authenticated.changePin, {
 									mnemonic: this.generateMnemonic().join(" "),
-									from: "more",
 								});
 							}}
 						>
 							<LockGreenIcon style={[styles.actionLogo]} />
+							<Text style={[styles.pinText, commonStyles.fontBook]}>
+								{localeData.more.pin}
+							</Text>
 							<Text
 								style={[
 									styles.transparentButtonTitlePIN,
 									commonStyles.fontBook,
 								]}
 							>
-								Change PIN &gt;
+								{localeData.more.changePIN} &gt;
 							</Text>
 						</Ripple>
 					</View>
