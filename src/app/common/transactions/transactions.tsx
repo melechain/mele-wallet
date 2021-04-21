@@ -26,6 +26,7 @@ import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
+import AsyncStorage from "@react-native-community/async-storage";
 
 interface ITransactionComponentProps {
 	transactionState: TransactionState;
@@ -38,13 +39,29 @@ interface ITransactionComponentProps {
 	languageState: LanguageState;
 }
 
+interface ITransactionComponentState {
+	fromStorage: boolean;
+	transactions: ITransactionList;
+}
+
 const languages = {
 	en: require("../../translations/en.json"),
 	ar: require("../../translations/ar.json"),
 };
 
-class TransactionComponent extends Component<ITransactionComponentProps> {
+class TransactionComponent extends Component<
+	ITransactionComponentProps,
+	ITransactionComponentState
+> {
+	constructor(props: ITransactionComponentProps) {
+		super(props);
+		this.state = {
+			fromStorage: true,
+			transactions: new ITransactionList(),
+		};
+	}
 	componentDidMount() {
+		this.getData();
 		this.props.actionCreators.transaction.searchTransactions({
 			page: 1,
 			size: 100,
@@ -54,6 +71,14 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 		});
 	}
 	componentDidUpdate(prevProps: ITransactionComponentProps) {
+		if (
+			this.state.fromStorage &&
+			this.props.transactionState.loadedTransactionLists[
+				this.props.transactionListKeyword
+			].totalCount > 0
+		) {
+			this.setState({ fromStorage: false });
+		}
 		if (
 			this.props.transactionStatus != prevProps.transactionStatus ||
 			this.props.transactionType != prevProps.transactionType
@@ -66,7 +91,29 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				transactionListKeyword: this.props.transactionListKeyword,
 			});
 		}
+		this.setData();
 	}
+
+	setData = async () => {
+		try {
+			await AsyncStorage.setItem(
+				"transactions",
+				JSON.stringify(
+					this.props.transactionState.loadedTransactionLists.HISTORY_PURCHASES,
+				),
+			);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	getData = async () => {
+		const value = await AsyncStorage.getItem("transactions");
+		if (value !== null) {
+			this.setState({ transactions: JSON.parse(value) });
+		}
+	};
+
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
 		return (
@@ -93,10 +140,11 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 	}
 
 	getTransactionList = (localeData: any) => {
-		const loadedTransactionList =
-			this.props.transactionState.loadedTransactionLists[
-				this.props.transactionListKeyword
-			] || new ITransactionList();
+		const loadedTransactionList = this.state.fromStorage
+			? this.state.transactions
+			: this.props.transactionState.loadedTransactionLists[
+					this.props.transactionListKeyword
+			  ] || new ITransactionList();
 
 		if (
 			loadedTransactionList.loadTransactionsStatus ===

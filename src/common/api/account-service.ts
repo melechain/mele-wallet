@@ -1,6 +1,7 @@
 import MainService from "./main-api-service";
 import base64 from "base-64";
 import Cookies from "universal-cookie";
+import AsyncStorage from "@react-native-community/async-storage";
 export default class AccountService extends MainService {
 	walletSync = async (accountId: string, wallet: string) => {
 		return await this.patch({
@@ -21,9 +22,10 @@ export default class AccountService extends MainService {
 	};
 
 	checkSession = async () => {
-		return await this.get({
+		const response = await this.get({
 			path: "/account",
 		});
+		return response;
 	};
 
 	logout = async () => {
@@ -131,4 +133,5 @@ export default class AccountService extends MainService {
 		});
 	};
 }
+
 export const accountService = new AccountService();

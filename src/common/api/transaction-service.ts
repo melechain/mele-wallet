@@ -1,5 +1,6 @@
 import MainService from "./main-api-service";
 import buildUrl from "build-url";
+import AsyncStorage from "@react-native-community/async-storage";
 // used by admin to manipulate user data
 export enum TransactionType {
 	TRANSFER = "transfer",
@@ -64,9 +65,10 @@ export default class TransactionService extends MainService {
 				...(p as any),
 			},
 		});
-		return await this.get({
+		const response = await this.get({
 			path: url,
 		});
+		return response;
 	};
 	getNewTransactionNumber = async () => {
 		return await this.get({
@@ -74,4 +76,5 @@ export default class TransactionService extends MainService {
 		});
 	};
 }
+
 export const transactionService = new TransactionService();

@@ -32,6 +32,7 @@ import { IAccountModel } from "@mele-wallet/common/model/account.model";
 import { Transactions } from "@mele-wallet/app/common/transactions/transactions";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import RBSheet from "react-native-raw-bottom-sheet";
+import AsyncStorage from "@react-native-community/async-storage";
 
 interface IHomeComponentProps {
 	actionCreators: IActionCreators;
@@ -42,6 +43,8 @@ interface IHomeComponentProps {
 
 interface IHomeComponentState {
 	refreshing: boolean;
+	fromStorage: boolean;
+	account: IAccountModel | undefined;
 }
 
 const languages = {
@@ -57,12 +60,15 @@ class HomeComponent extends Component<
 		super(props);
 		this.state = {
 			refreshing: false,
+			fromStorage: true,
+			account: undefined,
 		};
 		this._refresh = this._refresh.bind(this);
 	}
 
 	componentDidMount() {
 		this.props.actionCreators.transaction.resetPurchaseFlow;
+		this.getData();
 	}
 
 	_refresh = async () => {
@@ -78,10 +84,39 @@ class HomeComponent extends Component<
 		this.setState({ refreshing: false });
 	};
 
+	getData = async () => {
+		const value = await AsyncStorage.getItem("account");
+		if (value !== null) this.setState({ account: JSON.parse(value) });
+		else
+			this.setState({
+				account: this.props.accountState.account,
+			});
+	};
+
+	componentDidUpdate() {
+		if (this.state.account !== undefined && this.state.fromStorage) {
+			this.setState({ fromStorage: false });
+			this.setData();
+		}
+	}
+
+	setData = async () => {
+		try {
+			await AsyncStorage.setItem(
+				"account",
+				JSON.stringify(this.props.accountState.account),
+			);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
 		const account: IAccountModel =
-			this.props.accountState.account || ({} as any);
+			this.state.account !== undefined && this.state.fromStorage
+				? this.state.account
+				: this.props.accountState.account || ({} as any);
 		const wallet = Wallet.getWallet(this.props.staticState.mnemonic);
 		return (
 			<ScrollView
