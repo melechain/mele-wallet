@@ -1,0 +1,4 @@
+[submodule "mele-sdk"]
+	path = mele-sdk
+	url = https://github.com/melechain/mele-sdk.git
+	branch = master
