@@ -1,3 +1,6 @@
+import AsyncStorage from "@react-native-community/async-storage";
+import base64 from "base-64";
+
 export enum StaticStateActionTypes {
 	SET_MNEMONIC_AND_PIN = "@@STATIC/SET_MNEMONIC_AND_PIN",
 	SET_ACCOUNT_ID = "@@STATIC/SET_ACCOUNT_ID",
@@ -25,6 +28,8 @@ const staticReducer = (
 ): StaticState => {
 	switch (action.type) {
 		case StaticStateActionTypes.SET_MNEMONIC_AND_PIN:
+			AsyncStorage.setItem("pin", base64.encode(action.pin));
+			AsyncStorage.setItem("mnemonic", base64.encode(action.mnemonic));
 			return {
 				mnemonic: action.mnemonic,
 				pin: action.pin,

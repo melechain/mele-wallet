@@ -33,12 +33,16 @@ import { Transactions } from "@mele-wallet/app/common/transactions/transactions"
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from "@react-native-community/async-storage";
+import { WalletState } from "./../../../redux/reducers/wallet-reducer";
+import { Utils } from "mele-sdk";
+import base64 from "base-64";
 
 interface IHomeComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	staticState: StaticState;
 	languageState: LanguageState;
+	walletState: WalletState;
 }
 
 interface IHomeComponentState {
@@ -67,57 +71,27 @@ class HomeComponent extends Component<
 	}
 
 	componentDidMount() {
-		this.props.actionCreators.transaction.resetPurchaseFlow;
 		this.getData();
 	}
 
 	_refresh = async () => {
 		this.setState({ refreshing: true });
-		await this.props.actionCreators.account.accountSync();
-		await this.props.actionCreators.transaction.searchTransactions({
-			page: 1,
-			size: 100,
-			transactionType: undefined,
-			transactionStatus: undefined,
-			transactionListKeyword: "HOME_RECENT_TRANSACTIONS",
-		});
+		this.getData();
 		this.setState({ refreshing: false });
 	};
 
 	getData = async () => {
-		const value = await AsyncStorage.getItem("account");
-		if (value !== null) this.setState({ account: JSON.parse(value) });
-		else
-			this.setState({
-				account: this.props.accountState.account,
-			});
-	};
-
-	componentDidUpdate() {
-		if (this.state.account !== undefined && this.state.fromStorage) {
-			this.setState({ fromStorage: false });
-			this.setData();
-		}
-	}
-
-	setData = async () => {
-		try {
-			await AsyncStorage.setItem(
-				"account",
-				JSON.stringify(this.props.accountState.account),
-			);
-		} catch (e) {
-			console.log(e);
+		const based = await AsyncStorage.getItem("mnemonic");
+		if (based && this.props.walletState.loadedWalletAddress === "") {
+			this.props.actionCreators.wallet.getWalletAddress(base64.decode(based));
+			this.props.actionCreators.wallet.getWallet(base64.decode(based));
 		}
 	};
 
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
-		const account: IAccountModel =
-			this.state.account !== undefined && this.state.fromStorage
-				? this.state.account
-				: this.props.accountState.account || ({} as any);
-		const wallet = Wallet.getWallet(this.props.staticState.mnemonic);
+		const wallet = this.props.walletState.loadedWallet;
+		console.log(wallet);
 		return (
 			<ScrollView
 				style={[styles.scrollView]}
@@ -145,67 +119,56 @@ class HomeComponent extends Component<
 									style={[styles.balanceContainer]}
 								>
 									<Text style={[commonStyles.whiteHeader, styles.balance]}>
-										$
-										{MeleCalculator.centsToUSDFormatted(account.balance || "0")}
+										{wallet !== undefined &&
+										wallet.value.coins[0] !== undefined &&
+										wallet.value.coins[0].denom === "umelc"
+											? `${Utils.fromUmelc(
+													wallet.value.coins[0].amount,
+													"melc",
+											  )} MELC`
+											: wallet !== undefined &&
+											  wallet.value.coins[1] !== undefined &&
+											  wallet.value.coins[1].denom === "umelc"
+											? `${Utils.fromUmelc(
+													wallet.value.coins[1].amount,
+													"melc",
+											  )} MELG`
+											: "0"}
 									</Text>
-
-									<WiteInfoIcon style={styles.infoIcon} />
 								</Ripple>
-
-								<RBSheet
-									ref={(ref) => {
-										this.RBSheet = ref;
-									}}
-									openDuration={250}
-									height={350}
-									customStyles={{
-										container: {
-											borderTopLeftRadius: 20,
-											borderTopRightRadius: 20,
-											alignContent: "center",
-											alignItems: "center",
-										},
-									}}
-								>
-									<View style={[styles.explainerContainer]}>
-										<Text
-											style={[styles.calculatorText, commonStyles.fontBold]}
-										>
-											{localeData.home.balancetitle}
-										</Text>
-										<BlueInfoIcon style={[styles.blueIcon]} />
-									</View>
-									<View style={[styles.explainerDescription]}>
-										<Text style={[styles.calculatorDesc]}>
-											{localeData.home.balanceDesc}
-										</Text>
-									</View>
-								</RBSheet>
 							</View>
-						</View>
-						<View style={[styles.barcodeIconContainer]}>
-							{!this.props.staticState.accountId ? (
-								<Ripple
-									onPress={() => {
-										Actions.jump(ROUTES.scanQRCode);
-									}}
-									style={[styles.barcodeIcon]}
-									rippleContainerBorderRadius={30}
-								>
-									<ScanBarcodeIcon />
-								</Ripple>
-							) : null}
 						</View>
 					</View>
 					<Calculator
-						centsAmount={account.balance || "0"}
+						melc={
+							wallet !== undefined &&
+							wallet.value.coins[0] !== undefined &&
+							wallet.value.coins[0].denom === "umelc"
+								? Utils.fromUmelc(wallet.value.coins[0].amount, "melc")
+								: wallet !== undefined &&
+								  wallet.value.coins[1] !== undefined &&
+								  wallet.value.coins[1].denom === "umelc"
+								? Utils.fromUmelc(wallet.value.coins[1].amount, "melc")
+								: "0"
+						}
+						melg={
+							wallet !== undefined &&
+							wallet.value.coins[0] !== undefined &&
+							wallet.value.coins[0].denom === "melg"
+								? Utils.fromUmelg(wallet.value.coins[0].amount, "melg")
+								: wallet !== undefined &&
+								  wallet.value.coins[1] !== undefined &&
+								  wallet.value.coins[1].denom === "melg"
+								? Utils.fromUmelg(wallet.value.coins[1].amount, "melg")
+								: "0"
+						}
 						style={[styles.calculator]}
 					/>
 
 					<Ripple
 						style={[styles.walletAddressContainer]}
 						onPress={() => {
-							Clipboard.setString(wallet.getAddress());
+							Clipboard.setString(this.props.walletState.loadedWalletAddress);
 						}}
 					>
 						<Text
@@ -213,18 +176,16 @@ class HomeComponent extends Component<
 							adjustsFontSizeToFit={true}
 							numberOfLines={1}
 						>
-							{this.props.accountState.account?.wallet
-								? this.props.accountState.account?.wallet
-								: ""}
+							{this.props.walletState.loadedWalletAddress}
 						</Text>
 						<CopyIcon style={[styles.walletCopy]} />
 					</Ripple>
 				</View>
-				<View style={[styles.actions]}>
+				{/* <View style={[styles.actions]}>
 					<UserActions />
-				</View>
+				</View> */}
 				<View style={[styles.transactions]}>
-					<Transactions transactionListKeyword="HOME_RECENT_TRANSACTIONS" />
+					<Transactions />
 				</View>
 			</ScrollView>
 		);
@@ -236,6 +197,7 @@ const mapStateToProps = (state: ApplicationState) => {
 		accountState: state.account,
 		staticState: state.static,
 		languageState: state.language,
+		walletState: state.wallet,
 	};
 };
 

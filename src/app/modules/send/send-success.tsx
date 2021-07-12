@@ -12,14 +12,17 @@ import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { ScrollView, Text, View, StatusBar } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
-import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
+import { TransactionsState } from "@mele-wallet/redux/reducers/transaction-reducer";
 import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
+import { StaticState } from "./../../../redux/reducers/static-reducer";
+import { Utils } from "mele-sdk";
 
 interface ISendSuccessProps {
 	languageState: LanguageState;
-	transactionState: TransactionState;
+	transactionState: TransactionsState;
 	actionCreators: IActionCreators;
+	staticState: StaticState;
 }
 
 const languages = {
@@ -37,30 +40,23 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 	};
 
 	goBack = async () => {
-		await this.props.actionCreators.account.accountSync();
+		if (this.props.staticState.mnemonic) {
+			await this.props.actionCreators.wallet.getWallet(
+				this.props.staticState.mnemonic,
+			);
+		}
 		this.props.actionCreators.transaction.resetSendFlow();
 		Actions.jump(ROUTES.authenticated.home);
 	};
 
-	componentDidMount() {
-		this.props.actionCreators.transaction.searchTransactions({
-			page: 1,
-			size: 100,
-			transactionType: "transfer",
-			transactionStatus: undefined,
-			transactionListKeyword: "HISTORY_TRANSFERS",
-		});
-		this.props.actionCreators.transaction.searchTransactions({
-			page: 1,
-			size: 100,
-			transactionType: undefined,
-			transactionStatus: undefined,
-			transactionListKeyword: "HOME_RECENT_TRANSACTIONS",
-		});
-	}
-
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
+		const denom = this.props.transactionState.loadedTransaction
+			? this.props.transactionState.loadedTransaction.msgs[0].data.amount.substr(
+					this.props.transactionState.loadedTransaction.msgs[0].data.amount
+						.length - 5,
+			  )
+			: "";
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -76,10 +72,25 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 				<Text style={[styles.initContainer]}>
 					{localeData.send.successDescOne}
 					<Text style={[commonStyles.fontBold]}>
-						{MeleCalculator.centsToUSDFormatted(
-							this.props.transactionState.loadedTransaction.amount,
-						)}{" "}
-						USD
+						{this.props.transactionState.loadedTransaction && denom === "umelc"
+							? `${Utils.fromUmelc(
+									this.props.transactionState.loadedTransaction.msgs[0].data.amount.substring(
+										0,
+										this.props.transactionState.loadedTransaction.msgs[0].data
+											.amount.length - 5,
+									),
+									"melc",
+							  )} MELC`
+							: this.props.transactionState.loadedTransaction
+							? `${Utils.fromUmelg(
+									this.props.transactionState.loadedTransaction.msgs[0].data.amount.substring(
+										0,
+										this.props.transactionState.loadedTransaction.msgs[0].data
+											.amount.length - 5,
+									),
+									"melg",
+							  )} MELG`
+							: ""}
 					</Text>
 					{localeData.send.successDescTwo}
 					<Text style={[commonStyles.fontBold]}>
@@ -113,6 +124,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		languageState: state.language,
 		transactionState: state.transaction,
+		staticState: state.static,
 	};
 };
 export const SendSuccess = connect(

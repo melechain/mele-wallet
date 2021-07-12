@@ -83,29 +83,6 @@ class MoreComponent extends Component<IMoreComponentProps> {
 							</Text>
 						</Ripple>
 					</View> */}
-					<View style={[styles.eachAction]}>
-						<View style={[styles.Icon]}>
-							<WalletIcon style={[styles.actionLogo]} />
-						</View>
-						<Text style={[styles.actionText, commonStyles.fontBook]}>
-							{this.props.staticState.accountId
-								? localeData.more.connected
-								: localeData.more.notConnected}
-						</Text>
-						{!this.props.staticState.accountId ? (
-							<Ripple
-								onPress={() => {
-									FluxActions.jump(ROUTES.scanQRCode);
-								}}
-								rippleContainerBorderRadius={16}
-								style={[styles.actionButton]}
-							>
-								<Text style={[styles.buttonTitle, commonStyles.fontBold]}>
-									{localeData.more.scan}
-								</Text>
-							</Ripple>
-						) : null}
-					</View>
 				</View>
 				<View style={[styles.actionTitleContainer]}>
 					<Text style={[styles.actionTitle, commonStyles.fontBold]}>

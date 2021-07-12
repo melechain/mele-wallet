@@ -26,9 +26,7 @@ const languages = {
 	ar: require("../../translations/ar.json"),
 };
 
-class RegistrationOrLoginComponent extends Component<
-	IRegistrationOrLoginComponentProps
-> {
+class RegistrationOrLoginComponent extends Component<IRegistrationOrLoginComponentProps> {
 	render() {
 		const localeData =
 			this.props.languageState !== undefined
@@ -43,12 +41,12 @@ class RegistrationOrLoginComponent extends Component<
 					</Text>
 				</View>
 				<View style={styles.buttonContainer}>
-					{/* <YellowButton
-						text="Have a wallet?"
+					<YellowButton
+						text={localeData.wallet.restoreWallet}
 						onPress={() => {
-							Actions.jump(ROUTES.nonAuthenticated.loginPinFirstTime);
+							Actions.jump(ROUTES.nonAuthenticated.restoreWallet);
 						}}
-					/> */}
+					/>
 					<BlueButton
 						onPress={() => {
 							Actions.jump(ROUTES.nonAuthenticated.createWallet);

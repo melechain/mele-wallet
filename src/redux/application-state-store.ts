@@ -13,22 +13,23 @@ import staticReducer from "@mele-wallet/redux/reducers/static-reducer";
 import statisticsReducer from "@mele-wallet/redux/reducers/statistics-reducer";
 import transactionReducer from "@mele-wallet/redux/reducers/transaction-reducer";
 import currencyReducer from "./reducers/currency-reducer";
+import walletReducer from "./reducers/wallet-reducer";
 
 const AccountPersistConfig = {
 	key: "static",
 	storage: AsyncStorage,
 };
 
-export const reducers: Reducer<ApplicationState> = combineReducers<
-	ApplicationState
->({
-	account: accountReducer,
-	language: languageReducer,
-	statistics: statisticsReducer,
-	transaction: transactionReducer,
-	currency: currencyReducer,
-	static: persistReducer(AccountPersistConfig, staticReducer) as any,
-});
+export const reducers: Reducer<ApplicationState> =
+	combineReducers<ApplicationState>({
+		account: accountReducer,
+		language: languageReducer,
+		statistics: statisticsReducer,
+		transaction: transactionReducer,
+		currency: currencyReducer,
+		wallet: walletReducer,
+		static: persistReducer(AccountPersistConfig, staticReducer) as any,
+	});
 
 export const getApplicationStateStore = () => {
 	const sagaMiddleware = createSagaMiddleware();

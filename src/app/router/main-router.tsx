@@ -43,6 +43,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { RegistrationOrLogin } from "@mele-wallet/app/modules/registration-or-login/registration-or-login";
 import { CreateWallet } from "@mele-wallet/app/modules/create-wallet/create-wallet";
+import { RestoreWallet } from "@mele-wallet/app/modules/restore-wallet/restore-wallet";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import { ConfirmWallet } from "@mele-wallet/app/modules/confirm-wallet/confirm-wallet";
 import { CreatePin } from "@mele-wallet/app/modules/create-pin/create-pin";
@@ -99,6 +100,21 @@ class MainRouterComponent extends React.Component {
 										refreshOnBack={true}
 										componentKey={ROUTES.nonAuthenticated.createWallet}
 										title="Create a Mele Wallet"
+									/>
+								);
+							}}
+						/>
+						<Scene
+							key={ROUTES.nonAuthenticated.restoreWallet}
+							component={RestoreWallet}
+							hideNavBar={false}
+							showLabel={false}
+							navBar={() => {
+								return (
+									<UnauthenticatedWhiteHeader
+										refreshOnBack={true}
+										componentKey={ROUTES.nonAuthenticated.restoreWallet}
+										title="Restore Mele Wallet"
 									/>
 								);
 							}}
@@ -344,43 +360,43 @@ class MainRouterComponent extends React.Component {
 								key={ROUTES.authenticated.buy}
 								back={false}
 								icon={(p: any, a: any) => {
-									if (p.navigation.isFocused()) {
-										return (
-											<View style={styles.tabButton}>
-												<View style={styles.iconAntText}>
-													<View style={styles.icon}>
-														<ActiveBuyIcon />
-													</View>
-													<Text
-														style={[
-															styles.buttonTextActive,
-															commonStyles.fontBold,
-														]}
-													>
-														Buy
-													</Text>
+									// if (p.navigation.isFocused()) {
+									// 	return (
+									// 		<View style={styles.tabButton}>
+									// 			<View style={styles.iconAntText}>
+									// 				<View style={styles.icon}>
+									// 					<ActiveBuyIcon />
+									// 				</View>
+									// 				<Text
+									// 					style={[
+									// 						styles.buttonTextActive,
+									// 						commonStyles.fontBold,
+									// 					]}
+									// 				>
+									// 					Buy
+									// 				</Text>
+									// 			</View>
+									// 		</View>
+									// 	);
+									// } else {
+									return (
+										<View style={styles.tabButton}>
+											<View style={styles.iconAntText}>
+												<View style={styles.icon}>
+													<DisabledBuyIcon />
 												</View>
+												<Text
+													style={[
+														styles.buttonTextDisabled,
+														commonStyles.fontBold,
+													]}
+												>
+													Buy
+												</Text>
 											</View>
-										);
-									} else {
-										return (
-											<View style={styles.tabButton}>
-												<View style={styles.iconAntText}>
-													<View style={styles.icon}>
-														<InactiveBuyIcon />
-													</View>
-													<Text
-														style={[
-															styles.buttonTextInactive,
-															commonStyles.fontBold,
-														]}
-													>
-														Buy
-													</Text>
-												</View>
-											</View>
-										);
-									}
+										</View>
+									);
+									//}
 								}}
 							/>
 							<Scene

@@ -18,12 +18,15 @@ import moment from "moment";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
+import { WalletState } from "./../../../redux/reducers/wallet-reducer";
+import { Utils } from "mele-sdk";
 
 interface ITransactionComponentProps {
 	actionCreators: IActionCreators;
 	staticState: StaticState;
-	transaction: ITransactionModel;
+	transaction: any;
 	languageState: LanguageState;
+	walletState: WalletState;
 }
 
 const languages = {
@@ -35,20 +38,19 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
 		const statusStyle =
-			this.props.transaction.status === "pending"
-				? styles.transactionStatusContainerYellow
-				: styles.transactionStatusContainerGreen;
+			this.props.transaction.msgs[0].data.recipient ===
+			this.props.walletState.loadedWalletAddress
+				? styles.transactionStatusContainerGreen
+				: styles.transactionStatusContainerYellow;
 		const statusTextStyle =
-			this.props.transaction.status === "pending"
-				? styles.transactionStatusYellow
-				: styles.transactionStatusGreen;
-		const statusText =
-			this.props.transaction.status === "pending"
-				? localeData.transactions.pending
-				: localeData.transactions.complete;
-		const userWallet = Wallet.getWallet(
-			this.props.staticState.mnemonic,
-		).getAddress();
+			this.props.transaction.msgs[0].data.recipient ===
+			this.props.walletState.loadedWalletAddress
+				? styles.transactionStatusGreen
+				: styles.transactionStatusYellow;
+		const userWalletAddress = this.props.walletState.loadedWalletAddress;
+		const denom = this.props.transaction.msgs[0].data.amount.substr(
+			this.props.transaction.msgs[0].data.amount.length - 5,
+		);
 
 		return (
 			<ScrollView
@@ -68,57 +70,65 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 
 					<View style={[styles.balance]}>
 						<Text style={[styles.balanceAmount, commonStyles.fontBold]}>
-							$
-							{MeleCalculator.centsToUSDFormatted(
-								this.props.transaction.amount,
-							)}
+							{denom === "umelc"
+								? Utils.fromUmelc(
+										this.props.transaction.msgs[0].data.amount.substring(
+											0,
+											this.props.transaction.msgs[0].data.amount.length - 5,
+										),
+										"melc",
+								  )
+								: Utils.fromUmelg(
+										this.props.transaction.msgs[0].data.amount.substring(
+											0,
+											this.props.transaction.msgs[0].data.amount.length - 5,
+										),
+										"melg",
+								  )}
 						</Text>
 						<Text style={[styles.balanceDescription, commonStyles.fontBook]}>
-							USD
+							{denom === "umelc" ? "MELC" : "MELG"}
 						</Text>
 					</View>
 				</View>
-				<Calculator centsAmount={this.props.transaction.amount} />
 
 				<View style={[styles.infoList]}>
-					{/* {this.getInfoBlock("Transaction Id", this.props.transaction.id)} */}
-
 					{this.getInfoBlock(
 						localeData.transactions.sender,
-						this.props.transaction.from.wallet,
+						this.props.transaction.msgs[0].data.sender,
 						{
 							show:
-								!this.props.transaction.refCode &&
-								this.props.transaction.to.wallet === userWallet,
+								this.props.transaction.msgs[0].data.recipient ===
+								userWalletAddress,
 							capitalize: false,
 						},
 					)}
 					{this.getInfoBlock(
 						localeData.transactions.receiver,
-						this.props.transaction.to.wallet,
+						this.props.transaction.msgs[0].data.recipient,
 						{
 							show:
-								!this.props.transaction.refCode &&
-								this.props.transaction.to.wallet !== userWallet,
+								this.props.transaction.msgs[0].data.recipient !==
+								userWalletAddress,
 							capitalize: false,
 						},
 					)}
-					{this.getInfoBlock(
+					{/* {this.getInfoBlock(
 						localeData.transactions.referenceCode,
 						this.props.transaction.refCode,
 						{
 							show: !!this.props.transaction.refCode,
 							capitalize: false,
 						},
-					)}
-					{this.getInfoBlock(
+					)} */}
+					{/* {this.getInfoBlock(
 						localeData.transactions.type,
 						<View style={[styles.transactionTypeContainer]}>
 							<Text style={[styles.transactionType, commonStyles.fontBook]}>
 								{this.props.transaction.type}
 							</Text>
 						</View>,
-					)}
+					)} */}
 					{this.getInfoBlock(
 						localeData.transactions.status,
 						<View style={[styles.transactionStatusContainer, statusStyle]}>
@@ -129,21 +139,22 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 									commonStyles.fontBook,
 								]}
 							>
-								{this.props.transaction.status === "pending"
-									? localeData.transactions.pending
-									: localeData.transactions.complete}
+								{this.props.transaction.msgs[0].data.recipient ===
+								userWalletAddress
+									? localeData.transactions.receive
+									: localeData.transactions.send}
 							</Text>
 						</View>,
 					)}
 					{this.getInfoBlock(
-						localeData.transactions.orderedDate,
-						moment(this.props.transaction.createdAt).format("D MMM yyyy"),
+						localeData.transactions.date,
+						moment(this.props.transaction.timestamp).format("D MMM yyyy"),
 					)}
-					{this.getInfoBlock(
+					{/* {this.getInfoBlock(
 						localeData.transactions.approvedDate,
 						moment(this.props.transaction.approvedAt).format("D MMM yyyy"),
 						{ show: !!this.props.transaction.approvedAt },
-					)}
+					)} */}
 				</View>
 				<BlueButton
 					onPress={() => {
@@ -169,7 +180,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 			return null;
 		}
 		let valueToShow = value;
-		if (typeof value == "string") {
+		if (typeof value === "string") {
 			const textStyles: any[] = [styles.infoContainerText];
 			if (config.capitalize) {
 				textStyles.push(styles.capitalizedText);
@@ -196,6 +207,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		staticState: state.static,
 		languageState: state.language,
+		walletState: state.wallet,
 	};
 };
 

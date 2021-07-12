@@ -1,80 +1,54 @@
 import MainService from "./main-api-service";
-import buildUrl from "build-url";
 import AsyncStorage from "@react-native-community/async-storage";
-// used by admin to manipulate user data
-export enum TransactionType {
-	TRANSFER = "transfer",
-	PURCHASE = "purchase",
-}
+import { Mele, MnemonicSigner } from "mele-sdk";
+import base64 from "base-64";
 
-export enum TransactionStatus {
-	PENDING = "pending",
-	DENIED = "denied",
-	APPROVED = "approved",
-}
+const sdk = new Mele({
+	nodeUrl: "http://3.126.68.149:26657/",
+	chainId: "devnet",
+	indexerEndpoint: "http://18.192.179.29:3100/api/v1",
+});
 
-export interface ISearchTransactionParameter {
+export interface ISearchTransactionsParameter {
 	page: number;
 	size: number;
-	from?: string;
-	to?: string;
-	type?: TransactionType;
-	status?: TransactionStatus;
+	address: string;
 }
 
-export default class TransactionService extends MainService {
-	transactionSend = async (to: string, amount: number) => {
-		const response = await this.put({
-			path: `/transaction`,
-			data: {
-				to: to,
-				type: "transfer",
-				amount: amount,
-			},
+export default class TransactionsService extends MainService {
+	getTransactions = async (p: ISearchTransactionsParameter) => {
+		const txs = await sdk.indexer.transactions({
+			address: p.address,
 		});
-		return response;
+		return txs;
 	};
-	transactionPurchase = async (amount: number, refCode: string) => {
-		return await this.put({
-			path: `/transaction`,
-			data: {
-				type: "purchase",
-				amount: parseInt(amount as any),
-				refCode: refCode,
-			},
-		});
+	getTransactionsCount = async () => {
+		const txCount = await sdk.indexer.transactionCount();
+		return txCount.count;
 	};
-	transactionLoad = async (transactionId: string) => {
-		return await this.get({
-			path: `/transaction/${transactionId}`,
-		});
+
+	getTransaction = async (hash: string) => {
+		const tx = await sdk.indexer.transaction(hash);
+		return tx;
 	};
-	transactionApprove = async (transactionId: string) => {
-		return await this.post({
-			path: `/transaction/${transactionId}`,
-			data: {
-				status: "approved",
-			},
-		});
-	};
-	searchTransactions = async (p: ISearchTransactionParameter) => {
-		const url = buildUrl("/transaction", {
-			queryParams: {
-				from: "1000-01-01",
-				to: "3000-01-01",
-				...(p as any),
-			},
-		});
-		const response = await this.get({
-			path: url,
-		});
-		return response;
-	};
-	getNewTransactionNumber = async () => {
-		return await this.get({
-			path: "/sequence",
-		});
+
+	sendTransaction = async (address: string, denom: string, amount: string) => {
+		const based = await AsyncStorage.getItem("mnemonic");
+		if (based !== null) {
+			const mnemonic = base64.decode(based);
+			const mele = new Mele({
+				nodeUrl: "http://3.126.68.149:26657/",
+				indexerEndpoint: "http://18.192.179.29:3100/api/v1",
+				chainId: "devnet",
+				signer: new MnemonicSigner(mnemonic),
+			});
+
+			const response = await mele.bank
+				.transfer(address, [{ denom: denom, amount: amount }])
+				.sendTransaction();
+
+			return response;
+		}
 	};
 }
-
-export const transactionService = new TransactionService();
+export const transactionsService = new TransactionsService();

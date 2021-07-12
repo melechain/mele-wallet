@@ -10,6 +10,7 @@ export const ROUTES = {
 	nonAuthenticated: {
 		registrationOrLogin: "nonAuthenticated.registrationOrLogin",
 		createWallet: "nonAuthenticated.createWallet",
+		restoreWallet: "nonAuthenticated.restoreWallet",
 		confirmWallet: "nonAuthenticated.confirmWallet",
 		createPin: "nonAuthenticated.createPin",
 		confirmPin: "nonAuthenticated.confirmPin",

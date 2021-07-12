@@ -20,11 +20,13 @@ import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
 import Ripple from "react-native-material-ripple";
 import { Transactions } from "@mele-wallet/app/common/transactions/transactions";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
+import { WalletState } from "@mele-wallet/redux/reducers/wallet-reducer";
 
 interface IHistoryComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
 	languageState: LanguageState;
+	walletState: WalletState;
 }
 interface IHistoryComponentState {
 	activeTab: number;
@@ -61,43 +63,21 @@ class HistoryComponent extends Component<
 
 	_refresh = async () => {
 		this.setState({ refreshing: true });
-		await this.props.actionCreators.account.accountSync();
-		this.props.actionCreators.transaction.searchTransactions({
-			page: 1,
-			size: 100,
-			transactionType: undefined,
-			transactionStatus: undefined,
-			transactionListKeyword: "HISTORY_PURCHASES",
-		});
+		this.props.actionCreators.transaction.searchTransactions(
+			this.props.walletState.loadedWalletAddress,
+		);
 		this.setState({ refreshing: false });
 	};
 
 	componentDidMount() {
-		this.props.actionCreators.transaction.resetPurchaseFlow;
-		this.setState({
-			activeTab: 0,
-		});
+		if (this.props.walletState.loadedWalletAddress)
+			this.props.actionCreators.transaction.searchTransactions(
+				this.props.walletState.loadedWalletAddress,
+			);
 	}
 
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
-		const TAB_CONFIG: ITabConfig[] = [
-			{
-				title: localeData.transactions.purchase,
-				transactionListKeyword: "HISTORY_PURCHASES",
-				filter: {
-					transactionType: "purchase",
-				},
-			},
-			{
-				title: localeData.transactions.transfer,
-				transactionListKeyword: "HISTORY_TRANSFERS",
-				filter: {
-					transactionType: "transfer",
-				},
-				customEmptyScreen: <Text>{localeData.transactions.noTransfer}</Text>,
-			},
-		];
 
 		return (
 			<ScrollView
@@ -118,13 +98,9 @@ class HistoryComponent extends Component<
 				</View>
 				<View style={[styles.tabs]}>
 					<View style={[styles.tabPlaceHolder]} />
-					{TAB_CONFIG.map(this.getTab)}
 					<View style={[styles.tabPlaceHolder]} />
 				</View>
-				<Transactions
-					{...TAB_CONFIG[this.state.activeTab].filter}
-					{...TAB_CONFIG[this.state.activeTab]}
-				/>
+				<Transactions />
 			</ScrollView>
 		);
 	}
@@ -157,6 +133,7 @@ const mapStateToProps = (state: ApplicationState) => {
 	return {
 		accountState: state.account,
 		languageState: state.language,
+		walletState: state.wallet,
 	};
 };
 

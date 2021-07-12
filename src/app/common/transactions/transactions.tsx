@@ -12,12 +12,6 @@ import ShieldBlue from "@mele-wallet/resources/icons/shield-blue.svg";
 import Ripple from "react-native-material-ripple";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
-import {
-	TransactionState,
-	LoadTransactionsStatus,
-	ITransactionList,
-	PurchaseFlowStatus,
-} from "@mele-wallet/redux/reducers/transaction-reducer";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { ITransactionModel } from "@mele-wallet/common/model/transaction.model";
 import moment from "moment";
@@ -27,21 +21,17 @@ import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import AsyncStorage from "@react-native-community/async-storage";
+import { WalletState } from "@mele-wallet/redux/reducers/wallet-reducer";
+import { TransactionsState } from "@mele-wallet/redux/reducers/transaction-reducer";
+import { Utils } from "mele-sdk";
 
 interface ITransactionComponentProps {
-	transactionState: TransactionState;
+	transactionState: TransactionsState;
 	staticState: StaticState;
 	actionCreators: IActionCreators;
-	transactionType?: string;
-	transactionStatus?: string;
-	transactionListKeyword: string;
 	customEmptyScreen?: React.ReactNode;
 	languageState: LanguageState;
-}
-
-interface ITransactionComponentState {
-	fromStorage: boolean;
-	transactions: ITransactionList;
+	walletState: WalletState;
 }
 
 const languages = {
@@ -49,70 +39,17 @@ const languages = {
 	ar: require("../../translations/ar.json"),
 };
 
-class TransactionComponent extends Component<
-	ITransactionComponentProps,
-	ITransactionComponentState
-> {
+class TransactionComponent extends Component<ITransactionComponentProps> {
 	constructor(props: ITransactionComponentProps) {
 		super(props);
-		this.state = {
-			fromStorage: true,
-			transactions: new ITransactionList(),
-		};
 	}
 	componentDidMount() {
-		this.getData();
-		this.props.actionCreators.transaction.searchTransactions({
-			page: 1,
-			size: 100,
-			transactionType: this.props.transactionType,
-			transactionStatus: this.props.transactionStatus,
-			transactionListKeyword: this.props.transactionListKeyword,
-		});
-	}
-	componentDidUpdate(prevProps: ITransactionComponentProps) {
-		if (
-			this.state.fromStorage &&
-			this.props.transactionState.loadedTransactionLists[
-				this.props.transactionListKeyword
-			].totalCount > 0
-		) {
-			this.setState({ fromStorage: false });
-		}
-		if (
-			this.props.transactionStatus != prevProps.transactionStatus ||
-			this.props.transactionType != prevProps.transactionType
-		) {
-			this.props.actionCreators.transaction.searchTransactions({
-				page: 1,
-				size: 100,
-				transactionType: this.props.transactionType,
-				transactionStatus: this.props.transactionStatus,
-				transactionListKeyword: this.props.transactionListKeyword,
-			});
-		}
-		this.setData();
-	}
-
-	setData = async () => {
-		try {
-			await AsyncStorage.setItem(
-				"transactions",
-				JSON.stringify(
-					this.props.transactionState.loadedTransactionLists.HISTORY_PURCHASES,
-				),
+		if (this.props.walletState.loadedWalletAddress) {
+			this.props.actionCreators.transaction.searchTransactions(
+				this.props.walletState.loadedWalletAddress,
 			);
-		} catch (e) {
-			console.log(e);
 		}
-	};
-
-	getData = async () => {
-		const value = await AsyncStorage.getItem("transactions");
-		if (value !== null) {
-			this.setState({ transactions: JSON.parse(value) });
-		}
-	};
+	}
 
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
@@ -140,16 +77,9 @@ class TransactionComponent extends Component<
 	}
 
 	getTransactionList = (localeData: any) => {
-		const loadedTransactionList = this.state.fromStorage
-			? this.state.transactions
-			: this.props.transactionState.loadedTransactionLists[
-					this.props.transactionListKeyword
-			  ] || new ITransactionList();
+		const transactions = this.props.transactionState.loadedTransactions;
 
-		if (
-			loadedTransactionList.loadTransactionsStatus ===
-			LoadTransactionsStatus.REQUESTED
-		) {
+		if (transactions.length === 0) {
 			return (
 				<View style={[styles.noTransactionsContainer]}>
 					<ActivityIndicator size="large" color="#013EC4" />
@@ -157,42 +87,13 @@ class TransactionComponent extends Component<
 			);
 		}
 
-		if (
-			loadedTransactionList.loadedTransactions.length == 0 &&
-			this.props.customEmptyScreen
-		) {
+		if (transactions.length == 0 && this.props.customEmptyScreen) {
 			return (
 				<View style={[styles.noTransactionsContainer]}>
 					{this.props.customEmptyScreen}
 				</View>
 			);
-		} else if (
-			loadedTransactionList.loadedTransactions.length == 0 &&
-			!this.props.staticState.accountId
-		) {
-			return (
-				<View style={[styles.noTransactionsContainer]}>
-					<Text
-						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
-					>
-						{localeData.transactions.noTransactionsOne}
-					</Text>
-					{/* <Text
-						style={[styles.noTransactionsContainerText, commonStyles.fontBook]}
-					>
-						{localeData.transactions.noTransactionsTwo}
-					</Text> */}
-					<BlueButton
-						text={localeData.transactions.connect}
-						onPress={() => {
-							Actions.jump(ROUTES.scanQRCode);
-						}}
-						style={styles.purchaseCoins}
-						textStyle={styles.noTransactionsContainerButtonText}
-					/>
-				</View>
-			);
-		} else if (loadedTransactionList.loadedTransactions.length == 0) {
+		} else if (transactions.length == 0) {
 			return (
 				<View style={[styles.noTransactionsContainer]}>
 					<Text
@@ -205,101 +106,110 @@ class TransactionComponent extends Component<
 					>
 						{localeData.transactions.noTransactionsThree}
 					</Text>
-					<BlueButton
-						text={localeData.transactions.buyCoins}
-						style={styles.purchaseCoins}
-						textStyle={styles.noTransactionsContainerButtonText}
-						onPress={() => {
-							Actions.jump(ROUTES.authenticated.buy);
-						}}
-					/>
 				</View>
 			);
 		}
-		return loadedTransactionList.loadedTransactions.map(
-			(transaction: ITransactionModel) => {
-				const statusStyle =
-					transaction.status === "pending"
-						? styles.transactionStatusContainerYellow
-						: styles.transactionStatusContainerGreen;
-				const statusTextStyle =
-					transaction.status === "pending"
-						? styles.transactionStatusYellow
-						: styles.transactionStatusGreen;
-				const statusText =
-					transaction.status === "pending"
-						? localeData.transactions.pending
-						: localeData.transactions.complete;
+		return transactions.map((transaction: any, id: any) => {
+			const denom = transaction.msgs[0].data.amount.substr(
+				transaction.msgs[0].data.amount.length - 5,
+			);
 
-				let transactionTitle = transaction.refCode;
+			const statusStyle =
+				transaction.msgs[0].data.recipient ===
+				this.props.walletState.loadedWalletAddress
+					? styles.transactionStatusContainerGreen
+					: styles.transactionStatusContainerYellow;
+			const statusTextStyle =
+				transaction.msgs[0].data.recipient ===
+				this.props.walletState.loadedWalletAddress
+					? styles.transactionStatusGreen
+					: styles.transactionStatusYellow;
 
-				if (!transactionTitle) {
-					if (
-						transaction.to.wallet ==
-						Wallet.getWallet(this.props!.staticState.mnemonic).getAddress()
-					) {
-						transactionTitle = `From: ${transaction.from.wallet}`;
-					} else {
-						transactionTitle = `To: ${transaction.to.wallet}`;
-					}
+			let transactionTitle = transaction.refCode;
+
+			if (!transactionTitle) {
+				if (
+					transaction.msgs[0].data.recipient ===
+					this.props.walletState.loadedWalletAddress
+				) {
+					transactionTitle = `From: ${transaction.msgs[0].data.sender}`;
+				} else {
+					transactionTitle = `To: ${transaction.msgs[0].data.recipient}`;
 				}
-				return (
-					<Ripple
-						style={[styles.transactionContainer]}
-						key={transaction.id}
-						onPress={() => {
-							Actions.jump(ROUTES.authenticated.transaction, {
-								transaction: transaction,
-							});
-						}}
-					>
-						<View style={[styles.transactionContainerRow]}>
+			}
+			return (
+				<Ripple
+					style={[styles.transactionContainer]}
+					key={id}
+					onPress={() => {
+						Actions.jump(ROUTES.authenticated.transaction, {
+							transaction: transaction,
+						});
+					}}
+				>
+					<View style={[styles.transactionContainerRow]}>
+						<Text
+							adjustsFontSizeToFit={true}
+							numberOfLines={2}
+							style={[
+								styles.transactionContainerAddress,
+								commonStyles.fontBold,
+							]}
+						>
+							{transactionTitle}
+						</Text>
+						<View style={[styles.transactionContainerAmountContainer]}>
 							<Text
-								adjustsFontSizeToFit={true}
-								numberOfLines={2}
 								style={[
-									styles.transactionContainerAddress,
+									styles.transactionContainerAmount,
 									commonStyles.fontBold,
 								]}
 							>
-								{transactionTitle}
-							</Text>
-							<View style={[styles.transactionContainerAmountContainer]}>
-								<Text
-									style={[
-										styles.transactionContainerAmount,
-										commonStyles.fontBold,
-									]}
-								>
-									${MeleCalculator.centsToUSDFormatted(transaction.amount)}
-								</Text>
-							</View>
-						</View>
-						<View style={[styles.transactionContainerRow]}>
-							<View style={[styles.transactionTypeContainer]}>
-								<Text style={[styles.transactionType, commonStyles.fontBook]}>
-									{transaction.type}
-								</Text>
-							</View>
-							<View style={[styles.transactionStatusContainer, statusStyle]}>
-								<Text
-									style={[
-										styles.transactionStatus,
-										statusTextStyle,
-										commonStyles.fontBook,
-									]}
-								>
-									{statusText}
-								</Text>
-							</View>
-							<Text style={[styles.transactionDate, commonStyles.fontBook]}>
-								{moment(transaction.createdAt).format("D MMM yyyy")}
+								{denom === "umelc"
+									? `${Utils.fromUmelc(
+											transaction.msgs[0].data.amount.substring(
+												0,
+												transaction.msgs[0].data.amount.length - 5,
+											),
+											"melc",
+									  )} MELC`
+									: `${Utils.fromUmelg(
+											transaction.msgs[0].data.amount.substring(
+												0,
+												transaction.msgs[0].data.amount.length - 5,
+											),
+											"melg",
+									  )} MELG`}
 							</Text>
 						</View>
-					</Ripple>
-				);
-			},
-		);
+					</View>
+					<View style={[styles.transactionContainerRow]}>
+						{/* <View style={[styles.transactionTypeContainer]}>
+							<Text style={[styles.transactionType, commonStyles.fontBook]}>
+								{transaction.type}
+							</Text>
+						</View> */}
+						<View style={[styles.transactionStatusContainer, statusStyle]}>
+							<Text
+								style={[
+									styles.transactionStatus,
+									statusTextStyle,
+									commonStyles.fontBook,
+								]}
+							>
+								{transaction.msgs[0].data.recipient ===
+								this.props.walletState.loadedWalletAddress
+									? localeData.transactions.receive
+									: localeData.transactions.send}
+							</Text>
+						</View>
+						<Text style={[styles.transactionDate, commonStyles.fontBook]}>
+							{moment(transaction.timestamp).format("D MMM yyyy")}
+						</Text>
+					</View>
+				</Ripple>
+			);
+		});
 	};
 }
 
@@ -308,6 +218,7 @@ const mapStateToProps = (state: ApplicationState) => {
 		transactionState: state.transaction,
 		staticState: state.static,
 		languageState: state.language,
+		walletState: state.wallet,
 	};
 };
 

@@ -10,12 +10,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { ScrollView, StatusBar, Text, View } from "react-native";
-import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
+import { TransactionsState } from "@mele-wallet/redux/reducers/transaction-reducer";
 import ShieldRedIcon from "@mele-wallet/resources/icons/shielded-error.svg";
+import { Actions } from "react-native-router-flux";
+import { ROUTES } from "@mele-wallet/app/router/routes";
 
 interface ISendErrorProps {
 	languageState: LanguageState;
-	transactionState: TransactionState;
+	transactionState: TransactionsState;
 	actionCreators: IActionCreators;
 }
 
@@ -27,6 +29,7 @@ const languages = {
 class SendErrorComponent extends React.Component<ISendErrorProps> {
 	tryAgain = () => {
 		this.props.actionCreators.transaction.resetSendFlow();
+		Actions.jump(ROUTES.authenticated.send);
 	};
 
 	render() {

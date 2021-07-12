@@ -15,7 +15,8 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import Ripple from "react-native-material-ripple";
 
 interface CalculatorProps extends ViewProps {
-	centsAmount: string;
+	melc: string;
+	melg: string;
 	statisticsState: StatisticsState;
 	languageState: LanguageState;
 }
@@ -30,12 +31,6 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 		const localeData = languages[this.props.languageState.currentLanguage];
 		let meleCoins = "0";
 		let meleCoinPrice = "0";
-		let melegUSD = MeleCalculator.CentsToUSDMeleGPortionFormatted(
-			this.props.centsAmount || "0",
-		);
-		let melecUSD = MeleCalculator.CentsToUSDMeleCPortionFormatted(
-			this.props.centsAmount || "0",
-		);
 		let meleGold: any = "0";
 		let priceOfGoldPerGram = "0";
 		let melgPerGramOfGold = "1";
@@ -43,27 +38,15 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 		if (this.props.statisticsState.loaded) {
 			meleCoins = "0";
 			meleCoinPrice = "0";
-			melegUSD = MeleCalculator.CentsToUSDMeleGPortionFormatted(
-				this.props.centsAmount,
-			);
 			meleGold = "0";
 
 			if (this.props.statisticsState.loaded) {
 				meleCoinPrice = this.props.statisticsState.staticInfo!.melecPrice;
-				meleCoins = MeleCalculator.CentsToMeleCFormatted(
-					this.props.centsAmount,
-					meleCoinPrice,
-				);
 
-				priceOfGoldPerGram = this.props.statisticsState.staticInfo!
-					.priceOfGoldPerGram;
-				melgPerGramOfGold = this.props.statisticsState.staticInfo!
-					.melgPerGramOfGold;
-				meleGold = MeleCalculator.CentsToMeleGFormatted(
-					this.props.centsAmount,
-					melgPerGramOfGold,
-					priceOfGoldPerGram,
-				);
+				priceOfGoldPerGram =
+					this.props.statisticsState.staticInfo!.priceOfGoldPerGram;
+				melgPerGramOfGold =
+					this.props.statisticsState.staticInfo!.melgPerGramOfGold;
 			}
 		}
 
@@ -76,9 +59,9 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 								style={[styles.coinCount, commonStyles.fontBold]}
 								numberOfLines={1}
 							>
-								{meleCoins}
+								{this.props.melc}
 							</Text>
-							<Text style={[styles.usdCount]}>${melecUSD}</Text>
+							<Text style={[styles.usdCount]}>{this.props.melc}</Text>
 						</View>
 					</View>
 					<View style={[styles.meleDisplayNotions]}>
@@ -93,14 +76,13 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 								MELC
 							</Text>
 							<Text style={[styles.coinRate]}>
-								${MeleCalculator.getMelCPrice(meleCoinPrice)}
+								{MeleCalculator.getMelCPrice(meleCoinPrice)}
 							</Text>
 						</View>
 					</View>
 				</View>
 				{this.getMelegoldPart(
-					meleGold,
-					melegUSD,
+					this.props.melg,
 					melgPerGramOfGold,
 					priceOfGoldPerGram,
 					localeData,
@@ -111,7 +93,6 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 
 	getMelegoldPart(
 		meleGold: string,
-		melegUSD: string,
 		melgPerGramOfGold: string,
 		priceOfGoldPerGram: string,
 		localeData: any,
@@ -133,41 +114,9 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 							>
 								{meleGold}
 							</Text>
-							<Text style={[styles.usdCount]}>${melegUSD}</Text>
+							<Text style={[styles.usdCount]}>{meleGold}</Text>
 						</View>
-
-						<InfoGrayIcon
-							height={15}
-							width={15}
-							style={{ marginLeft: "40%" }}
-						/>
 					</Ripple>
-					<RBSheet
-						ref={(ref) => {
-							this.RBSheet = ref;
-						}}
-						openDuration={250}
-						customStyles={{
-							container: {
-								borderTopLeftRadius: 20,
-								borderTopRightRadius: 20,
-								alignContent: "center",
-								alignItems: "center",
-							},
-						}}
-					>
-						<View style={[styles.explainerContainer]}>
-							<Text style={[styles.calculatorText, commonStyles.fontBold]}>
-								{localeData.calculator.title}
-							</Text>
-							<BlueInfoIcon style={[styles.blueIcon]} />
-						</View>
-						<View style={[styles.explainerDescription]}>
-							<Text style={[styles.calculatorDesc]}>
-								{localeData.calculator.description}
-							</Text>
-						</View>
-					</RBSheet>
 				</View>
 				<View style={[styles.meleDisplayNotions]}>
 					{/* <View style={[styles.notificationIcon]}>
@@ -180,7 +129,6 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 							MELG
 						</Text>
 						<Text style={[styles.coinRate]}>
-							$
 							{MeleCalculator.getMelGPrice(
 								melgPerGramOfGold,
 								priceOfGoldPerGram,

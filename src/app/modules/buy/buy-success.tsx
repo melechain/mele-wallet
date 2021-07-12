@@ -12,12 +12,12 @@ import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
 import { ScrollView, Image, Text, View, StatusBar } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
-import { TransactionState } from "@mele-wallet/redux/reducers/transaction-reducer";
+import { TransactionsState } from "@mele-wallet/redux/reducers/transaction-reducer";
 import ShieldGreenIcon from "@mele-wallet/resources/icons/shield-green.svg";
 
 interface IBuysSuccessProps {
 	languageState: LanguageState;
-	transactionState: TransactionState;
+	transactionState: TransactionsState;
 	actionCreators: IActionCreators;
 }
 

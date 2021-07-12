@@ -9,7 +9,8 @@ import {
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import {
-	TransactionState,
+	LoadTransactionsStatus,
+	TransactionsState,
 	TransactionStatus,
 } from "@mele-wallet/redux/reducers/transaction-reducer";
 import { BaseField } from "@mele-wallet/app/common/fields/base-field";
@@ -22,19 +23,25 @@ import { NoCoinsAvailable } from "./no-coins-available";
 import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
+import { WalletState } from "@mele-wallet/redux/reducers/wallet-reducer";
+import { Utils } from "mele-sdk";
+import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
+import { Picker } from "@react-native-picker/picker";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
-	transactionState: TransactionState;
+	transactionState: TransactionsState;
 	languageState: LanguageState;
+	walletState: WalletState;
+	staticState: StaticState;
 }
 
 interface ISendState {
-	sendAmount: string;
-	toAddress: string;
-	notEnoughCoins: boolean;
-	formatted: number;
+	recipient: string;
+	amount: string;
+	denom: string;
+	state: number;
 }
 
 const languages = {
@@ -46,82 +53,110 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 	constructor(props: ISendComponentProps) {
 		super(props);
 		this.state = {
-			sendAmount: "",
-			toAddress: "",
-			notEnoughCoins: false,
-			formatted: 0,
+			recipient: "",
+			amount: "",
+			denom: "melc",
+			state: 0,
 		};
 	}
 
 	componentDidMount() {
-		this.setState({
-			sendAmount: "",
-			toAddress: "",
-			formatted: 0,
-		});
+		this.state = {
+			recipient: "",
+			amount: "",
+			denom: "melc",
+			state: 0,
+		};
 	}
 
-	sendCoins = () => {
-		const replaced = parseFloat(
-			this.state.sendAmount.replace(",", ".").replace(" ", ""),
-		);
-		if (
-			this.props.accountState.account?.balance === undefined ||
-			parseFloat(
-				MeleCalculator.centsToUSD(this.props.accountState.account?.balance),
-			) < parseFloat(this.state.sendAmount)
-		) {
-			this.props.actionCreators.transaction.notEnoughCoins();
-		} else {
-			this.props.actionCreators.transaction.transactionSend(
-				this.state.toAddress,
-				parseFloat(
-					parseFloat(
-						parseFloat((replaced * 100).toFixed(2).toString()).toString(),
-					).toFixed(2),
-				),
-			);
+	sendCoins = (localeData: any) => {
+		if (this.state.amount !== "" && this.state.recipient !== "") {
+			const amount =
+				this.state.denom === "melc"
+					? parseFloat(Utils.toUmelc(this.state.amount, this.state.denom))
+					: parseFloat(Utils.toUmelg(this.state.amount, this.state.denom));
+			const wallet = this.props.walletState.loadedWallet;
+			if (amount <= 0) {
+				return;
+			} else if (
+				this.props.walletState.loadedWalletAddress === this.state.recipient
+			) {
+				return;
+			} else if (wallet === undefined) {
+				this.setState({ state: 2, amount: "", recipient: "" });
+			} else if (
+				(wallet.value.coins[0] !== undefined &&
+					`u${this.state.denom}` === wallet.value.coins[0].denom &&
+					amount > parseFloat(wallet.value.coins[0].amount)) ||
+				(wallet.value.coins[1] !== undefined &&
+					`u${this.state.denom}` === wallet.value.coins[1].denom &&
+					amount > parseFloat(wallet.value.coins[1].amount))
+			) {
+				this.setState({ state: 2, amount: "", recipient: "" });
+			} else {
+				this.props.actionCreators.transaction.sendTransaction(
+					this.state.recipient,
+					`u${this.state.denom}`,
+					amount.toString(),
+				);
+			}
 		}
-		this.setState({
-			sendAmount: "",
-			toAddress: "",
-			formatted: 0,
-		});
 	};
 
-	setFormattedCents = (e: any) => {
-		const replaced = parseFloat(e.replace(",", ".").replace(" ", ""));
-		this.setState({
-			sendAmount: e,
-			formatted: parseFloat(
-				parseFloat(
-					parseFloat((replaced * 100).toFixed(2).toString()).toString(),
-				).toFixed(2),
-			),
-		});
-	};
+	componentDidUpdate(prevProps: any, prevState: any) {
+		if (
+			this.props.transactionState.loadTransactionsStatus ===
+			LoadTransactionsStatus.RESET
+		) {
+			this.setState({ state: 0 });
+			this.props.actionCreators.transaction.startSendFlow();
+		}
+		if (
+			prevProps.transactionState.loadTransactionsStatus !==
+				this.props.transactionState.loadTransactionsStatus &&
+			this.props.transactionState.loadTransactionsStatus ===
+				LoadTransactionsStatus.SEND_SUCCESS
+		) {
+			this.props.actionCreators.wallet.getWallet(
+				this.props.staticState.mnemonic ? this.props.staticState.mnemonic : "",
+			);
+			this.props.actionCreators.transaction.searchTransactions(
+				this.props.walletState.loadedWalletAddress,
+			);
+			this.setState({ amount: "", recipient: "" });
+			this.setState({ state: 1 });
+		} else if (
+			prevProps.transactionState.loadTransactionsStatus !==
+				this.props.transactionState.loadTransactionsStatus &&
+			this.props.transactionState.loadTransactionsStatus ===
+				LoadTransactionsStatus.SEND_ERROR
+		) {
+			this.setState({ state: 3 });
+		}
+	}
+
+	handleChange = (e: any) =>
+		this.setState({ denom: e.target.innerText.toString().toLowerCase() });
 
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
+		const wallet = this.props.walletState.loadedWalletAddress;
+		const coins: { key: string; text: string; value: string }[] = [
+			{ key: "melc", text: "MELC", value: "melc" },
+			{ key: "melg", text: "MELG", value: "melg" },
+		];
 		StatusBar.setBarStyle("dark-content", true);
-		if (
-			this.props.transactionState.transactionStatus === TransactionStatus.ERROR
-		) {
+		if (this.state.state === 3) {
 			return <SendError />;
-		} else if (
-			this.props.transactionState.transactionStatus ===
-			TransactionStatus.NOT_ENOUGH_COINS_SEND
-		) {
+		} else if (this.state.state === 2) {
 			return <SendNoCoins />;
-		} else if (
-			this.props.accountState.account?.balance === undefined ||
-			parseFloat(this.props.accountState.account?.balance) === 0
-		)
-			return <NoCoinsAvailable />;
-		else if (
-			this.props.transactionState.transactionStatus !==
-			TransactionStatus.SUCCESS
-		) {
+		}
+		// else if (
+		// 	this.props.accountState.account?.balance === undefined ||
+		// 	parseFloat(this.props.accountState.account?.balance) === 0
+		// )
+		// 	return <NoCoinsAvailable />;
+		else if (this.state.state === 0) {
 			return (
 				<ScrollView
 					style={[styles.scrollView]}
@@ -136,70 +171,71 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 					</Text>
 					<BaseField
 						onChangeText={(e: string) => {
-							const value = e;
-							if (value.length > 10) {
-								return;
-							}
-							if (value.includes(".")) {
-								const digits = value.split(".");
-								if (digits[1].length > 2) return;
-							}
-
-							const test = value.replace(/[^.]/g, "").length;
-							if (test > 1) return;
-							if (value === ".") return;
-
-							const reg = new RegExp("^[0-9.]+$");
-							if (reg.test(value) || value === "") {
-								if (value === "") {
-									this.setState({
-										sendAmount: e,
-									});
-								}
-								if ((e.length === 1 && parseFloat(e) > 0) || e.length > 1) {
-									this.setFormattedCents(e);
+							if (
+								e === "" ||
+								(e.includes(".") && e.substr(e.indexOf(".")).length < 11) ||
+								!e.includes(".")
+							) {
+								const regExp = /[a-zA-Z]/g;
+								const format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]+/;
+								if (!regExp.test(e) && !format.test(e)) {
+									this.setState({ amount: e });
 								}
 							}
 						}}
-						value={this.state.sendAmount || ""}
+						value={this.state.amount || ""}
 						placeholder={localeData.send.amount}
-						iconRight={<Text>USD</Text>}
+						iconRight={
+							<Picker
+								selectedValue={this.state.denom}
+								onValueChange={(itemValue) =>
+									this.setState({ denom: itemValue })
+								}
+								style={{
+									height: 50,
+									width: 111,
+									backgroundColor: "#013EC4",
+									color: "black",
+								}}
+							>
+								{coins.map((coin: any) => {
+									return <Picker.Item label={coin.text} value={coin.value} />;
+								})}
+							</Picker>
+						}
 					/>
 					<BaseField
 						onChangeText={(e: string) => {
 							this.setState({
-								toAddress: e,
+								recipient: e,
 							});
 						}}
-						value={this.state.toAddress || ""}
+						value={this.state.recipient || ""}
 						style={[styles.sendFields, { paddingTop: 10 }]}
 						placeholder={localeData.send.recepient}
 					/>
-					<Calculator
+					{/* <Calculator
 						centsAmount={
-							this.state.formatted ? this.state.formatted.toString() : "0"
+							this.state.formatted ? this.state.formatted.toString() : '0'
 						}
-					/>
+					/> */}
 					<BlueButton
 						text={localeData.send.sendButton}
 						onPress={() => {
-							this.sendCoins();
+							this.sendCoins(localeData);
 						}}
 						disabled={
-							this.state.toAddress === "" ||
-							this.state.toAddress.length < 43 ||
-							this.state.sendAmount === "" ||
-							parseFloat(this.state.sendAmount) < 0.000001
+							this.state.recipient === "" ||
+							this.state.recipient.length < 43 ||
+							this.state.amount === "" ||
+							parseFloat(this.state.amount) < 0.000000001
 						}
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}
 					/>
 				</ScrollView>
 			);
-		} else if (
-			this.props.transactionState.transactionStatus ===
-			TransactionStatus.SUCCESS
-		) {
+		} else if (this.state.state === 1) {
 			return <SendSuccess />;
 		}
 	}
@@ -210,6 +246,8 @@ const mapStateToProps = (state: ApplicationState) => {
 		accountState: state.account,
 		transactionState: state.transaction,
 		languageState: state.language,
+		walletState: state.wallet,
+		staticState: state.static,
 	};
 };
 

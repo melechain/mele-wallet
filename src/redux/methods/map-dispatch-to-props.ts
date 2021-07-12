@@ -3,12 +3,14 @@ import AccountActionCreator from "./account-action-creator";
 import StaticActionCreator from "@mele-wallet/redux/methods/static-action-creator";
 import StatisticsActionCreator from "@mele-wallet/redux/methods/statistics-action-creator";
 import TransactionActionCreator from "@mele-wallet/redux/methods/transaction-action-creator";
+import WalletActionCreator from "./wallet-action-creator";
 
 export interface IActionCreators {
 	account: AccountActionCreator;
 	static: StaticActionCreator;
 	statistics: StatisticsActionCreator;
 	transaction: TransactionActionCreator;
+	wallet: WalletActionCreator;
 }
 
 export const mapDispatchToProps = (
@@ -20,6 +22,7 @@ export const mapDispatchToProps = (
 			static: new StaticActionCreator(dispatch),
 			statistics: new StatisticsActionCreator(dispatch),
 			transaction: new TransactionActionCreator(dispatch),
+			wallet: new WalletActionCreator(dispatch),
 		},
 	};
 };

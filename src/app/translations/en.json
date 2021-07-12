@@ -30,9 +30,12 @@
 		"status": "Status",
 		"orderedDate": "Date of order",
 		"approvedDate": "Date of approval",
+		"date": "Date",
 		"purchase": "Buy",
 		"transfer": "Transfer",
-		"noTransfer": "No recent transfers"
+		"noTransfer": "No recent transfers",
+		"receive": "Receive",
+		"send": "Send"
 	},
 	"qrCode": {
 		"title": "Scan QR code",
@@ -87,7 +90,7 @@
 		"backToDash": "Go back to dashboard",
 		"noCoinsTitle": "Insufficient coins",
 		"noCoinsDesc": "You don’t have enough coins to make this transaction.",
-		"noCoinsButton": "Buy coins",
+		"noCoinsButton": "Go back",
 		"errorTitle": "Address not found",
 		"errorDescription": "This address doesn’t exist on our system. Please check it.",
 		"errorButton": "Try again",
@@ -115,7 +118,10 @@
 		"enterWord": "Enter word",
 		"confirmWalletButton": "Confirm",
 		"createANewWallet": "Create a new wallet",
-		"loginTitle": "Welcome to Mele wallet"
+		"loginTitle": "Welcome to Mele wallet",
+		"restoreWallet": "Restore Wallet",
+		"passphrase": "Passhphrase",
+		"enterPassphrase": "Enter your passphrase"
 	},
 	"more": {
 		"title": "More",

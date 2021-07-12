@@ -13,7 +13,7 @@ import {
 import { styles } from "./styles";
 import {
 	PurchaseFlowStatus,
-	TransactionState,
+	TransactionsState,
 } from "@mele-wallet/redux/reducers/transaction-reducer";
 import { BaseField } from "@mele-wallet/app/common/fields/base-field";
 import { commonStyles } from "./../../common/styles/common-styles";
@@ -30,7 +30,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 interface IBuyComponentProps {
 	actionCreators: IActionCreators;
 	accountState: AccountState;
-	transactionState: TransactionState;
+	transactionState: TransactionsState;
 	languageState: LanguageState;
 }
 

@@ -115,16 +115,20 @@ class ConfirmPinComponent extends Component<
 							});
 						}}
 						onPinReady={(pin: string) => {
-							if (
-								pin === this.props.pin &&
-								this.props.accountId !== undefined
-							) {
-								this.props.actionCreators.static.updatePin(pin);
-								Actions.jump(ROUTES.authenticated.home);
-							} else if (pin == this.props.pin) {
+							// if (
+							// 	pin === this.props.pin &&
+							// 	this.props.accountId !== undefined
+							// ) {
+							// 	this.props.actionCreators.static.updatePin(pin);
+							// 	Actions.jump(ROUTES.authenticated.home);
+							// } else
+							if (pin == this.props.pin) {
 								this.props.actionCreators.static.setMnemonicAndPin(
 									this.props.mnemonic,
 									pin,
+								);
+								this.props.actionCreators.wallet.getWalletAddress(
+									this.props.mnemonic,
 								);
 							} else {
 								this.startShake();

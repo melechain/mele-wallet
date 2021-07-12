@@ -1,84 +1,57 @@
 import {
-	TransactionStateActionTypes,
-	ITransactionReducerAction,
+	ITransactionsReducerAction,
+	TransactionsStateActionTypes,
 } from "../reducers/transaction-reducer";
 import BaseActionCreator from "./base-action-creator";
 
-export default class TransactionActionCreator extends BaseActionCreator<
-	TransactionStateActionTypes,
-	ITransactionReducerAction
+export default class TransactionsActionCreator extends BaseActionCreator<
+	TransactionsStateActionTypes,
+	ITransactionsReducerAction
 > {
-	transactionStart = async () => {
+	searchTransactions = async (address: string) => {
 		this.dispatch({
-			type: TransactionStateActionTypes.CREATE_TRANSACTION_START,
+			type: TransactionsStateActionTypes.LOAD_TRANSACTIONS_REQUEST,
+			address: address,
 		});
 	};
 
-	transactionEnd = async () => {
+	getTransactionsCount = async () => {
 		this.dispatch({
-			type: TransactionStateActionTypes.CREATE_TRANSACTION_END,
+			type: TransactionsStateActionTypes.GET_TRANSACTIONS_COUNT_REQUEST,
 		});
 	};
 
-	transactionSend = async (to: string, amount: number) => {
+	getTransaction = async (hash: string) => {
 		this.dispatch({
-			type: TransactionStateActionTypes.CREATE_TRANSACTION_REQUEST,
-			to: to,
+			type: TransactionsStateActionTypes.LOAD_TRANSACTION_REQUEST,
+			hash: hash,
+		});
+	};
+
+	cleanTransactions = async () => {
+		this.dispatch({
+			type: TransactionsStateActionTypes.CLEAN_TRANSACTIONS,
+		});
+	};
+
+	sendTransaction = async (address: string, denom: string, amount: string) => {
+		this.dispatch({
+			type: TransactionsStateActionTypes.SEND_TRANSACTION_REQUEST,
+			address: address,
+			denom: denom,
 			amount: amount,
 		});
 	};
 
-	searchNotPayedOrdersTransactions = async (
-		page: number,
-		size: number,
-		transactionType: string,
-	) => {
-		this.dispatch({
-			type: TransactionStateActionTypes.LOAD_TRANSACTIONS_REQUEST,
-			page: page,
-			size: size,
-			transactionType: transactionType,
-		});
-	};
-	searchTransactions = async (p: {
-		page: number;
-		size: number;
-		from?: string;
-		to?: string;
-		transactionType?: string;
-		transactionStatus?: string;
-		transactionListKeyword: string;
-	}) => {
-		this.dispatch({
-			type: TransactionStateActionTypes.LOAD_TRANSACTIONS_REQUEST,
-			...p,
-		});
-	};
-	generateNewPurchaseNumber = async () => {
-		this.dispatch({
-			type: TransactionStateActionTypes.PURCHASE_NUMBER_REQUEST,
-		});
-	};
-	processPurchase = async (amount: number, generatedPurchaseCode: string) => {
-		this.dispatch({
-			type: TransactionStateActionTypes.PURCHASE_REQUEST,
-			amount: amount,
-			generatedPurchaseCode: generatedPurchaseCode,
-		});
-	};
-	resetPurchaseFlow = async () => {
-		this.dispatch({
-			type: TransactionStateActionTypes.PURCHASE_STATUS_CLEAR,
-		});
-	};
 	resetSendFlow = async () => {
 		this.dispatch({
-			type: TransactionStateActionTypes.RESET_SEND_FLOW,
+			type: TransactionsStateActionTypes.CLEAN_SEND_FLOW,
 		});
 	};
-	notEnoughCoins = async () => {
+
+	startSendFlow = async () => {
 		this.dispatch({
-			type: TransactionStateActionTypes.NOT_ENOUGH_COINS_SEND,
+			type: TransactionsStateActionTypes.START_SEND_FLOW,
 		});
 	};
 }

@@ -83,8 +83,8 @@ export const styles = StyleSheet.create({
 		marginBottom: 5,
 	},
 	transactionContainerAmountContainer: {
-		width: 48,
-		height: 22,
+		width: 70,
+		height: 20,
 		fontSize: 12,
 		backgroundColor: "#E4F9F0",
 		marginLeft: 13,
@@ -92,8 +92,13 @@ export const styles = StyleSheet.create({
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+		textAlign: "center",
+		paddingHorizontal: 10,
+		paddingVertical: 15,
 	},
 	transactionContainerAmount: {
+		width: 70,
+		marginLeft: 10,
 		fontSize: 10,
 		color: "#1EDF92",
 	},
@@ -114,7 +119,7 @@ export const styles = StyleSheet.create({
 		textTransform: "capitalize",
 	},
 	transactionStatusContainer: {
-		marginLeft: 10,
+		marginLeft: 0,
 		height: 22,
 		fontSize: 12,
 		backgroundColor: "#EEEFF8",
