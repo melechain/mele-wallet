@@ -7,6 +7,7 @@ import androidx.multidex.MultiDexApplication;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.bitgo.randombytes.RandomBytesPackage;
 import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;
 import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;
 import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;

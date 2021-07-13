@@ -10,6 +10,7 @@ target 'MeleWallet' do
     pod 'Permission-Camera', :path => "../node_modules/react-native-permissions/ios/Camera.podspec"
 
 
+
   target 'MeleWalletTests' do
     inherit! :complete
     # Pods for testing
