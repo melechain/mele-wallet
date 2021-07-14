@@ -20,7 +20,7 @@ export default class TransactionsService extends MainService {
 		const txs = await sdk.indexer.transactions({
 			address: p.address,
 		});
-
+		console.log(txs);
 		return txs;
 	};
 	getTransactionsCount = async () => {
