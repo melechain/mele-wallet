@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
 	scrollView: {
 		display: "flex",
 		flexDirection: "column",
+		backgroundColor: "#FFFFFF",
 	},
 	content: {
 		flexDirection: "column",
@@ -158,7 +159,7 @@ export const styles = StyleSheet.create({
 	successConfirm: {
 		marginTop: 22,
 		marginBottom: 10,
-		width: "45%",
+		width: "50%",
 		marginRight: 5,
 	},
 	successGoBack: {

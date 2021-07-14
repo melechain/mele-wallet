@@ -76,7 +76,10 @@ class RestoreWalletComponent extends Component<
 					text={localeData.wallet.restoreWallet}
 					onPress={() => {
 						Actions.jump(ROUTES.nonAuthenticated.createPin, {
-							mnemonic: this.state.mnemonic.replace(/,/g, " "),
+							mnemonic: this.state.mnemonic
+								.replace(/[\[\]']+/g, "")
+								.replace(/['"]+/g, "")
+								.replace(/,/g, " "),
 						});
 					}}
 				/>

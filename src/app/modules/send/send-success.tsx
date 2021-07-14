@@ -51,12 +51,6 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
-		const denom = this.props.transactionState.loadedTransaction
-			? this.props.transactionState.loadedTransaction.msgs[0].data.amount.substr(
-					this.props.transactionState.loadedTransaction.msgs[0].data.amount
-						.length - 5,
-			  )
-			: "";
 		StatusBar.setBarStyle("dark-content", true);
 		return (
 			<ScrollView
@@ -72,47 +66,39 @@ class SendSuccessComponent extends React.Component<ISendSuccessProps> {
 				<Text style={[styles.initContainer]}>
 					{localeData.send.successDescOne}
 					<Text style={[commonStyles.fontBold]}>
-						{this.props.transactionState.loadedTransaction && denom === "umelc"
+						{this.props.transactionState.denom === "umelc"
 							? `${Utils.fromUmelc(
-									this.props.transactionState.loadedTransaction.msgs[0].data.amount.substring(
-										0,
-										this.props.transactionState.loadedTransaction.msgs[0].data
-											.amount.length - 5,
-									),
+									this.props.transactionState.amount,
 									"melc",
 							  )} MELC`
-							: this.props.transactionState.loadedTransaction
+							: this.props.transactionState.denom
 							? `${Utils.fromUmelg(
-									this.props.transactionState.loadedTransaction.msgs[0].data.amount.substring(
-										0,
-										this.props.transactionState.loadedTransaction.msgs[0].data
-											.amount.length - 5,
-									),
+									this.props.transactionState.amount,
 									"melg",
 							  )} MELG`
 							: ""}
 					</Text>
 					{localeData.send.successDescTwo}
 					<Text style={[commonStyles.fontBold]}>
-						{this.props.transactionState.loadedTransaction?.to.wallet}
+						{this.props.transactionState.address}
 					</Text>
 				</Text>
 				<View style={[styles.buttonsContainer]}>
-					<BlueButton
+					{/* <BlueButton
 						text={localeData.send.transactionDetails}
 						onPress={() => {
 							this.goToTransactionDetails();
 						}}
 						style={styles.successConfirm}
 						textStyle={styles.succesContainerButtonText}
-					/>
+					/> */}
 					<BlueButton
 						text={localeData.send.backToDash}
 						onPress={() => {
 							this.goBack();
 						}}
-						style={styles.successGoBack}
-						textStyle={styles.successGoBackButtonText}
+						style={styles.successConfirm}
+						textStyle={styles.succesContainerButtonText}
 					/>
 				</View>
 			</ScrollView>

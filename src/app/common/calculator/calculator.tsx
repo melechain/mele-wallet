@@ -61,7 +61,6 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 							>
 								{this.props.melc}
 							</Text>
-							<Text style={[styles.usdCount]}>{this.props.melc}</Text>
 						</View>
 					</View>
 					<View style={[styles.meleDisplayNotions]}>
@@ -114,7 +113,6 @@ class CalculatorComponent extends React.Component<CalculatorProps> {
 							>
 								{meleGold}
 							</Text>
-							<Text style={[styles.usdCount]}>{meleGold}</Text>
 						</View>
 					</Ripple>
 				</View>

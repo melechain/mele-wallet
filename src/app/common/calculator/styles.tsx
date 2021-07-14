@@ -26,10 +26,11 @@ export const styles = StyleSheet.create({
 		borderColor: "#0D299F",
 	},
 	coinCount: {
-		fontSize: 14,
+		fontSize: 20,
 		color: "#FFFFFF",
 		//textOverflow: "ellipsis",
 		overflow: "hidden",
+		marginTop: "2%",
 	},
 	usdCount: {
 		fontSize: 10,

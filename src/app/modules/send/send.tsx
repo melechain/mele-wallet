@@ -42,6 +42,7 @@ interface ISendState {
 	amount: string;
 	denom: string;
 	state: number;
+	sending: boolean;
 }
 
 const languages = {
@@ -57,6 +58,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			amount: "",
 			denom: "melc",
 			state: 0,
+			sending: false,
 		};
 	}
 
@@ -66,6 +68,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			amount: "",
 			denom: "melc",
 			state: 0,
+			sending: false,
 		};
 	}
 
@@ -94,6 +97,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			) {
 				this.setState({ state: 2, amount: "", recipient: "" });
 			} else {
+				this.setState({ sending: true });
 				this.props.actionCreators.transaction.sendTransaction(
 					this.state.recipient,
 					`u${this.state.denom}`,
@@ -228,7 +232,8 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							this.state.recipient === "" ||
 							this.state.recipient.length < 43 ||
 							this.state.amount === "" ||
-							parseFloat(this.state.amount) < 0.000000001
+							parseFloat(this.state.amount) < 0.000000001 ||
+							this.state.sending
 						}
 						style={styles.purchaseCoins}
 						textStyle={styles.noTransactionsContainerButtonText}

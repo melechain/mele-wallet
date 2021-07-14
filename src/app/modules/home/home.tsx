@@ -5,6 +5,7 @@ import {
 	ScrollView,
 	StatusBar,
 	RefreshControl,
+	ActivityIndicator,
 } from "react-native";
 import Clipboard from "@react-native-community/clipboard";
 import { connect } from "react-redux";
@@ -16,22 +17,13 @@ import {
 import { AccountState } from "@mele-wallet/redux/reducers/account-reducer";
 import { styles } from "./styles";
 import { commonStyles } from "@mele-wallet/app/common/styles/common-styles";
-import WiteInfoIcon from "@mele-wallet/resources/icons/info-white.svg";
-import BlueInfoIcon from "@mele-wallet/resources/icons/info-blue.svg";
-import ScanBarcodeIcon from "@mele-wallet/resources/icons/scan-barcode.svg";
 import CopyIcon from "@mele-wallet/resources/icons/copy.svg";
 import Ripple from "react-native-material-ripple";
 import { Calculator } from "@mele-wallet/app/common/calculator/calculator";
-import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
-import { Actions as UserActions } from "@mele-wallet/app/modules/home/actions";
-import { Actions } from "react-native-router-flux";
-import { ROUTES } from "@mele-wallet/app/router/routes";
-import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { IAccountModel } from "@mele-wallet/common/model/account.model";
 import { Transactions } from "@mele-wallet/app/common/transactions/transactions";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
-import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from "@react-native-community/async-storage";
 import { WalletState } from "./../../../redux/reducers/wallet-reducer";
 import { Utils } from "mele-sdk";
@@ -82,7 +74,7 @@ class HomeComponent extends Component<
 
 	getData = async () => {
 		const based = await AsyncStorage.getItem("mnemonic");
-		if (based && this.props.walletState.loadedWalletAddress === "") {
+		if (based) {
 			this.props.actionCreators.wallet.getWalletAddress(base64.decode(based));
 			this.props.actionCreators.wallet.getWallet(base64.decode(based));
 		}
@@ -91,7 +83,8 @@ class HomeComponent extends Component<
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
 		const wallet = this.props.walletState.loadedWallet;
-		console.log(wallet);
+		//console.log(wallet)
+
 		return (
 			<ScrollView
 				style={[styles.scrollView]}
@@ -117,53 +110,49 @@ class HomeComponent extends Component<
 									}}
 									rippleOpacity={0}
 									style={[styles.balanceContainer]}
-								>
-									<Text style={[commonStyles.whiteHeader, styles.balance]}>
-										{wallet !== undefined &&
-										wallet.value.coins[0] !== undefined &&
-										wallet.value.coins[0].denom === "umelc"
-											? `${Utils.fromUmelc(
-													wallet.value.coins[0].amount,
-													"melc",
-											  )} MELC`
-											: wallet !== undefined &&
-											  wallet.value.coins[1] !== undefined &&
-											  wallet.value.coins[1].denom === "umelc"
-											? `${Utils.fromUmelc(
-													wallet.value.coins[1].amount,
-													"melc",
-											  )} MELG`
-											: "0"}
-									</Text>
-								</Ripple>
+								/>
 							</View>
 						</View>
 					</View>
-					<Calculator
-						melc={
-							wallet !== undefined &&
-							wallet.value.coins[0] !== undefined &&
-							wallet.value.coins[0].denom === "umelc"
-								? Utils.fromUmelc(wallet.value.coins[0].amount, "melc")
-								: wallet !== undefined &&
-								  wallet.value.coins[1] !== undefined &&
-								  wallet.value.coins[1].denom === "umelc"
-								? Utils.fromUmelc(wallet.value.coins[1].amount, "melc")
-								: "0"
-						}
-						melg={
-							wallet !== undefined &&
-							wallet.value.coins[0] !== undefined &&
-							wallet.value.coins[0].denom === "melg"
-								? Utils.fromUmelg(wallet.value.coins[0].amount, "melg")
-								: wallet !== undefined &&
-								  wallet.value.coins[1] !== undefined &&
-								  wallet.value.coins[1].denom === "melg"
-								? Utils.fromUmelg(wallet.value.coins[1].amount, "melg")
-								: "0"
-						}
-						style={[styles.calculator]}
-					/>
+					{wallet === undefined ? (
+						<ActivityIndicator
+							size="large"
+							color="#ffffff"
+							style={{ marginBottom: "5%" }}
+						/>
+					) : (
+						<Calculator
+							melc={
+								wallet !== undefined &&
+								wallet !== [] &&
+								wallet.value !== undefined &&
+								wallet.value.coins[0] !== undefined &&
+								wallet.value.coins[0].denom === "umelc"
+									? Utils.fromUmelc(wallet.value.coins[0].amount, "melc")
+									: wallet !== undefined &&
+									  wallet.value !== undefined &&
+									  wallet.value.coins[1] !== undefined &&
+									  wallet.value.coins[1].denom === "umelc"
+									? Utils.fromUmelc(wallet.value.coins[1].amount, "melc")
+									: "0"
+							}
+							melg={
+								wallet !== undefined &&
+								wallet !== [] &&
+								wallet.value !== undefined &&
+								wallet.value.coins[0] !== undefined &&
+								wallet.value.coins[0].denom === "umelg"
+									? Utils.fromUmelg(wallet.value.coins[0].amount, "melg")
+									: wallet !== undefined &&
+									  wallet.value !== undefined &&
+									  wallet.value.coins[1] !== undefined &&
+									  wallet.value.coins[1].denom === "umelg"
+									? Utils.fromUmelg(wallet.value.coins[1].amount, "melg")
+									: "0"
+							}
+							style={[styles.calculator]}
+						/>
+					)}
 
 					<Ripple
 						style={[styles.walletAddressContainer]}

@@ -61,11 +61,11 @@ class MoreComponent extends Component<IMoreComponentProps> {
 				style={[styles.scrollView]}
 				contentContainerStyle={styles.content}
 			>
-				<View style={[styles.actionTitleContainer, { marginTop: 40 }]}>
+				{/* <View style={[styles.actionTitleContainer, { marginTop: 40 }]}>
 					<Text style={[styles.actionTitle, commonStyles.fontBold]}>
 						{localeData.more.title}
 					</Text>
-				</View>
+				</View> */}
 				<View style={[styles.actionArea]}>
 					{/* <View style={[styles.eachAction]}>
 						<View style={[styles.Icon]}>

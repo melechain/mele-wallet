@@ -69,7 +69,7 @@ const walletReducer = (
 			return {
 				...state,
 				loadWalletStatus: LoadWalletStatus.ERROR,
-				loadedWallet: undefined,
+				loadedWallet: [],
 			};
 		case WalletStateActionTypes.WALLET_LOGOUT:
 			return {

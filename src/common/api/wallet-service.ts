@@ -17,14 +17,14 @@ export default class WalletService extends MainService {
 	};
 
 	getWallet = async (p: ISearchWalletParameter) => {
+		const signer = new MnemonicSigner(p.mnemonic);
 		const mele = new Mele({
 			nodeUrl: "http://3.126.68.149:26657/",
 			indexerEndpoint: "http://18.192.179.29:3100/api/v1",
 			chainId: "devnet",
-			signer: new MnemonicSigner(p.mnemonic),
+			signer: signer,
 		});
-		console.log("before");
-		const wallet = await mele.query.getAccountInfo(mele.signer.getAddress());
+		const wallet = await mele.query.getAccountInfo(signer.getAddress());
 		return wallet;
 	};
 }

@@ -355,7 +355,7 @@ class MainRouterComponent extends React.Component {
 							/>
 							<Scene
 								hideNavBar
-								component={Buy}
+								component={Home}
 								title="Buy"
 								key={ROUTES.authenticated.buy}
 								back={false}

@@ -1,6 +1,6 @@
 import MainService from "./main-api-service";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Mele, MnemonicSigner } from "mele-sdk";
+import { Mele, MnemonicSigner, Utils } from "mele-sdk";
 import base64 from "base-64";
 
 const sdk = new Mele({
@@ -20,6 +20,7 @@ export default class TransactionsService extends MainService {
 		const txs = await sdk.indexer.transactions({
 			address: p.address,
 		});
+
 		return txs;
 	};
 	getTransactionsCount = async () => {
@@ -43,9 +44,11 @@ export default class TransactionsService extends MainService {
 				signer: new MnemonicSigner(mnemonic),
 			});
 
-			const response = await mele.bank
-				.transfer(address, [{ denom: denom, amount: amount }])
-				.sendTransaction();
+			const response = Utils.promisify(
+				await mele.bank
+					.transfer(address, [{ denom: denom, amount: amount }])
+					.sendTransaction(),
+			);
 
 			return response;
 		}

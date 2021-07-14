@@ -57,10 +57,13 @@ export enum LoadTransactionsStatus {
 
 export class TransactionsState {
 	loadedTransactions: ITRANSACTIONModel[] = [];
-	totalCount: number = 0;
+	totalCount: number = -1;
 	generatedTransactionsCount: number = 0;
 	loadedTransaction?: ITRANSACTIONModel;
-	loadTransactionsStatus?: LoadTransactionsStatus;
+	loadTransactionsStatus?: LoadTransactionsStatus.START;
+	address: string = "";
+	denom: string = "";
+	amount: string = "";
 }
 
 export class ITransactionsReducerAction {
@@ -143,6 +146,9 @@ const TransactionsReducer = (
 			return {
 				...state,
 				loadTransactionsStatus: LoadTransactionsStatus.SEND_SUCCESS,
+				denom: action.denom,
+				amount: action.amount,
+				address: action.address,
 			};
 		case TransactionsStateActionTypes.SEND_TRANSACTION_ERROR:
 			return {

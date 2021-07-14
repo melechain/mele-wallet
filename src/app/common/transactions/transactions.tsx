@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator, RefreshControl } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -12,17 +12,17 @@ import ShieldBlue from "@mele-wallet/resources/icons/shield-blue.svg";
 import Ripple from "react-native-material-ripple";
 import { Actions } from "react-native-router-flux";
 import { ROUTES } from "@mele-wallet/app/router/routes";
-import { BlueButton } from "@mele-wallet/app/common/buttons/blue-button";
-import { ITransactionModel } from "@mele-wallet/common/model/transaction.model";
+import base64 from "base-64";
 import moment from "moment";
-import { MeleCalculator } from "@mele-wallet/common/mele-calculator/mele-calculator";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
-import { Wallet } from "@mele-wallet/common/utils/wallet";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import AsyncStorage from "@react-native-community/async-storage";
 import { WalletState } from "@mele-wallet/redux/reducers/wallet-reducer";
-import { TransactionsState } from "@mele-wallet/redux/reducers/transaction-reducer";
+import {
+	LoadTransactionsStatus,
+	TransactionsState,
+} from "@mele-wallet/redux/reducers/transaction-reducer";
 import { Utils } from "mele-sdk";
 
 interface ITransactionComponentProps {
@@ -34,22 +34,52 @@ interface ITransactionComponentProps {
 	walletState: WalletState;
 }
 
+interface ITransactionComponentState {
+	wait: boolean;
+}
+
 const languages = {
 	en: require("../../translations/en.json"),
 	ar: require("../../translations/ar.json"),
 };
 
-class TransactionComponent extends Component<ITransactionComponentProps> {
+class TransactionComponent extends Component<
+	ITransactionComponentProps,
+	ITransactionComponentState
+> {
 	constructor(props: ITransactionComponentProps) {
 		super(props);
+		this.state = {
+			wait: false,
+		};
 	}
+
 	componentDidMount() {
-		if (this.props.walletState.loadedWalletAddress) {
-			this.props.actionCreators.transaction.searchTransactions(
-				this.props.walletState.loadedWalletAddress,
-			);
+		if (this.props.transactionState.totalCount === -1) {
+			this.getData();
 		}
 	}
+
+	componentDidUpdate() {
+		if (this.props.transactionState.totalCount === -1 && !this.state.wait) {
+			this.getDataFromUpdate();
+		}
+	}
+
+	getDataFromUpdate = async () => {
+		this.setState({ wait: true });
+		this.getData();
+		this.setState({ wait: false });
+	};
+
+	getData = async () => {
+		const based = await AsyncStorage.getItem("address");
+		if (based) {
+			await this.props.actionCreators.transaction.searchTransactions(
+				base64.decode(based),
+			);
+		}
+	};
 
 	render() {
 		const localeData = languages[this.props.languageState.currentLanguage];
@@ -78,8 +108,9 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 
 	getTransactionList = (localeData: any) => {
 		const transactions = this.props.transactionState.loadedTransactions;
+		const transactionsCount = this.props.transactionState.totalCount;
 
-		if (transactions.length === 0) {
+		if (transactionsCount === -1) {
 			return (
 				<View style={[styles.noTransactionsContainer]}>
 					<ActivityIndicator size="large" color="#013EC4" />
@@ -87,13 +118,13 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 			);
 		}
 
-		if (transactions.length == 0 && this.props.customEmptyScreen) {
+		if (transactionsCount == 0 && this.props.customEmptyScreen) {
 			return (
 				<View style={[styles.noTransactionsContainer]}>
 					{this.props.customEmptyScreen}
 				</View>
 			);
-		} else if (transactions.length == 0) {
+		} else if (transactionsCount == 0) {
 			return (
 				<View style={[styles.noTransactionsContainer]}>
 					<Text

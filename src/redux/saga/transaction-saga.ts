@@ -34,14 +34,14 @@ function* searchTransactions(action: ITransactionsReducerAction): SagaIterator {
 	try {
 		const p: ISearchTransactionsParameter = {
 			page: action.page,
-			size: action.size || 9999,
+			size: action.size || 100,
 			address: action.address,
 		};
 		const response = yield call(transactionsService.getTransactions, p);
 		return yield put({
 			type: TransactionsStateActionTypes.LOAD_TRANSACTIONS_SUCCESS,
 			loadedTransactions: response,
-			totalCount: response.length,
+			totalCount: response === [] ? 0 : response.length,
 		});
 	} catch (e) {
 		return yield put({
@@ -89,7 +89,7 @@ function* getTransaction(action: ITransactionsReducerAction): SagaIterator {
 
 function* sendTransaction(action: ITransactionsReducerAction): SagaIterator {
 	try {
-		const response = yield call(
+		yield call(
 			transactionsService.sendTransaction,
 			action.address,
 			action.denom,
@@ -98,6 +98,9 @@ function* sendTransaction(action: ITransactionsReducerAction): SagaIterator {
 
 		return yield put({
 			type: TransactionsStateActionTypes.SEND_TRANSACTION_SUCCESS,
+			address: action.address,
+			denom: action.denom,
+			amount: action.amount,
 		});
 	} catch (e) {
 		return yield put({

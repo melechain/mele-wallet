@@ -32,16 +32,16 @@ function* getWalletAddress(action: IWalletReducerAction): SagaIterator {
 function* getWallet(action: IWalletReducerAction): SagaIterator {
 	try {
 		const response = yield call(walletService.getWallet, action);
-		console.log("welllll....");
+		console.log("success");
 		return yield put({
 			type: WalletStateActionTypes.GET_WALLET_SUCCESS,
 			loadedWallet: response,
 		});
 	} catch (e) {
-		console.log(e.message);
+		console.log("error");
 		return yield put({
 			type: WalletStateActionTypes.GET_WALLET_ERROR,
-			loadedWallet: undefined,
+			loadedWallet: [],
 		});
 	}
 }
