@@ -8,7 +8,7 @@ declare const global: {};
 const getUrl = () => {
 	//DEV - https://api.dev1.melechain.com
 	//MAIN - https://api.melechain.com
-	return "https://api.dev1.melechain.com";
+	return "https://api.melechain.com";
 };
 
 export const API_URL = getUrl();
