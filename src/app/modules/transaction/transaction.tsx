@@ -51,7 +51,6 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 		const denom = this.props.transaction.msgs[0].data.amount.substr(
 			this.props.transaction.msgs[0].data.amount.length - 5,
 		);
-
 		return (
 			<ScrollView
 				style={[commonStyles.whiteBackground, styles.scrollView]}
@@ -150,6 +149,20 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 						localeData.transactions.date,
 						moment(this.props.transaction.timestamp).format("D MMM yyyy"),
 					)}
+					{this.props.transaction.msgs[0].data.recipient !==
+						userWalletAddress &&
+						this.getInfoBlock(
+							localeData.transactions.fee,
+							this.props.transaction.fee !== undefined
+								? `${Utils.fromUmelc(
+										this.props.transaction.fee.system_fee.substring(
+											0,
+											this.props.transaction.fee.system_fee.length - 5,
+										),
+										"melc",
+								  )} MELC`
+								: "0 MELC",
+						)}
 					{/* {this.getInfoBlock(
 						localeData.transactions.approvedDate,
 						moment(this.props.transaction.approvedAt).format("D MMM yyyy"),
@@ -186,7 +199,7 @@ class TransactionComponent extends Component<ITransactionComponentProps> {
 				textStyles.push(styles.capitalizedText);
 			}
 			valueToShow = (
-				<Text adjustsFontSizeToFit={true} numberOfLines={2} style={textStyles}>
+				<Text adjustsFontSizeToFit={true} numberOfLines={2}>
 					{value}
 				</Text>
 			);

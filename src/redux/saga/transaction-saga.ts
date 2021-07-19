@@ -95,7 +95,6 @@ function* sendTransaction(action: ITransactionsReducerAction): SagaIterator {
 			action.denom,
 			action.amount,
 		);
-
 		return yield put({
 			type: TransactionsStateActionTypes.SEND_TRANSACTION_SUCCESS,
 			address: action.address,
@@ -103,8 +102,14 @@ function* sendTransaction(action: ITransactionsReducerAction): SagaIterator {
 			amount: action.amount,
 		});
 	} catch (e) {
-		return yield put({
-			type: TransactionsStateActionTypes.SEND_TRANSACTION_ERROR,
-		});
+		if (e.toString().includes("insufficient fees")) {
+			return yield put({
+				type: TransactionsStateActionTypes.SEND_TRANSACTION_ERROR_NO_FUNDS,
+			});
+		} else {
+			return yield put({
+				type: TransactionsStateActionTypes.SEND_TRANSACTION_ERROR,
+			});
+		}
 	}
 }

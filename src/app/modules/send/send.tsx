@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { Text, ScrollView, Image, StatusBar } from "react-native";
+import {
+	Text,
+	ScrollView,
+	Image,
+	StatusBar,
+	ActivityIndicator,
+} from "react-native";
 import { connect } from "react-redux";
 import ApplicationState from "@mele-wallet/redux/application-state";
 import {
@@ -72,7 +78,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 		};
 	}
 
-	sendCoins = (localeData: any) => {
+	sendCoins = () => {
 		if (this.state.amount !== "" && this.state.recipient !== "") {
 			const amount =
 				this.state.denom === "melc"
@@ -112,7 +118,7 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			this.props.transactionState.loadTransactionsStatus ===
 			LoadTransactionsStatus.RESET
 		) {
-			this.setState({ state: 0 });
+			this.setState({ state: 0, sending: false });
 			this.props.actionCreators.transaction.startSendFlow();
 		}
 		if (
@@ -127,8 +133,14 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 			this.props.actionCreators.transaction.searchTransactions(
 				this.props.walletState.loadedWalletAddress,
 			);
-			this.setState({ amount: "", recipient: "" });
-			this.setState({ state: 1 });
+			this.setState({ amount: "", recipient: "", state: 1 });
+		} else if (
+			prevProps.transactionState.loadTransactionsStatus !==
+				this.props.transactionState.loadTransactionsStatus &&
+			this.props.transactionState.loadTransactionsStatus ===
+				LoadTransactionsStatus.SEND_ERROR_NO_FUNDS
+		) {
+			this.setState({ amount: "", recipient: "", state: 2 });
 		} else if (
 			prevProps.transactionState.loadTransactionsStatus !==
 				this.props.transactionState.loadTransactionsStatus &&
@@ -191,15 +203,14 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 						placeholder={localeData.send.amount}
 						iconRight={
 							<Picker
+								mode="dropdown"
 								selectedValue={this.state.denom}
 								onValueChange={(itemValue) =>
 									this.setState({ denom: itemValue })
 								}
 								style={{
-									height: 50,
-									width: 111,
-									backgroundColor: "#013EC4",
-									color: "black",
+									width: 150,
+									backgroundColor: "transparent",
 								}}
 							>
 								{coins.map((coin: any) => {
@@ -223,21 +234,24 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 							this.state.formatted ? this.state.formatted.toString() : '0'
 						}
 					/> */}
-					<BlueButton
-						text={localeData.send.sendButton}
-						onPress={() => {
-							this.sendCoins(localeData);
-						}}
-						disabled={
-							this.state.recipient === "" ||
-							this.state.recipient.length < 43 ||
-							this.state.amount === "" ||
-							parseFloat(this.state.amount) < 0.000000001 ||
-							this.state.sending
-						}
-						style={styles.purchaseCoins}
-						textStyle={styles.noTransactionsContainerButtonText}
-					/>
+					{this.state.sending ? (
+						<ActivityIndicator size="small" color="#013EC4" />
+					) : (
+						<BlueButton
+							text={localeData.send.sendButton}
+							onPress={() => {
+								this.sendCoins();
+							}}
+							disabled={
+								this.state.recipient === "" ||
+								this.state.recipient.length < 43 ||
+								this.state.amount === "" ||
+								parseFloat(this.state.amount) < 0.000000001
+							}
+							style={styles.purchaseCoins}
+							textStyle={styles.noTransactionsContainerButtonText}
+						/>
+					)}
 				</ScrollView>
 			);
 		} else if (this.state.state === 1) {

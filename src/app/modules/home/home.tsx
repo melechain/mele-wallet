@@ -41,6 +41,7 @@ interface IHomeComponentState {
 	refreshing: boolean;
 	fromStorage: boolean;
 	account: IAccountModel | undefined;
+	transactions: boolean;
 }
 
 const languages = {
@@ -58,12 +59,27 @@ class HomeComponent extends Component<
 			refreshing: false,
 			fromStorage: true,
 			account: undefined,
+			transactions: false,
 		};
 		this._refresh = this._refresh.bind(this);
 	}
 
 	componentDidMount() {
 		this.getData();
+	}
+
+	getTransactions = async () => {
+		const based = await AsyncStorage.getItem("address");
+		if (based && !this.state.transactions) {
+			await this.props.actionCreators.transaction.searchTransactions(
+				base64.decode(based),
+			);
+			this.setState({ transactions: true });
+		}
+	};
+
+	componentDidUpdate() {
+		this.getTransactions();
 	}
 
 	_refresh = async () => {

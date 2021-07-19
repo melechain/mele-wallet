@@ -92,15 +92,16 @@ export const styles = StyleSheet.create({
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
-		textAlign: "center",
+		textAlign: "right",
 		paddingHorizontal: 10,
 		paddingVertical: 15,
 	},
 	transactionContainerAmount: {
 		width: 70,
-		marginLeft: 10,
+		marginRight: 8,
 		fontSize: 10,
 		color: "#1EDF92",
+		textAlign: "right",
 	},
 	transactionTypeContainer: {
 		height: 22,

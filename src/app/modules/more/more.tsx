@@ -30,6 +30,7 @@ import { CurrencyPicker } from "@mele-wallet/app/common/pickers/currency-picker"
 import { LanguagePicker } from "@mele-wallet/app/common/pickers/language-picker";
 import { Picker } from "@react-native-picker/picker";
 import { Utils } from "mele-sdk";
+import AsyncStorage from "@react-native-community/async-storage";
 
 interface IMoreComponentProps {
 	staticState: StaticState;
@@ -51,6 +52,13 @@ class MoreComponent extends Component<IMoreComponentProps> {
 
 	generateMnemonic = () => {
 		return Utils.generateMnemonic().split(" ").slice(0, 12);
+	};
+
+	logout = async () => {
+		await AsyncStorage.clear();
+		await this.props.actionCreators.wallet.logout();
+		await this.props.actionCreators.transaction.logout();
+		FluxActions.jump(ROUTES.nonAuthenticated.registrationOrLogin);
 	};
 
 	render() {
@@ -110,6 +118,25 @@ class MoreComponent extends Component<IMoreComponentProps> {
 								]}
 							>
 								{localeData.more.changePIN} &gt;
+							</Text>
+						</Ripple>
+					</View>
+					<View style={[styles.eachAction]}>
+						<Ripple
+							style={[styles.transparentButtonPIN]}
+							onPress={() => this.logout()}
+						>
+							<WalletIcon style={[styles.walletLogo]} />
+							<Text style={[styles.pinText, commonStyles.fontBook]}>
+								{localeData.more.wallet}
+							</Text>
+							<Text
+								style={[
+									styles.transparentButtonTitlePIN,
+									commonStyles.fontBook,
+								]}
+							>
+								{localeData.more.logout} &gt;
 							</Text>
 						</Ripple>
 					</View>

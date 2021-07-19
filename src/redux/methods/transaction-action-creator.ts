@@ -42,6 +42,11 @@ export default class TransactionsActionCreator extends BaseActionCreator<
 			amount: amount,
 		});
 	};
+	logout = async () => {
+		this.dispatch({
+			type: TransactionsStateActionTypes.RESET_ALL,
+		});
+	};
 
 	resetSendFlow = async () => {
 		this.dispatch({

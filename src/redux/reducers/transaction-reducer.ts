@@ -38,9 +38,11 @@ export enum TransactionsStateActionTypes {
 	SEND_TRANSACTION_REQUEST = "@@Transactions/SEND_TRANSACTION_REQUEST",
 	SEND_TRANSACTION_SUCCESS = "@@Transactions/SEND_TRANSACTION_SUCCESS",
 	SEND_TRANSACTION_ERROR = "@@Transactions/SEND_TRANSACTION_ERROR",
+	SEND_TRANSACTION_ERROR_NO_FUNDS = "@@Transactions/SEND_TRANSACTION_ERROR_NO_FUNDS",
 	CLEAN_TRANSACTIONS = "@@Transactions/CLEAN_TRANSACTIONS",
 	CLEAN_SEND_FLOW = "@@Transactions/CLEAN_SEND_FLOW",
 	START_SEND_FLOW = "@@Transactions/START_SEND_FLOW",
+	RESET_ALL = "@@Transactions/RESET_ALL",
 }
 
 export enum LoadTransactionsStatus {
@@ -51,6 +53,7 @@ export enum LoadTransactionsStatus {
 	SEND_REQUEST,
 	SEND_SUCCESS,
 	SEND_ERROR,
+	SEND_ERROR_NO_FUNDS,
 	RESET,
 	START,
 }
@@ -155,6 +158,11 @@ const TransactionsReducer = (
 				...state,
 				loadTransactionsStatus: LoadTransactionsStatus.SEND_ERROR,
 			};
+		case TransactionsStateActionTypes.SEND_TRANSACTION_ERROR_NO_FUNDS:
+			return {
+				...state,
+				loadTransactionsStatus: LoadTransactionsStatus.SEND_ERROR_NO_FUNDS,
+			};
 		case TransactionsStateActionTypes.CLEAN_TRANSACTIONS:
 			return {
 				...state,
@@ -169,6 +177,13 @@ const TransactionsReducer = (
 		case TransactionsStateActionTypes.START_SEND_FLOW:
 			return {
 				...state,
+				loadTransactionsStatus: LoadTransactionsStatus.START,
+			};
+		case TransactionsStateActionTypes.RESET_ALL:
+			return {
+				...state,
+				loadedTransactions: [],
+				loadedTransaction: undefined,
 				loadTransactionsStatus: LoadTransactionsStatus.START,
 			};
 		default:

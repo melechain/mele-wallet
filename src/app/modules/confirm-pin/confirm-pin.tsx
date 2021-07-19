@@ -18,7 +18,7 @@ interface IConfirmPinComponentProps {
 	accountState: AccountState;
 	mnemonic: string;
 	pin: string;
-	accountId?: string;
+	update?: boolean;
 }
 interface IConfirmPinComponentState {
 	pinConfirmation: string;
@@ -90,7 +90,7 @@ class ConfirmPinComponent extends Component<
 		const localeData =
 			this.props.languageState !== undefined
 				? languages[this.props.languageState.currentLanguage]
-				: languages["en"];
+				: languages.en;
 		return (
 			<ScrollView
 				style={[commonStyles.blueBackground, styles.scrollView]}
@@ -115,7 +115,10 @@ class ConfirmPinComponent extends Component<
 							});
 						}}
 						onPinReady={(pin: string) => {
-							if (pin == this.props.pin) {
+							if (pin == this.props.pin && this.props.update) {
+								this.props.actionCreators.static.updatePin(pin);
+								Actions.jump(ROUTES.authenticated.home);
+							} else if (pin == this.props.pin) {
 								this.props.actionCreators.static.setMnemonicAndPin(
 									this.props.mnemonic,
 									pin,

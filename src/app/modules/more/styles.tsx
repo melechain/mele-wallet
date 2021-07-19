@@ -65,6 +65,11 @@ export const styles = StyleSheet.create({
 		width: 11,
 		height: 13,
 	},
+	walletLogo: {
+		width: 11,
+		height: 13,
+		marginLeft: -5,
+	},
 
 	actionText: {
 		flex: 1,

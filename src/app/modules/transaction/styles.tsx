@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	balanceAmount: {
-		fontSize: 25,
+		fontSize: 24,
 		color: "#013EC4",
 	},
 	balanceDescription: {

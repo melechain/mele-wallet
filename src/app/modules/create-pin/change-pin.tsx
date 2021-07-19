@@ -58,7 +58,7 @@ class ChangePinComponent extends Component<IChangePinComponentProps> {
 						Actions.jump(ROUTES.nonAuthenticated.confirmPin, {
 							mnemonic: this.props.mnemonic,
 							pin: pin,
-							accountId: this.props.staticState.accountId,
+							update: true,
 						});
 					}}
 					style={styles.pinContainer}

@@ -13,6 +13,7 @@
 	},
 	"transactions": {
 		"title": "Your transactions history",
+		"fee": "Fee",
 		"noTransactionsOne": "When you get started, all your fund transfers will show up here.",
 		"noTransactionsTwo": " Connect your Account to get started.",
 		"noTransactionsThree": "Simply buy coins, and away you go.",
@@ -130,7 +131,9 @@
 		"scan": "Scan QR",
 		"security": "Security",
 		"changePIN": "Change PIN",
-		"pin": "PIN"
+		"pin": "PIN",
+		"wallet": "Wallet",
+		"logout": "Logout"
 	},
 	"calculator": {
 		"title": "Your balance, explained",
