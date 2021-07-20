@@ -32,7 +32,7 @@ import { LanguageState } from "@mele-wallet/redux/reducers/language-reducer";
 import { WalletState } from "@mele-wallet/redux/reducers/wallet-reducer";
 import { Utils } from "mele-sdk";
 import { StaticState } from "@mele-wallet/redux/reducers/static-reducer";
-import { Picker } from "@react-native-picker/picker";
+import SelectDropdown from "react-native-select-dropdown";
 
 interface ISendComponentProps {
 	actionCreators: IActionCreators;
@@ -202,21 +202,26 @@ class SendComponent extends Component<ISendComponentProps, ISendState> {
 						value={this.state.amount || ""}
 						placeholder={localeData.send.amount}
 						iconRight={
-							<Picker
-								mode="dropdown"
-								selectedValue={this.state.denom}
-								onValueChange={(itemValue) =>
-									this.setState({ denom: itemValue })
+							<SelectDropdown
+								data={coins}
+								onSelect={(itemValue: any) =>
+									this.setState({ denom: itemValue.value })
 								}
-								style={{
-									width: 150,
-									backgroundColor: "transparent",
+								buttonTextAfterSelection={(selectedItem: any) => {
+									// text represented after item is selected
+									// if data array is an array of objects then return selectedItem.property to render after item is selected
+									return selectedItem.text;
 								}}
-							>
-								{coins.map((coin: any) => {
-									return <Picker.Item label={coin.text} value={coin.value} />;
-								})}
-							</Picker>
+								rowTextForSelection={(item: any) => {
+									// text represented for each item in dropdown
+									// if data array is an array of objects then return item.property to represent item in dropdown
+									return item.text;
+								}}
+								defaultValue={this.state.denom}
+								defaultButtonText={this.state.denom.toUpperCase()}
+								buttonTextStyle={{ marginRight: 50 }}
+								dropdownIconPosition="left"
+							/>
 						}
 					/>
 					<BaseField

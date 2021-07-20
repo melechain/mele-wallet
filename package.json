@@ -45,6 +45,7 @@
 		"react-native-router-flux": "^4.3.1",
 		"react-native-safe-area-context": "^3.2.0",
 		"react-native-screens": "^2.18.1",
+		"react-native-select-dropdown": "^1.0.9",
 		"react-native-status-bar-height": "^2.6.0",
 		"react-native-svg": "^12.1.1",
 		"react-navigation-stack": "^2.10.4",
